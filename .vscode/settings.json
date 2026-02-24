@@ -1,0 +1,10 @@
+{
+  "deno.enable": true,
+  "deno.enablePaths": [
+    "supabase/functions",
+    "supabase/seed_test_data.ts"
+  ],
+  "deno.lint": true,
+  "deno.unstable": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
+}
