@@ -92,7 +92,11 @@ export default function LoginPage() {
       if (error) throw error;
       setMessage({ text: "Security link sent! Check your inbox.", type: 'success' });
     } catch (err: any) {
-      console.error('Password recovery error:', err);
+      console.error('Password recovery debug info:', {
+        message: err?.message,
+        error: err,
+        stack: err?.stack
+      });
       
       let errorMessage = err?.message ?? "Failed to send reset email.";
       
