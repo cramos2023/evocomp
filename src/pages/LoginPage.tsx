@@ -92,8 +92,20 @@ export default function LoginPage() {
       if (error) throw error;
       setMessage({ text: "Security link sent! Check your inbox.", type: 'success' });
     } catch (err: any) {
-      setMessage({ text: err?.message ?? "Failed to send reset email.", type: 'error' });
-      console.error(err);
+      console.error('Password recovery error:', err);
+      
+      let errorMessage = err?.message ?? "Failed to send reset email.";
+      
+      // Handle specific SMTP/Auth errors from Supabase
+      if (errorMessage.includes("550")) {
+        errorMessage = "Identity Proof Required: Resend is in testing mode. You can only send to the account owner until a domain is verified.";
+      } else if (errorMessage.includes("535")) {
+        errorMessage = "SMTP Authentication Failed: Check if username is set to 'resend' in Supabase Dashboard.";
+      } else if (errorMessage.toLowerCase().includes("rate limit")) {
+        errorMessage = "Email limit reached. Please wait a moment or check your Supabase SMTP limits.";
+      }
+
+      setMessage({ text: errorMessage, type: 'error' });
     } finally {
       setLoading(false);
     }
