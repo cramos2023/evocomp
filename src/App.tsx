@@ -10,6 +10,8 @@ import ReportsPage from './pages/ReportsPage'
 import ApprovalsPage from './pages/ApprovalsPage'
 import TenantSettingsPage from './pages/TenantSettingsPage'
 import AuditLogPage from './pages/AuditLogPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
+import OnboardingPage from './pages/OnboardingPage'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 const Dashboard = () => (
@@ -79,6 +81,7 @@ function App() {
   }, [])
 
   async function fetchProfile(userId: string) {
+    setLoading(true)
     try {
       const { data, error } = await supabase
         .from('user_profiles')
@@ -86,7 +89,14 @@ function App() {
         .eq('id', userId)
         .single()
       
-      if (error) throw error
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Profile doesn't exist yet (might be a slight delay in trigger)
+          console.warn('Profile not found, user might be in onboarding process.')
+        } else {
+          throw error
+        }
+      }
       setProfile(data)
     } catch (err) {
       console.error('Error fetching profile:', err)
@@ -140,84 +150,13 @@ function App() {
           ) : <Navigate to="/login" replace />
         } />
 
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
         <Route path="/" element={<Navigate to="/app" replace />} />
       </Routes>
     </Router>
   )
 }
 
-// Simple Onboarding Component
-const OnboardingPage = ({ onComplete }: { onComplete: () => void }) => {
-  const [name, setName] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleCreateTenant(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      // 1. Create Tenant
-      const { data: tenant, error: tError } = await supabase
-        .from('tenants')
-        .insert({ name, mode: 'ADVISORY' })
-        .select()
-        .single()
-      
-      if (tError) throw tError
-
-      // 2. Update User Profile
-      const { error: pError } = await supabase
-        .from('user_profiles')
-        .update({ tenant_id: tenant.id, status: 'ACTIVE' })
-        .eq('id', user.id)
-      
-      if (pError) throw pError
-
-      // 3. Assign COMP_ADMIN role
-      await supabase.from('user_roles').insert({
-        user_id: user.id,
-        role_id: 'COMP_ADMIN',
-        tenant_id: tenant.id
-      })
-
-      onComplete()
-    } catch (err: any) {
-      alert(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 text-white">
-      <div className="max-w-md w-full bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl">
-        <h1 className="text-2xl font-bold mb-2">Welcome to EvoComp</h1>
-        <p className="text-slate-400 mb-6">Let's set up your organization to get started.</p>
-        
-        <form onSubmit={handleCreateTenant} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Organization Name</label>
-            <input 
-              required
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="e.g. Acme Corp"
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-          </div>
-          <button 
-            type="submit"
-            disabled={loading || !name}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors"
-          >
-            {loading ? 'Creating...' : 'Create Organization'}
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
 
 export default App

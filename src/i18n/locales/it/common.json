@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Strategia",
+    "scenarios": "Scenari",
+    "cycles": "Cicli",
+    "pay_bands": "Fasce Salariali",
+    "intelligence": "Intelligenza",
+    "reports": "Rapporti",
+    "approvals": "Approvazioni",
+    "data_backbone": "Dati",
+    "imports": "Importazioni",
+    "snapshots": "Snapshots",
+    "audit_log": "Registro Verifiche",
+    "admin": "Admin",
+    "tenants": "Organizzazioni",
+    "users": "Utenti",
+    "platform_status": "Stato Piattaforma",
+    "mvp_mode": "Modalità MVP v1.0.42",
+    "secure_engine": "Motore di Intelligence Sicuro"
+  },
+  "header": {
+    "verified_admin": "Amministratore Verificato",
+    "sign_out": "Disconnessione Sicura",
+    "quick_actions": "Azioni Rapide",
+    "search_placeholder": "Cerca scenari, talenti o audit..."
+  },
+  "auth": {
+    "sign_in": "Accedi",
+    "sign_up": "Crea Account",
+    "email": "Indirizzo E-mail",
+    "password": "Password",
+    "forgot_password": "Password dimenticata?",
+    "reset_password": "Reimposta Password",
+    "new_password": "Nuova Password",
+    "confirm_password": "Conferma Nuova Password",
+    "loading": "Caricamento...",
+    "show_password": "Mostra Password",
+    "hide_password": "Nascondi Password"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Scenari di Compensi",
+      "subtitle": "Modella la distribuzione dei meriti e l'impatto sul budget.",
+      "new": "Nuovo Scenario",
+      "empty_title": "Nessuno scenario trovato",
+      "empty_subtitle": "Crea il tuo primo scenario per iniziare a modellare gli aumenti salariali.",
+      "learn_more": "Scopri di più sulla modellazione",
+      "budget": "Budget",
+      "no_limit": "Nessun limite"
+    },
+    "reports": {
+      "title": "Intelligence & Insights",
+      "subtitle": "Genera report per dirigenti e pacchetti di audit.",
+      "generate": "Genera Nuovo Report",
+      "exec_summary": "Sintesi Esecutiva",
+      "exec_summary_desc": "Distribuzione del budget e media dei meriti ad alto livello.",
+      "audit_pack": "Pacchetto di Audit Completo",
+      "audit_pack_desc": "Approfondimento sul percorso decisionale e cronologia approvazioni.",
+      "custom_template": "Modello Personalizzato",
+      "custom_template_desc": "Crea il tuo layout di report personalizzato.",
+      "coming_soon": "In arrivo nella Fase 2",
+      "history": "Cronologia Generazione Recente"
+    },
+    "approvals": {
+      "title": "Governance e Approvazioni",
+      "subtitle": "Esamina o rifiuta le proposte di scenari di compenso.",
+      "my_actions": "Le Mie Azioni",
+      "all_requests": "Tutte le Richieste",
+      "queue_stats": "Statistiche Coda",
+      "wait_time": "Tempo di Attesa (Media)",
+      "pending_amount": "Importo in Sospeso",
+      "guardrails": "Regole di Politica",
+      "guardrails_desc": "L'applicazione automatica di RLS garantisce la privacy.",
+      "filter_placeholder": "Filtra per scenario o proprietario...",
+      "table": {
+        "scenario": "Scenario Proposto",
+        "financials": "Dati Finanziari",
+        "status": "Stato"
+      }
+    },
+    "pay_bands": {
+      "title": "Fasce Retributive",
+      "subtitle": "Gestisci intervalli di compenso, punti medi e spread.",
+      "create": "Crea Fascia",
+      "total": "Fasce Totali",
+      "avg_spread": "Spread Medio",
+      "currency_policy": "Politica Valutaria Globale",
+      "currency_policy_desc": "La conversione automatica FX è applicata negli scenari.",
+      "table": {
+        "family": "Famiglia Professionale / Livello",
+        "currency": "Valuta",
+        "range": "Intervallo (Min - Medio - Max)",
+        "spread": "Spread"
+      },
+      "empty": "Nessuna fascia definita. Clicca su \"Crea Fascia\" per iniziare."
+    },
+    "imports": {
+      "title": "Base di Dati",
+      "subtitle": "Carica snapshot di dati sui talenti per la modellazione.",
+      "upload": "Carica Snapshot",
+      "history": "Cronologia Importazioni"
+    },
+    "admin": {
+      "title": "Impostazioni Organizzazione",
+      "subtitle": "Configura identità e governance del workspace.",
+      "general": "Profilo Generale",
+      "org_name": "Nome Organizzazione",
+      "base_currency": "Valuta di Base",
+      "currency_desc": "Base per tutti i calcoli degli scenari.",
+      "governance": "Governance Operativa",
+      "advisory": "Modalità Consultiva",
+      "advisory_desc": "Modella senza modificare i dati di base.",
+      "sor": "Sistema di Registrazione",
+      "sor_desc": "Aggiorna la cronologia alla pubblicazione.",
+      "caution": "Attenzione: Accesso in Scrittura Completo Abilitato",
+      "caution_desc": "Gli scenari modificheranno i record persistenti.",
+      "save": "Salva Modifiche",
+      "discard": "Annulla",
+      "privacy": "Privacy dell'Infrastruttura",
+      "privacy_desc": "Lo strato RLS zero-trust garantisce la separazione dei dati."
+    }
+  }
+}

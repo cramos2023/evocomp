@@ -4,8 +4,10 @@ import {
   Save, Loader2, AlertTriangle, Building2
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 const TenantSettingsPage = () => {
+  const { t } = useTranslation();
   const [tenant, setTenant] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -69,14 +71,14 @@ const TenantSettingsPage = () => {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Organization Settings</h1>
-        <p className="text-slate-500 mt-1">Configure your workspace identity, core currency, and operational governance mode.</p>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{t('admin.title')}</h1>
+        <p className="text-slate-500 mt-1">{t('admin.subtitle')}</p>
       </div>
 
       {loading ? (
         <div className="p-12 text-center text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-          Loading settings...
+          Loading...
         </div>
       ) : (
         <form onSubmit={handleSave} className="space-y-6">
@@ -85,11 +87,11 @@ const TenantSettingsPage = () => {
               <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
                 <Building2 className="w-5 h-5" />
               </div>
-              <h2 className="font-bold text-slate-900">General Profile</h2>
+              <h2 className="font-bold text-slate-900">{t('admin.general')}</h2>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Organization Name</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('admin.org_name')}</label>
                 <input 
                   value={name}
                   onChange={e => setName(e.target.value)}
@@ -97,7 +99,7 @@ const TenantSettingsPage = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Base Currency</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('admin.base_currency')}</label>
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-slate-400" />
                   <select 
@@ -111,7 +113,7 @@ const TenantSettingsPage = () => {
                     <option value="MXN">MXN - Mexican Peso</option>
                   </select>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2 px-1">This currency is used as the global baseline for all scenario calculations and reporting.</p>
+                <p className="text-[11px] text-slate-400 mt-2 px-1">{t('admin.currency_desc')}</p>
               </div>
             </div>
           </div>
@@ -121,7 +123,7 @@ const TenantSettingsPage = () => {
               <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
                 <Shield className="w-5 h-5" />
               </div>
-              <h2 className="font-bold text-slate-900">Operational Governance</h2>
+              <h2 className="font-bold text-slate-900">{t('admin.governance')}</h2>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -137,9 +139,9 @@ const TenantSettingsPage = () => {
                   }`}>
                     {mode === 'ADVISORY' && <div className="w-2 h-2 bg-white rounded-full" />}
                   </div>
-                  <h3 className="font-bold text-slate-900">Advisory Mode</h3>
+                  <h3 className="font-bold text-slate-900">{t('admin.advisory')}</h3>
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Model scenarios without modifying core employee data. Ideal for planning and "what-if" analysis.
+                    {t('admin.advisory_desc')}
                   </p>
                 </button>
 
@@ -155,9 +157,9 @@ const TenantSettingsPage = () => {
                   }`}>
                     {mode === 'SYSTEM_OF_RECORD' && <div className="w-2 h-2 bg-white rounded-full" />}
                   </div>
-                  <h3 className="font-bold text-slate-900">System of Record</h3>
+                  <h3 className="font-bold text-slate-900">{t('admin.sor')}</h3>
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Directly updates employee history and persistent records upon scenario publication.
+                    {t('admin.sor_desc')}
                   </p>
                 </button>
               </div>
@@ -166,9 +168,8 @@ const TenantSettingsPage = () => {
                 <div className="mt-6 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-orange-800">
                   <AlertTriangle className="w-5 h-5 shrink-0" />
                   <p className="text-xs leading-relaxed">
-                    <span className="font-bold block">Caution: Full Write Access Enabled</span>
-                    Published scenarios will modify `employees` and `employee_compensation` tables. 
-                    Ensure your data imports are accurate before enabling this mode.
+                    <span className="font-bold block">{t('admin.caution')}</span>
+                    {t('admin.caution_desc')}
                   </p>
                 </div>
               )}
@@ -180,7 +181,7 @@ const TenantSettingsPage = () => {
               type="button"
               className="px-6 py-3 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
             >
-              Discard Changes
+              {t('admin.discard')}
             </button>
             <button 
               type="submit"
@@ -188,7 +189,7 @@ const TenantSettingsPage = () => {
               className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Changes
+              {t('admin.save')}
             </button>
           </div>
         </form>
@@ -199,10 +200,9 @@ const TenantSettingsPage = () => {
           <Info className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="font-bold text-slate-900">Infrastructure Privacy</h3>
+          <h3 className="font-bold text-slate-900">{t('admin.privacy')}</h3>
           <p className="text-slate-500 text-sm mt-1 leading-relaxed">
-            Your organization ID (UUID) is protected by our zero-trust RLS layer. No data is shared between tenants 
-            even when operating in a shared database instance.
+            {t('admin.privacy_desc')}
           </p>
         </div>
       </div>

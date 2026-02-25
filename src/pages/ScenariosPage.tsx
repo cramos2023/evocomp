@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Calculator, Calendar, ArrowRight, Shield } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 const ScenariosPage = () => {
+  const { t } = useTranslation();
   const [scenarios, setScenarios] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,12 +32,12 @@ const ScenariosPage = () => {
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Compensation Scenarios</h1>
-          <p className="text-slate-500 mt-1">Model merit distribution and budget impact across snapshots.</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{t('pages.scenarios.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('pages.scenarios.subtitle')}</p>
         </div>
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20">
           <Plus className="w-4 h-4" />
-          New Scenario
+          {t('pages.scenarios.new')}
         </button>
       </div>
 
@@ -50,12 +52,12 @@ const ScenariosPage = () => {
           <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mx-auto mb-6">
             <Calculator className="w-8 h-8 text-slate-300" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">No scenarios found</h3>
+          <h3 className="text-xl font-bold text-slate-900 mb-2">{t('pages.scenarios.empty_title')}</h3>
           <p className="text-slate-500 max-w-sm mx-auto mb-8">
-            Create your first scenario to start modeling salary increases and budget distributions.
+            {t('pages.scenarios.empty_subtitle')}
           </p>
           <button className="text-blue-600 font-bold hover:text-blue-700 flex items-center gap-2 mx-auto">
-            Learn more about modeling <ArrowRight className="w-4 h-4" />
+            {t('pages.scenarios.learn_more')} <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       ) : (
@@ -77,8 +79,8 @@ const ScenariosPage = () => {
               
               <div className="flex items-center gap-8">
                 <div className="text-right">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Budget</p>
-                  <p className="font-bold text-slate-900">{scenario.budget_total ? `$${Number(scenario.budget_total).toLocaleString()}` : 'No limit'}</p>
+                  <p className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">{t('pages.scenarios.budget')}</p>
+                  <p className="font-bold text-slate-900">{scenario.budget_total ? `$${Number(scenario.budget_total).toLocaleString()}` : t('pages.scenarios.no_limit')}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${

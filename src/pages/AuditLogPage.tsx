@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { 
-  Activity, Search, Filter, Calendar, 
-  User, Database, Shield, ArrowRight,
-  Info, Terminal
-} from 'lucide-react';
-import { supabase } from '../lib/supabaseClient';
+  Shield, Search, Filter, RefreshCcw, 
+  ExternalLink, Calendar, User, Info,
+  CheckCircle2, AlertTriangle, ShieldAlert,
+  ArrowRight, Download
+} from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { useTranslation } from "react-i18next";
 
 const AuditLogPage = () => {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,129 +20,131 @@ const AuditLogPage = () => {
   async function fetchLogs() {
     try {
       const { data, error } = await supabase
-        .from('audit_log')
+        .from("audit_logs")
         .select(`
           *,
-          user_profiles!audit_log_user_id_fkey (
+          user_profiles!audit_logs_user_id_fkey (
             full_name,
             email
           )
         `)
-        .order('created_at', { ascending: false })
+        .order("created_at", { ascending: false })
         .limit(50);
-      
+
       if (error) throw error;
       setLogs(data || []);
     } catch (err) {
-      console.error('Error fetching audit logs:', err);
+      console.error("Error fetching audit logs:", err);
     } finally {
       setLoading(false);
     }
   }
 
-  const getActionColor = (action: string) => {
-    if (action.includes('CREATE')) return 'text-green-600 bg-green-50 border-green-100';
-    if (action.includes('UPDATE')) return 'text-blue-600 bg-blue-50 border-blue-100';
-    if (action.includes('DELETE')) return 'text-red-600 bg-red-50 border-red-100';
-    if (action.includes('PUBLISH') || action.includes('APPROVE')) return 'text-purple-600 bg-purple-50 border-purple-100';
-    return 'text-slate-600 bg-slate-50 border-slate-100';
+  const getSeverityStyles = (severity: string) => {
+    switch (severity) {
+      case "HIGH": return "bg-red-500/10 text-red-500 border-red-500/20";
+      case "MEDIUM": return "bg-amber-500/10 text-amber-500 border-amber-500/20";
+      default: return "bg-blue-500/10 text-blue-500 border-blue-500/20";
+    }
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="mb-8 flex justify-between items-end">
+    <div className="p-10 bg-slate-950/20 min-h-screen">
+      <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
-               <Activity className="w-5 h-5" />
-             </div>
-             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Audit Trail</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <ShieldAlert className="w-4 h-4 text-red-500" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Immutable System of Record</span>
           </div>
-          <p className="text-slate-500 max-w-xl">
-            Immutable chronological record of all administrative actions and system modifications within your tenant.
+          <h1 className="text-4xl font-extrabold text-white tracking-tight">{t('sidebar.audit_log')}</h1>
+          <p className="text-slate-500 mt-2 text-lg max-w-xl leading-relaxed">
+            Deep forensic traceability of all platform operations and high-stakes compensation decisions.
           </p>
         </div>
-        <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
-            <Calendar className="w-4 h-4" />
-            Last 30 Days
+        <div className="flex items-center gap-3">
+          <button className="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-white/5 text-slate-400 transition-all">
+            <Download className="w-5 h-5" />
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
-            Export CSV
+          <button 
+            onClick={() => { setLoading(true); fetchLogs(); }}
+            className="btn-premium"
+          >
+            <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh Audit Trail</span>
           </button>
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden mb-12">
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-          <div className="relative w-full max-w-xs">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+      <div className="glass-card overflow-hidden">
+        <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="relative flex-1 max-w-md group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
             <input 
-              placeholder="Search by user or entity ID..." 
-              className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/10"
+              type="text" 
+              placeholder="Search by event, actor or entity ID..." 
+              className="w-full bg-slate-900/50 border border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
           </div>
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-slate-400 hover:text-slate-600">
-            <Filter className="w-4 h-4" /> Filter Action Types
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="p-20 text-center text-slate-400">
-            <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            Retreiving secure audit data...
-          </div>
-        ) : logs.length === 0 ? (
-          <div className="p-24 text-center">
-            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-300 border border-slate-100">
-              <Terminal className="w-8 h-8" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">No activity recorded yet</h3>
-            <p className="text-sm text-slate-400 max-w-xs mx-auto mt-1">
-              Actions like imports, scenario creations, and approvals will appear here for full traceability.
+          <div className="flex items-center gap-4">
+            <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all text-xs font-bold uppercase tracking-wider">
+              <Filter className="w-4 h-4" /> Type
+            </button>
+            <div className="w-px h-6 bg-white/5" />
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+              Last <span className="text-white">50</span> Events
             </p>
           </div>
-        ) : (
+        </div>
+        
+        <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                <th className="px-6 py-4">Action & Entity</th>
-                <th className="px-6 py-4">User</th>
-                <th className="px-6 py-4">Timestamp</th>
-                <th className="px-6 py-4">Trace ID</th>
-                <th className="px-6 py-4"></th>
+              <tr className="bg-white/[0.02]">
+                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Timestamp / Event</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Actor</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Context</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">IP Source</th>
+                <th className="px-8 py-5 text-[10px) font-black text-slate-500 uppercase tracking-[0.2em]">Trace</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-50/80 transition-colors group">
-                  <td className="px-6 py-4">
+            <tbody className="divide-y divide-white/5">
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-8 py-20 text-center text-slate-500">Scanning forensic record...</td>
+                </tr>
+              ) : logs.map((log) => (
+                <tr key={log.id} className="group hover:bg-white/[0.01] transition-colors">
+                  <td className="px-8 py-6">
+                    <div className="flex items-start gap-4">
+                      <div className={`mt-1 w-2 h-2 rounded-full ${
+                        log.severity === 'HIGH' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 
+                        log.severity === 'MEDIUM' ? 'bg-amber-500' : 'bg-blue-500'
+                      }`} />
+                      <div>
+                        <p className="text-xs font-black text-slate-500 uppercase tracking-tighter">{new Date(log.created_at).toLocaleString()}</p>
+                        <p className="text-sm font-bold text-white mt-0.5">{log.action_type}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6">
                     <div className="flex items-center gap-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight border ${getActionColor(log.action)}`}>
-                        {log.action}
-                      </span>
-                      <span className="text-sm font-bold text-slate-900 capitalize">{log.entity_type}</span>
+                      <div className="w-8 h-8 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center text-[10px] font-black text-blue-400">
+                        {log.user_profiles?.full_name?.[0] || log.user_profiles?.email?.[0] || 'S'}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white transition-colors">{log.user_profiles?.full_name || 'System Engine'}</p>
+                        <p className="text-[10px] text-slate-600 font-medium">{log.user_profiles?.email || 'INTERNAL'}</p>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                       <User className="w-3.5 h-3.5 text-slate-400" />
-                       <div>
-                         <p className="text-sm font-medium text-slate-700">{log.user_profiles?.full_name || 'System Auto'}</p>
-                         <p className="text-[10px] text-slate-400">{log.user_profiles?.email || 'N/A'}</p>
-                       </div>
-                    </div>
+                  <td className="px-8 py-6">
+                    <p className="text-xs text-slate-400 font-medium line-clamp-1 max-w-[200px]">{log.entity_name} ({log.entity_id.slice(0, 8)})</p>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-xs text-slate-600 font-mono">
-                      {new Date(log.created_at).toLocaleString()}
-                    </p>
+                  <td className="px-8 py-6">
+                    <p className="text-xs font-mono text-slate-500">{log.ip_address || "0.0.0.0"}</p>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-[10px] text-slate-400 font-mono truncate max-w-[100px]">{log.entity_id}</p>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-slate-300 group-hover:text-slate-900 transition-colors">
+                  <td className="px-8 py-6 text-right">
+                    <button className="p-2.5 bg-slate-900 hover:bg-slate-800 rounded-xl border border-white/5 text-slate-500 hover:text-white transition-all">
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </td>
@@ -147,39 +152,6 @@ const AuditLogPage = () => {
               ))}
             </tbody>
           </table>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-slate-900 rounded-3xl p-8 text-white flex gap-6 items-start relative overflow-hidden">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/20">
-            <Shield className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">Immutable Governance</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Audit logs are stored in a dedicated table with restricted delete permissions. 
-              Even compensation admins cannot erase the trial of their own actions, 
-              ensuring 100% compliance with external audit requirements.
-            </p>
-          </div>
-          <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/5 rounded-full" />
-        </div>
-
-        <div className="bg-blue-50 border border-blue-100 rounded-3xl p-8 flex gap-6 items-start">
-          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shrink-0 border border-blue-100 text-blue-600">
-            <Database className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Log Rotation</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              MVP Phase 1 retains logs for the last 90 days. For longer retention or SIEM integration, 
-              please contact support for our Enterprise Tunnelling module.
-            </p>
-            <button className="mt-4 text-blue-600 text-sm font-bold flex items-center gap-1 hover:underline">
-              View Data Retention Policy <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
         </div>
       </div>
     </div>

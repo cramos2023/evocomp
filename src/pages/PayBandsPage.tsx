@@ -4,8 +4,10 @@ import {
   TrendingUp, DollarSign, Layers, ArrowUpDown
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 const PayBandsPage = () => {
+  const { t } = useTranslation();
   const [bands, setBands] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,25 +36,25 @@ const PayBandsPage = () => {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Pay Bands</h1>
-          <p className="text-slate-500 mt-1">Manage compensation ranges, midpoints, and spreads across job families.</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{t('pay_bands.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('pay_bands.subtitle')}</p>
         </div>
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20">
           <Plus className="w-4 h-4" />
-          Create Band
+          {t('pay_bands.create')}
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">Total Bands</p>
+          <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">{t('pay_bands.total')}</p>
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-bold text-slate-900">{bands.length}</h3>
             <Layers className="w-5 h-5 text-blue-500" />
           </div>
         </div>
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">Avg. Spread</p>
+          <p className="text-[11px] font-bold text-slate-400 uppercase mb-2">{t('pay_bands.avg_spread')}</p>
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-bold text-slate-900">45%</h3>
             <TrendingUp className="w-5 h-5 text-green-500" />
@@ -63,8 +65,8 @@ const PayBandsPage = () => {
             <DollarSign className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-bold text-blue-900">Global Currency Policy</p>
-            <p className="text-xs text-blue-700">All local currency bands are automatically converted using current FX rates in scenarios.</p>
+            <p className="text-sm font-bold text-blue-900">{t('pay_bands.currency_policy')}</p>
+            <p className="text-xs text-blue-700">{t('pay_bands.currency_policy_desc')}</p>
           </div>
         </div>
       </div>
@@ -74,30 +76,22 @@ const PayBandsPage = () => {
           <div className="relative flex-1 max-w-xs">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input 
-              placeholder="Filter by family or level..." 
+              placeholder="Search..."
               className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
-          <button className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-            <Filter className="w-4 h-4" />
-            Family
-          </button>
-          <button className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-            <ArrowUpDown className="w-4 h-4" />
-            Refine
-          </button>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-slate-400">Loading bands...</div>
+          <div className="p-12 text-center text-slate-400">Loading...</div>
         ) : (
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                <th className="px-6 py-4">Job Family / Level</th>
-                <th className="px-6 py-4">Currency</th>
-                <th className="px-6 py-4">Range (Min - Mid - Max)</th>
-                <th className="px-6 py-4">Spread</th>
+                <th className="px-6 py-4">{t('pay_bands.table.family')}</th>
+                <th className="px-6 py-4">{t('pay_bands.table.currency')}</th>
+                <th className="px-6 py-4">{t('pay_bands.table.range')}</th>
+                <th className="px-6 py-4">{t('pay_bands.table.spread')}</th>
                 <th className="px-6 py-4"></th>
               </tr>
             </thead>
@@ -105,7 +99,7 @@ const PayBandsPage = () => {
               {bands.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">
-                    No pay bands defined yet. Click "Create Band" to get started.
+                    {t('pay_bands.empty')}
                   </td>
                 </tr>
               ) : (

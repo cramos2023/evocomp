@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Stratégie",
+    "scenarios": "Scénarios",
+    "cycles": "Cycles",
+    "pay_bands": "Grilles Salariales",
+    "intelligence": "Intelligence",
+    "reports": "Rapports",
+    "approvals": "Approbations",
+    "data_backbone": "Base de Données",
+    "imports": "Importations",
+    "snapshots": "Captures",
+    "audit_log": "Journal d'Audit",
+    "admin": "Admin",
+    "tenants": "Organisations",
+    "users": "Utilisateurs",
+    "platform_status": "Statut de la Plateforme",
+    "mvp_mode": "Mode MVP v1.0.42",
+    "secure_engine": "Moteur d'Intelligence Sécurisé"
+  },
+  "header": {
+    "verified_admin": "Administrateur Vérifié",
+    "sign_out": "Déconnexion Sécurisée",
+    "quick_actions": "Actions Rapides",
+    "search_placeholder": "Rechercher des scénarios, talents o audit..."
+  },
+  "auth": {
+    "sign_in": "Se Connecter",
+    "sign_up": "Créer un Compte",
+    "email": "E-mail",
+    "password": "Mot de Passe",
+    "forgot_password": "Mot de passe oublié ?",
+    "reset_password": "Réinitialiser le Mot de Passe",
+    "new_password": "Nouveau Mot de Passe",
+    "confirm_password": "Confirmer le Nouveau Mot de Passe",
+    "loading": "Chargement...",
+    "show_password": "Afficher le Mot de Passe",
+    "hide_password": "Masquer le Mot de Passe"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Scénarios de Rémunération",
+      "subtitle": "Modélisez la distribution des mérites et l'impact budgétaire.",
+      "new": "Nouveau Scénario",
+      "empty_title": "Aucun scénario trouvé",
+      "empty_subtitle": "Créez votre premier scénario pour commencer à modéliser les augmentations salariales.",
+      "learn_more": "En savoir plus sur la modélisation",
+      "budget": "Budget",
+      "no_limit": "Aucune limite"
+    },
+    "reports": {
+      "title": "Intelligence et Analyses",
+      "subtitle": "Générez des rapports pour les cadres et des dossiers d'audit.",
+      "generate": "Générer un Nouveau Rapport",
+      "exec_summary": "Résumé Exécutif",
+      "exec_summary_desc": "Distribution du budget et moyenne des mérites.",
+      "audit_pack": "Dossier d'Audit Complet",
+      "audit_pack_desc": "Tracé des décisions et historique des approbations.",
+      "custom_template": "Modèle Personnalisé",
+      "custom_template_desc": "Créez votre propre mise en page de rapport.",
+      "coming_soon": "Bientôt en Phase 2",
+      "history": "Historique de Génération Récent"
+    },
+    "approvals": {
+      "title": "Gouvernance et Approbations",
+      "subtitle": "Examinez ou rejetez les propositions de scénarios.",
+      "my_actions": "Mes Actions",
+      "all_requests": "Toutes les Demandes",
+      "queue_stats": "Stats de la File",
+      "wait_time": "Temps d'Attente (Moyenne)",
+      "pending_amount": "Montant en Attente",
+      "guardrails": "Règles de Politique",
+      "guardrails_desc": "L'application automatique de RLS garantit la confidentialité.",
+      "filter_placeholder": "Filtrer par scénario ou propriétaire...",
+      "table": {
+        "scenario": "Scénario Proposé",
+        "financials": "Finances",
+        "status": "Statut"
+      }
+    },
+    "pay_bands": {
+      "title": "Grilles Salariales",
+      "subtitle": "Gérez les plages de rémunération, les points médians et les écarts.",
+      "create": "Créer une Grille",
+      "total": "Total des Grilles",
+      "avg_spread": "Écart Moyen",
+      "currency_policy": "Politique Monétaire Globale",
+      "currency_policy_desc": "La conversion automatique est appliquée dans les scénarios.",
+      "table": {
+        "family": "Famille d'Emplois / Niveau",
+        "currency": "Devise",
+        "range": "Plage (Min - Méd - Max)",
+        "spread": "Écart"
+      },
+      "empty": "Aucune grille définie. Cliquez sur \"Créer une Grille\" pour commencer."
+    },
+    "imports": {
+      "title": "Base de Données",
+      "subtitle": "Téléchargez des données de talents pour la modélisation.",
+      "upload": "Télécharger des Données",
+      "history": "Historique des Importations"
+    },
+    "admin": {
+      "title": "Paramètres de l'Organisation",
+      "subtitle": "Configurez l'identité et la gouvernance.",
+      "general": "Profil Général",
+      "org_name": "Nom de l'Organisation",
+      "base_currency": "Devise de Base",
+      "currency_desc": "Base pour tous les calculs de scénarios.",
+      "governance": "Gouvernance Opérationnelle",
+      "advisory": "Mode Consultatif",
+      "advisory_desc": "Modéliser sans modifier les données de base.",
+      "sor": "Système d'Enregistrement",
+      "sor_desc": "Met à jour l'historique lors de la publication.",
+      "caution": "Attention : Accès en Écriture Activé",
+      "caution_desc": "Les scénarios modifieront les enregistrements.",
+      "save": "Enregistrer les Modifications",
+      "discard": "Annuler",
+      "privacy": "Confidentialité de l'Infrastructure",
+      "privacy_desc": "La couche RLS garantit la séparation des données."
+    }
+  }
+}

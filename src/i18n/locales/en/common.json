@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Strategy",
+    "scenarios": "Scenarios",
+    "cycles": "Cycles",
+    "pay_bands": "Pay Bands",
+    "intelligence": "Intelligence",
+    "reports": "Reports",
+    "approvals": "Approvals",
+    "data_backbone": "Data Backbone",
+    "imports": "Imports",
+    "snapshots": "Snapshots",
+    "audit_log": "Audit Log",
+    "admin": "Admin",
+    "tenants": "Tenants",
+    "users": "Users",
+    "platform_status": "Platform Status",
+    "mvp_mode": "MVP Mode v1.0.42",
+    "secure_engine": "Secure Intelligence Engine"
+  },
+  "header": {
+    "verified_admin": "Verified Admin",
+    "sign_out": "Secure Sign Out",
+    "quick_actions": "Quick Actions",
+    "search_placeholder": "Search scenarios, talent, or audit records..."
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "email": "Email Address",
+    "password": "Password",
+    "forgot_password": "Forgot Password?",
+    "reset_password": "Reset Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm New Password",
+    "loading": "Working...",
+    "show_password": "Show Password",
+    "hide_password": "Hide Password"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Compensation Scenarios",
+      "subtitle": "Model merit distribution and budget impact across snapshots.",
+      "new": "New Scenario",
+      "empty_title": "No scenarios found",
+      "empty_subtitle": "Create your first scenario to start modeling salary increases and budget distributions.",
+      "learn_more": "Learn more about modeling",
+      "budget": "Budget",
+      "no_limit": "No limit"
+    },
+    "reports": {
+      "title": "Intelligence & Insights",
+      "subtitle": "Generate executive-ready reports and detailed audit packs.",
+      "generate": "Generate New Report",
+      "exec_summary": "Executive Summary",
+      "exec_summary_desc": "High-level budget distribution and merit average.",
+      "audit_pack": "Full Audit Pack",
+      "audit_pack_desc": "Deep dive into the decision trail and approval history.",
+      "custom_template": "Custom Template",
+      "custom_template_desc": "Build your own reporting layout.",
+      "coming_soon": "Coming in Phase 2",
+      "history": "Recent Generation History"
+    },
+    "approvals": {
+      "title": "Governance & Approvals",
+      "subtitle": "Review or reject compensation scenario proposals.",
+      "my_actions": "My Actions",
+      "all_requests": "All Requests",
+      "queue_stats": "Queue Stats",
+      "wait_time": "Wait Time (Avg)",
+      "pending_amount": "Pending Amount",
+      "guardrails": "Policy Guardrails",
+      "guardrails_desc": "Automatic RLS enforcement ensures privacy.",
+      "filter_placeholder": "Filter by scenario or owner...",
+      "table": {
+        "scenario": "Proposed Scenario",
+        "financials": "Financials",
+        "status": "Status"
+      }
+    },
+    "pay_bands": {
+      "title": "Pay Bands",
+      "subtitle": "Manage compensation ranges, midpoints, and spreads.",
+      "create": "Create Band",
+      "total": "Total Bands",
+      "avg_spread": "Avg. Spread",
+      "currency_policy": "Global Currency Policy",
+      "currency_policy_desc": "Automatic FX conversion is applied in scenarios.",
+      "table": {
+        "family": "Job Family / Level",
+        "currency": "Currency",
+        "range": "Range (Min - Mid - Max)",
+        "spread": "Spread"
+      },
+      "empty": "No pay bands defined yet. Click \"Create Band\" to get started."
+    },
+    "imports": {
+      "title": "Data Backbone",
+      "subtitle": "Upload talent data snapshots for compensation modeling.",
+      "upload": "Upload Snapshot",
+      "history": "Import History"
+    },
+    "admin": {
+      "title": "Organization Settings",
+      "subtitle": "Configure workspace identity and governance.",
+      "general": "General Profile",
+      "org_name": "Organization Name",
+      "base_currency": "Base Currency",
+      "currency_desc": "Baseline for all scenario calculations.",
+      "governance": "Operational Governance",
+      "advisory": "Advisory Mode",
+      "advisory_desc": "Model without modifying core data.",
+      "sor": "System of Record",
+      "sor_desc": "Directly updates history on publication.",
+      "caution": "Caution: Full Write Access Enabled",
+      "caution_desc": "Scenarios will modify persistent records.",
+      "save": "Save Changes",
+      "discard": "Discard Changes",
+      "privacy": "Infrastructure Privacy",
+      "privacy_desc": "Zero-trust RLS layer ensures data separation."
+    }
+  }
+}

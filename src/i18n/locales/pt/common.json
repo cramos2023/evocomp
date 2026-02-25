@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Estratégia",
+    "scenarios": "Cenários",
+    "cycles": "Ciclos",
+    "pay_bands": "Bandas Salariais",
+    "intelligence": "Inteligência",
+    "reports": "Relatórios",
+    "approvals": "Aprovações",
+    "data_backbone": "Base de Dados",
+    "imports": "Importações",
+    "snapshots": "Capturas",
+    "audit_log": "Log de Auditoria",
+    "admin": "Admin",
+    "tenants": "Organizações",
+    "users": "Usuários",
+    "platform_status": "Status da Plataforma",
+    "mvp_mode": "Modo MVP v1.0.42",
+    "secure_engine": "Motor de Inteligência Seguro"
+  },
+  "header": {
+    "verified_admin": "Administrador Verificado",
+    "sign_out": "Sair com Segurança",
+    "quick_actions": "Ações Rápidas",
+    "search_placeholder": "Buscar cenários, talentos ou auditorias..."
+  },
+  "auth": {
+    "sign_in": "Entrar",
+    "sign_up": "Criar Conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "forgot_password": "Esqueceu a senha?",
+    "reset_password": "Redefinir Senha",
+    "new_password": "Nova Senha",
+    "confirm_password": "Confirmar Nova Senha",
+    "loading": "Carregando...",
+    "show_password": "Mostrar Senha",
+    "hide_password": "Ocultar Senha"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Cenários de Compensação",
+      "subtitle": "Modelar a distribuição de méritos e impacto orçamentário.",
+      "new": "Novo Cenário",
+      "empty_title": "Nenhum cenário encontrado",
+      "empty_subtitle": "Crie seu primeiro cenário para começar a modelar aumentos salariais.",
+      "learn_more": "Saiba mais sobre modelagem",
+      "budget": "Orçamento",
+      "no_limit": "Sem limite"
+    },
+    "reports": {
+      "title": "Inteligência e Insights",
+      "subtitle": "Gerar relatórios para executivos e pacotes de auditoria.",
+      "generate": "Gerar Novo Relatório",
+      "exec_summary": "Resumo Executivo",
+      "exec_summary_desc": "Distribuição de orçamento e média de méritos.",
+      "audit_pack": "Pacote de Auditoria Completo",
+      "audit_pack_desc": "Trilha de decisões e histórico de aprovações.",
+      "custom_template": "Modelo Personalizado",
+      "custom_template_desc": "Crie seu próprio layout de relatório.",
+      "coming_soon": "Em breve na Fase 2",
+      "history": "Histórico de Geração Recente"
+    },
+    "approvals": {
+      "title": "Governança e Aprovações",
+      "subtitle": "Revisar ou rejeitar propostas de cenários de compensação.",
+      "my_actions": "Minhas Ações",
+      "all_requests": "Todas as Solicitações",
+      "queue_stats": "Estatísticas da Fila",
+      "wait_time": "Tempo de Espera (Média)",
+      "pending_amount": "Valor Pendente",
+      "guardrails": "Regras de Política",
+      "guardrails_desc": "A aplicação automática de RLS garante a privacidade.",
+      "filter_placeholder": "Filtrar por cenário ou proprietário...",
+      "table": {
+        "scenario": "Cenário Proposto",
+        "financials": "Financeiro",
+        "status": "Status"
+      }
+    },
+    "pay_bands": {
+      "title": "Bandas Salariais",
+      "subtitle": "Gerenciar faixas de remuneração, pontos médios e amplitudes.",
+      "create": "Criar Banda",
+      "total": "Total de Bandas",
+      "avg_spread": "Amplitude Média",
+      "currency_policy": "Política de Moeda Global",
+      "currency_policy_desc": "A conversão cambial automática é aplicada nos cenários.",
+      "table": {
+        "family": "Família de Cargos / Nível",
+        "currency": "Moeda",
+        "range": "Faixa (Mín - Méd - Máx)",
+        "spread": "Amplitude"
+      },
+      "empty": "Nenhuma banda definida. Clique em \"Criar Banda\" para começar."
+    },
+    "imports": {
+      "title": "Base de Dados",
+      "subtitle": "Carregar dados de talentos para modelagem de compensação.",
+      "upload": "Carregar Dados",
+      "history": "Histórico de Importação"
+    },
+    "admin": {
+      "title": "Configurações da Organização",
+      "subtitle": "Configurar identidade e governança do workspace.",
+      "general": "Perfil Geral",
+      "org_name": "Nome da Organização",
+      "base_currency": "Moeda Base",
+      "currency_desc": "Base para todos os cálculos e relatórios.",
+      "governance": "Governança Operacional",
+      "advisory": "Modo Consultivo",
+      "advisory_desc": "Modelar sem modificar dados principais.",
+      "sor": "Sistema de Registro",
+      "sor_desc": "Atualiza o histórico diretamente na publicação.",
+      "caution": "Atenção: Acesso de Gravação Habilitado",
+      "caution_desc": "Cenários modificarão registros persistentes.",
+      "save": "Salvar Alterações",
+      "discard": "Descartar Alterações",
+      "privacy": "Privacidade da Infraestrutura",
+      "privacy_desc": "A camada RLS garante a separação de dados."
+    }
+  }
+}

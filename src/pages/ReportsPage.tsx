@@ -4,8 +4,10 @@ import {
   Sparkles, Calendar, ArrowRight, ShieldCheck, 
   Loader2, ExternalLink
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ReportsPage = () => {
+  const { t } = useTranslation();
   const [generating, setGenerating] = useState(false);
 
   // Demo data for reports
@@ -40,7 +42,7 @@ const ReportsPage = () => {
     setGenerating(true);
     setTimeout(() => {
       setGenerating(false);
-      alert("Executive report generation triggered! This calls the 'reporting-engine' Edge Function to gather scenario data and generate a PDF audit pack.");
+      alert("Executive report generation triggered!");
     }, 2000);
   };
 
@@ -48,9 +50,9 @@ const ReportsPage = () => {
     <div className="p-8 max-w-6xl mx-auto">
       <div className="flex justify-between items-start mb-12">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Intelligence & Insights</h1>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{t('pages.reports.title')}</h1>
           <p className="text-slate-500 mt-1 max-w-2xl">
-            Generate executive-ready reports and detailed audit packs for your compensation cycles and scenario results.
+            {t('pages.reports.subtitle')}
           </p>
         </div>
         <button 
@@ -59,7 +61,7 @@ const ReportsPage = () => {
           className="bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 disabled:text-slate-400 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-3 transition-all shadow-xl shadow-slate-900/10 group"
         >
           {generating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" />}
-          Generate New Report
+          {t('pages.reports.generate')}
         </button>
       </div>
 
@@ -68,9 +70,9 @@ const ReportsPage = () => {
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-4 border border-white/30 text-white">
             <FileBarChart className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold">Executive Summary</h3>
+          <h3 className="text-lg font-bold">{t('pages.reports.exec_summary')}</h3>
           <p className="text-blue-100 text-xs mt-1 leading-relaxed">
-            High-level budget distribution, merit average, and count of flags triggered across all scenarios.
+            {t('pages.reports.exec_summary_desc')}
           </p>
           <button className="mt-6 flex items-center gap-2 text-sm font-bold bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">
             Configure <ArrowRight className="w-4 h-4" />
@@ -81,19 +83,16 @@ const ReportsPage = () => {
           <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mb-4 border border-slate-100 text-slate-400 group-hover:text-blue-500 group-hover:bg-blue-50 transition-colors">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">Full Audit Pack</h3>
+          <h3 className="text-lg font-bold text-slate-900">{t('pages.reports.audit_pack')}</h3>
           <p className="text-slate-500 text-xs mt-1 leading-relaxed">
-            Deep dive into the decision trail, including the exact rules_json used, approval history, and audit log slice.
+            {t('pages.reports.audit_pack_desc')}
           </p>
-          <div className="absolute top-4 right-4 bg-slate-100 text-[10px] font-bold text-slate-500 px-2 py-1 rounded-full uppercase tracking-tighter">
-            System-of-Record Only
-          </div>
         </div>
 
         <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 border-dashed flex flex-col items-center justify-center text-center">
-          <p className="text-sm font-bold text-slate-400">Custom Template</p>
-          <p className="text-xs text-slate-400 mt-1 max-w-[180px]">Build your own reporting layout with internal data points.</p>
-          <button className="mt-4 text-[10px] font-bold uppercase text-slate-300 tracking-widest cursor-not-allowed">Coming in Phase 2</button>
+          <p className="text-sm font-bold text-slate-400">{t('pages.reports.custom_template')}</p>
+          <p className="text-xs text-slate-400 mt-1 max-w-[180px]">{t('pages.reports.custom_template_desc')}</p>
+          <button className="mt-4 text-[10px] font-bold uppercase text-slate-300 tracking-widest cursor-not-allowed">{t('pages.reports.coming_soon')}</button>
         </div>
       </div>
 
@@ -101,7 +100,7 @@ const ReportsPage = () => {
         <div className="p-6 border-b border-slate-100">
           <h2 className="font-bold text-slate-900 flex items-center gap-2">
             <History className="w-5 h-5 text-slate-300" />
-            Recent Generation History
+            {t('pages.reports.history')}
           </h2>
         </div>
         <div className="divide-y divide-slate-100">
@@ -121,14 +120,6 @@ const ReportsPage = () => {
                     <span>{rpt.size}</span>
                   </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors bg-white rounded-lg border border-slate-200 shadow-sm" title="Download PDF">
-                  <Download className="w-4 h-4" />
-                </button>
-                <button className="p-2 text-slate-400 hover:text-slate-900 transition-colors bg-white rounded-lg border border-slate-200 shadow-sm" title="View Full Report">
-                  <ExternalLink className="w-4 h-4" />
-                </button>
               </div>
             </div>
           ))}

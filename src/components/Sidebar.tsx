@@ -3,56 +3,67 @@ import { NavLink } from 'react-router-dom';
 import { 
   Users, Database, Calculator, ClipboardCheck, 
   BarChart3, ShieldCheck, Settings, Layers, 
-  FileUp, History
+  FileUp, History, Sparkles, ChevronRight
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
+  const { t } = useTranslation();
+
   const sections = [
     {
-      title: 'Strategy',
+      title: t('sidebar.strategy'),
       items: [
-        { name: 'Scenarios', icon: Calculator, href: '/app/comp/scenarios' },
-        { name: 'Cycles', icon: Layers, href: '/app/comp/cycles' },
-        { name: 'Pay Bands', icon: BarChart3, href: '/app/comp/bands' },
+        { name: t('sidebar.scenarios'), icon: Calculator, href: '/app/comp/scenarios' },
+        { name: t('sidebar.cycles'), icon: Layers, href: '/app/comp/cycles' },
+        { name: t('sidebar.pay_bands'), icon: BarChart3, href: '/app/comp/bands' },
       ]
     },
     {
-      title: 'Intelligence',
+      title: t('sidebar.intelligence'),
       items: [
-        { name: 'Reports', icon: ShieldCheck, href: '/app/reports' },
-        { name: 'Approvals', icon: ClipboardCheck, href: '/app/approvals' },
+        { name: t('sidebar.reports'), icon: ShieldCheck, href: '/app/reports' },
+        { name: t('sidebar.approvals'), icon: ClipboardCheck, href: '/app/approvals' },
       ]
     },
     {
-      title: 'Data Backbone',
+      title: t('sidebar.data_backbone'),
       items: [
-        { name: 'Imports', icon: FileUp, href: '/app/data/imports' },
-        { name: 'Snapshots', icon: History, href: '/app/data/snapshots' },
-        { name: 'Audit Log', icon: Database, href: '/app/audit' },
+        { name: t('sidebar.imports'), icon: FileUp, href: '/app/data/imports' },
+        { name: t('sidebar.snapshots'), icon: History, href: '/app/data/snapshots' },
+        { name: t('sidebar.audit_log'), icon: Database, href: '/app/audit' },
       ]
     },
     {
-      title: 'Admin',
+      title: t('sidebar.admin'),
       items: [
-        { name: 'Tenants', icon: Settings, href: '/app/admin/tenants' },
-        { name: 'Users', icon: Users, href: '/app/admin/users' },
+        { name: t('sidebar.tenants'), icon: Settings, href: '/app/admin/tenants' },
+        { name: t('sidebar.users'), icon: Users, href: '/app/admin/users' },
       ]
     }
   ];
 
   return (
-    <aside className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col h-screen sticky top-0">
-      <div className="p-6 border-b border-slate-800">
+    <aside className="w-[280px] bg-slate-950 border-r border-white/5 flex flex-col h-screen sticky top-0 z-50 overflow-hidden">
+      {/* Dynamic Background Glow */}
+      <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[80px] rounded-full" />
+      
+      <div className="p-8 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">E</div>
-          <span className="text-xl font-bold text-white tracking-tight">EvoComp</span>
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 rotate-3 group cursor-pointer hover:rotate-0 transition-transform duration-300">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <span className="text-xl font-bold text-white tracking-tight block">EvoComp</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest -mt-1 block">Intelligence</span>
+          </div>
         </div>
       </div>
       
-      <nav className="flex-1 overflow-y-auto p-4 space-y-8">
+      <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-8 relative z-10">
         {sections.map((section) => (
-          <div key={section.title}>
-            <h3 className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <div key={section.title} className="space-y-2">
+            <h3 className="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">
               {section.title}
             </h3>
             <div className="space-y-1">
@@ -61,15 +72,18 @@ const Sidebar = () => {
                   key={item.href}
                   to={item.href}
                   className={({ isActive }) => 
-                    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    `flex items-center justify-between group px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive 
-                        ? 'bg-blue-600/10 text-blue-400 border border-blue-600/20' 
-                        : 'text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent'
+                        ? 'bg-blue-600/10 text-white border border-blue-500/20 shadow-[0_0_20px_rgba(37,99,235,0.05)]' 
+                        : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`
                   }
                 >
-                  <item.icon className="w-4 h-4" />
-                  {item.name}
+                  <div className="flex items-center gap-3">
+                    <item.icon className="w-[18px] h-[18px] transition-transform group-hover:scale-110" />
+                    {item.name}
+                  </div>
+                  <ChevronRight className={`w-4 h-4 transition-all opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 cursor-pointer`} />
                 </NavLink>
               ))}
             </div>
@@ -77,12 +91,23 @@ const Sidebar = () => {
         ))}
       </nav>
       
-      <div className="p-4 border-t border-slate-800">
-        <div className="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-          <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">MVP Mode</p>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Strategic Intelligence Platform v1.0
-          </p>
+      <div className="p-6 relative z-10">
+        <div className="bg-slate-900/40 backdrop-blur-md rounded-[20px] p-4 border border-white/5 relative group cursor-pointer overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">{t('sidebar.platform_status')}</span>
+              <div className="flex gap-1">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+              {t('sidebar.mvp_mode')}
+            </p>
+            <p className="text-[10px] text-slate-500 mt-1">
+              {t('sidebar.secure_engine')}
+            </p>
+          </div>
         </div>
       </div>
     </aside>

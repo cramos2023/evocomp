@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Estrategia",
+    "scenarios": "Escenarios",
+    "cycles": "Ciclos",
+    "pay_bands": "Bandas Salariales",
+    "intelligence": "Inteligencia",
+    "reports": "Informes",
+    "approvals": "Aprobaciones",
+    "data_backbone": "Base de Datos",
+    "imports": "Importaciones",
+    "snapshots": "Capturas",
+    "audit_log": "Registro de Auditoría",
+    "admin": "Admin",
+    "tenants": "Organizaciones",
+    "users": "Usuarios",
+    "platform_status": "Estado de la Plataforma",
+    "mvp_mode": "Modo MVP v1.0.42",
+    "secure_engine": "Motor de Inteligencia Seguro"
+  },
+  "header": {
+    "verified_admin": "Administrador Verificado",
+    "sign_out": "Cerrar Sesión de Forma Segura",
+    "quick_actions": "Acciones Rápidas",
+    "search_placeholder": "Buscar escenarios, talento o auditoría..."
+  },
+  "auth": {
+    "sign_in": "Iniciar Sesión",
+    "sign_up": "Crear Cuenta",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "reset_password": "Restablecer Contraseña",
+    "new_password": "Nueva Contraseña",
+    "confirm_password": "Confirmar Nueva Contraseña",
+    "loading": "Cargando...",
+    "show_password": "Mostrar Contraseña",
+    "hide_password": "Ocultar Contraseña"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Escenarios de Compensación",
+      "subtitle": "Modelar la distribución de méritos e impacto presupuestario.",
+      "new": "Nuevo Escenario",
+      "empty_title": "No se encontraron escenarios",
+      "empty_subtitle": "Crea tu primer escenario para comenzar a modelar aumentos salariales.",
+      "learn_more": "Saber más sobre modelado",
+      "budget": "Presupuesto",
+      "no_limit": "Sin límite"
+    },
+    "reports": {
+      "title": "Inteligencia e Insights",
+      "subtitle": "Generar informes para ejecutivos y paquetes de auditoría.",
+      "generate": "Generar Nuevo Informe",
+      "exec_summary": "Resumen Ejecutivo",
+      "exec_summary_desc": "Distribución de presupuesto y promedio de méritos.",
+      "audit_pack": "Paquete de Auditoría Completo",
+      "audit_pack_desc": "Rastro de decisiones e historial de aprobaciones.",
+      "custom_template": "Plantilla Personalizada",
+      "custom_template_desc": "Crea tu propio diseño de informe.",
+      "coming_soon": "Próximamente en Fase 2",
+      "history": "Historial de Generación Reciente"
+    },
+    "approvals": {
+      "title": "Gobernanza y Aprobaciones",
+      "subtitle": "Revisar o rechazar propuestas de escenarios de compensación.",
+      "my_actions": "Mis Acciones",
+      "all_requests": "Todas las Solicitudes",
+      "queue_stats": "Estadísticas de Cola",
+      "wait_time": "Tiempo de Espera (Promedio)",
+      "pending_amount": "Monto Pendiente",
+      "guardrails": "Reglas de Política",
+      "guardrails_desc": "El cumplimiento automático de RLS garantiza la privacidad.",
+      "filter_placeholder": "Filtrar por escenario o propietario...",
+      "table": {
+        "scenario": "Escenario Propuesto",
+        "financials": "Finanzas",
+        "status": "Estado"
+      }
+    },
+    "pay_bands": {
+      "title": "Bandas Salariales",
+      "subtitle": "Gestionar rangos de compensación, puntos medios y dispersión.",
+      "create": "Crear Banda",
+      "total": "Total de Bandas",
+      "avg_spread": "Dispersión Promedio",
+      "currency_policy": "Política de Moneda Global",
+      "currency_policy_desc": "La conversión de divisas se aplica automáticamente.",
+      "table": {
+        "family": "Familia de Puestos / Nivel",
+        "currency": "Moneda",
+        "range": "Rango (Mín - Medio - Máx)",
+        "spread": "Dispersión"
+      },
+      "empty": "No hay bandas definidas. Haz clic en \"Crear Banda\" para comenzar."
+    },
+    "imports": {
+      "title": "Base de Datos",
+      "subtitle": "Subir capturas de datos de talento para modelado.",
+      "upload": "Subir Captura",
+      "history": "Historial de Importaciones"
+    },
+    "admin": {
+      "title": "Ajustes de la Organización",
+      "subtitle": "Configurar identidad y gobernanza.",
+      "general": "Perfil General",
+      "org_name": "Nombre de la Organización",
+      "base_currency": "Moneda Base",
+      "currency_desc": "Base para todos los cálculos de escenarios.",
+      "governance": "Gobernanza Operativa",
+      "advisory": "Modo Consultivo",
+      "advisory_desc": "Modelar sin modificar datos básicos.",
+      "sor": "Sistema de Registro",
+      "sor_desc": "Actualiza el historial al publicar.",
+      "caution": "Atención: Escritura Completa Habilitada",
+      "caution_desc": "Los escenarios modificarán registros persistentes.",
+      "save": "Guardar Cambios",
+      "discard": "Descartar Cambios",
+      "privacy": "Privacidad de Infraestructura",
+      "privacy_desc": "La capa RLS garantiza la separación de datos."
+    }
+  }
+}

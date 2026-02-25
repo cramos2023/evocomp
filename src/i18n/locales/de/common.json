@@ -1,0 +1,123 @@
+{
+  "sidebar": {
+    "strategy": "Strategie",
+    "scenarios": "Szenarien",
+    "cycles": "Zyklen",
+    "pay_bands": "Gehaltsbänder",
+    "intelligence": "Intelligenz",
+    "reports": "Berichte",
+    "approvals": "Genehmigungen",
+    "data_backbone": "Datenrückgrat",
+    "imports": "Importe",
+    "snapshots": "Snapshots",
+    "audit_log": "Audit-Protokoll",
+    "admin": "Admin",
+    "tenants": "Mandanten",
+    "users": "Benutzer",
+    "platform_status": "Plattformstatus",
+    "mvp_mode": "MVP-Modus v1.0.42",
+    "secure_engine": "Sichere Intelligence-Engine"
+  },
+  "header": {
+    "verified_admin": "Verifizierter Admin",
+    "sign_out": "Sicher Abmelden",
+    "quick_actions": "Schnellaktionen",
+    "search_placeholder": "Szenarien, Talente oder Audit suchen..."
+  },
+  "auth": {
+    "sign_in": "Anmelden",
+    "sign_up": "Konto Erstellen",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "forgot_password": "Passwort vergessen?",
+    "reset_password": "Passwort Zurücksetzen",
+    "new_password": "Neues Passwort",
+    "confirm_password": "Neues Passwort Bestätigen",
+    "loading": "Arbeite...",
+    "show_password": "Passwort Anzeigen",
+    "hide_password": "Passwort Verbergen"
+  },
+  "pages": {
+    "scenarios": {
+      "title": "Vergütungsszenarien",
+      "subtitle": "Modellieren Sie die Leistungsverteilung und Budgetauswirkungen.",
+      "new": "Neues Szenario",
+      "empty_title": "Keine Szenarien gefunden",
+      "empty_subtitle": "Erstellen Sie Ihr erstes Szenario, um Gehaltserhöhungen zu modellieren.",
+      "learn_more": "Erfahren Sie mehr über die Modellierung",
+      "budget": "Budget",
+      "no_limit": "Unbegrenzt"
+    },
+    "reports": {
+      "title": "Intelligence & Insights",
+      "subtitle": "Generieren Sie berichte für Führungskräfte und Audit-Pakete.",
+      "generate": "Neuen Bericht Erstellen",
+      "exec_summary": "Zusammenfassung für Führungskräfte",
+      "exec_summary_desc": "Budgetverteilung und Leistungsdurchschnitt auf hoher Ebene.",
+      "audit_pack": "Vollständiges Audit-Paket",
+      "audit_pack_desc": "Tiefer Einblick in den Entscheidungsweg und die Genehmigungshistorie.",
+      "custom_template": "Benutzerdefinierte Vorlage",
+      "custom_template_desc": "Erstellen Sie Ihr eigenes Berichtslayout.",
+      "coming_soon": "Kommt in Phase 2",
+      "history": "Aktuelle Erstellungshistorie"
+    },
+    "approvals": {
+      "title": "Governance & Genehmigungen",
+      "subtitle": "Überprüfen oder lehnen Sie Vorschläge für Vergütungsszenarien ab.",
+      "my_actions": "Meine Aktionen",
+      "all_requests": "Alle Anfragen",
+      "queue_stats": "Warteschlangenstatistik",
+      "wait_time": "Wartezeit (Durchschn.)",
+      "pending_amount": "Ausstehender Betrag",
+      "guardrails": "Richtlinien-Schutzplanken",
+      "guardrails_desc": "Automatische RLS-Durchsetzung gewährleistet den Datenschutz.",
+      "filter_placeholder": "Nach Szenario oder Besitzer filtern...",
+      "table": {
+        "scenario": "Vorgeschlagenes Szenario",
+        "financials": "Finanzen",
+        "status": "Status"
+      }
+    },
+    "pay_bands": {
+      "title": "Vergütungsbänder",
+      "subtitle": "Verwalten Sie Vergütungsbereiche, Mittelpunkte und Spannen.",
+      "create": "Band Erstellen",
+      "total": "Gesamtbänder",
+      "avg_spread": "Durchschn. Spanne",
+      "currency_policy": "Globale Währungsrichtlinie",
+      "currency_policy_desc": "Automatische FX-Konvertierung wird angewendet.",
+      "table": {
+        "family": "Jobfamilie / Ebene",
+        "currency": "Währung",
+        "range": "Bereich (Min - Mittel - Max)",
+        "spread": "Spanne"
+      },
+      "empty": "Noch keine Vergütungsbänder definiert. Klicken Sie auf \"Band erstellen\", um zu beginnen."
+    },
+    "imports": {
+      "title": "Daten-Rückgrat",
+      "subtitle": "Talentdaten-Snapshots für die Modellierung hochladen.",
+      "upload": "Snapshot Hochladen",
+      "history": "Importverlauf"
+    },
+    "admin": {
+      "title": "Organisationseinstellungen",
+      "subtitle": "Konfigurieren Sie Workspace-Identität und Governance.",
+      "general": "Allgemeines Profil",
+      "org_name": "Name der Organisation",
+      "base_currency": "Basiswährung",
+      "currency_desc": "Basis für alle Szenarioberechnungen.",
+      "governance": "Operative Governance",
+      "advisory": "Beratungsmodus",
+      "advisory_desc": "Modellieren ohne Basisdaten zu ändern.",
+      "sor": "System of Record",
+      "sor_desc": "Aktualisiert den Verlauf bei Veröffentlichung direkt.",
+      "caution": "Achtung: Voller Schreibzugriff Aktiviert",
+      "caution_desc": "Szenarien werden dauerhafte Datensätze ändern.",
+      "save": "Änderungen Speichern",
+      "discard": "Änderungen Verwerfen",
+      "privacy": "Infrastruktur-Datenschutz",
+      "privacy_desc": "Zero-Trust-RLS-Ebene gewährleistet Datentrennung."
+    }
+  }
+}
