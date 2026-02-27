@@ -12,6 +12,7 @@ import TenantSettingsPage from './pages/TenantSettingsPage'
 import AuditLogPage from './pages/AuditLogPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import OnboardingPage from './pages/OnboardingPage'
+import MeritResultsPage from './pages/MeritResultsPage'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 const Dashboard = () => (
@@ -131,6 +132,7 @@ function App() {
                   <Route path="data/snapshots" element={<Dashboard />} />
                   <Route path="comp/bands" element={<PayBandsPage />} />
                   <Route path="comp/scenarios" element={<ScenariosPage />} />
+                  <Route path="comp/scenarios/:scenarioId/results" element={<MeritResultsPage />} />
                   <Route path="comp/cycles" element={<Dashboard />} />
                   <Route path="approvals" element={<ApprovalsPage />} />
                   <Route path="reports" element={<ReportsPage />} />
