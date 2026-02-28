@@ -8,6 +8,8 @@ import PayBandsPage from './pages/PayBandsPage'
 import UsersPage from './pages/UsersPage'
 import ReportsPage from './pages/ReportsPage'
 import ApprovalsPage from './pages/ApprovalsPage'
+import { ManagerWorkspacePage } from './pages/approvals/ManagerWorkspacePage'
+import { ApprovalsInboxPage } from './pages/approvals/ApprovalsInboxPage'
 import TenantSettingsPage from './pages/TenantSettingsPage'
 import AuditLogPage from './pages/AuditLogPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
@@ -15,6 +17,7 @@ import OnboardingPage from './pages/OnboardingPage'
 import MeritResultsPage from './pages/MeritResultsPage'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import MeritCycleAdminPage from './pages/admin/MeritCycleAdminPage'
 const Dashboard = () => (
   <div className="p-8">
     <div className="mb-8">
@@ -128,13 +131,21 @@ function App() {
                 <Routes>
                   <Route path="admin/tenants" element={<TenantSettingsPage />} />
                   <Route path="admin/users" element={<UsersPage />} />
+                  <Route path="admin/merit-cycle" element={<MeritCycleAdminPage />} />
                   <Route path="data/imports" element={<ImportsPage />} />
                   <Route path="data/snapshots" element={<Dashboard />} />
                   <Route path="comp/bands" element={<PayBandsPage />} />
                   <Route path="comp/scenarios" element={<ScenariosPage />} />
                   <Route path="comp/scenarios/:scenarioId/results" element={<MeritResultsPage />} />
                   <Route path="comp/cycles" element={<Dashboard />} />
+                  
+                  {/* Phase 5 Approvals Routes */}
+                  <Route path="approvals/my-plan" element={<ManagerWorkspacePage />} />
+                  <Route path="approvals/inbox" element={<ApprovalsInboxPage />} />
+                  
+                  {/* Legacy Redirect for /app/approvals */}
                   <Route path="approvals" element={<ApprovalsPage />} />
+                  
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="audit" element={<AuditLogPage />} />
                   <Route path="*" element={<Navigate to="/app/comp/scenarios" replace />} />

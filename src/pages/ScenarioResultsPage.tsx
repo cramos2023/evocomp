@@ -5,7 +5,7 @@ import {
   Download, Filter, Search,
   AlertCircle, AlertTriangle
 } from 'lucide-react';
-import { supabase } from '../lib/supabaseClient.ts';
+import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 
 interface Scenario {

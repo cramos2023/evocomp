@@ -52,12 +52,29 @@ const MeritResultsPage: React.FC = () => {
     if (!scenarioId) return;
     setRunning(true); setRunError('');
     try {
-      const { data, error } = await supabase.functions.invoke('scenario-engine', { body: { scenarioId, action: 'run' } });
-      if (error) throw error;
+      const { data, error } = await supabase.functions.invoke('scenario-engine', { 
+        body: { scenarioId, action: 'run' }
+      });
+      
+      if (error) {
+        // Try to parse detailed error if body is JSON
+        try {
+          const body = await error.context.json();
+          const msg = body.error || error.message;
+          setRunError(`${msg}${body.hint ? ` - ${body.hint}` : ''}`);
+        } catch {
+          setRunError(error.message || 'Run failed');
+        }
+        return;
+      }
+      
       if (data?.error) throw new Error(data.error);
       await loadData();
-    } catch (err: any) { setRunError(err.message || 'Run failed'); }
-    finally { setRunning(false); }
+    } catch (err: any) { 
+      setRunError(err.message || 'Run failed'); 
+    } finally { 
+      setRunning(false); 
+    }
   }
 
   async function switchRun(run: any) {

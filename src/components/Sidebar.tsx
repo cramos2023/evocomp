@@ -3,12 +3,39 @@ import { NavLink } from 'react-router-dom';
 import { 
   Users, Database, Calculator, ClipboardCheck, 
   BarChart3, ShieldCheck, Settings, Layers, 
-  FileUp, History, Sparkles, ChevronRight
+  FileUp, History, Sparkles, ChevronRight, Inbox
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { approvalsApi } from '../services/approvalsApi';
+import { supabase } from '../lib/supabaseClient';
 
 const Sidebar = () => {
   const { t } = useTranslation();
+  const [visibility, setVisibility] = React.useState({ hasMyPlan: false, hasInbox: false });
+  const [isAdmin, setIsAdmin] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkAccess = async () => {
+      try {
+        const vis = await approvalsApi.checkVisibility();
+        setVisibility(vis);
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: roles } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id);
+          
+          const adminRoles = ['TENANT_ADMIN', 'COMP_ADMIN'];
+          setIsAdmin(roles?.some(r => adminRoles.includes(r.role)) || false);
+        }
+      } catch (err) {
+        console.error('Sidebar access check failed:', err);
+      }
+    };
+    checkAccess();
+  }, []);
 
   const sections = [
     {
@@ -23,8 +50,19 @@ const Sidebar = () => {
       title: t('sidebar.intelligence'),
       items: [
         { name: t('sidebar.reports'), icon: ShieldCheck, href: '/app/reports' },
-        { name: t('sidebar.approvals'), icon: ClipboardCheck, href: '/app/approvals' },
+        { 
+          name: t('sidebar.approvals'), 
+          icon: ClipboardCheck, 
+          href: isAdmin || visibility.hasInbox ? '/app/approvals/inbox' : '/app/approvals/my-plan' 
+        },
       ]
+    },
+    {
+      title: t('sidebar.approvals_section'),
+      items: [
+        ...(visibility.hasMyPlan ? [{ name: t('sidebar.my_plan'), icon: Calculator, href: '/app/approvals/my-plan' }] : []),
+        ...(visibility.hasInbox || isAdmin ? [{ name: t('sidebar.inbox'), icon: Inbox, href: '/app/approvals/inbox' }] : []),
+      ].filter(Boolean)
     },
     {
       title: t('sidebar.data_backbone'),
@@ -39,6 +77,7 @@ const Sidebar = () => {
       items: [
         { name: t('sidebar.tenants'), icon: Settings, href: '/app/admin/tenants' },
         { name: t('sidebar.users'), icon: Users, href: '/app/admin/users' },
+        { name: t('merit_admin.sidebar_label'), icon: ShieldCheck, href: '/app/admin/merit-cycle' },
       ]
     }
   ];
