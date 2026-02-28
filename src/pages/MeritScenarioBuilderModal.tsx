@@ -63,17 +63,33 @@ const MeritScenarioBuilderModal: React.FC<Props> = ({ isOpen, onClose, onCreated
     if (!snapshotId)  { setError(t('merit.error_snapshot_required')); return; }
     setLoading(true); setError('');
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('tenant_id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile?.tenant_id) throw new Error('No tenant found for user');
+
       const rulesJson = {
         comp_basis: compBasis, approved_budget_pct: budgetPctNum, step_factor: stepFactorNum,
         threshold_1: parseFloat(threshold1), threshold_2: parseFloat(threshold2), threshold_3: parseFloat(threshold3),
         fte_hours_standard: parseFloat(fteStandard),
       };
       const { data: scenario, error: sErr } = await supabase.from('scenarios').insert({
+        tenant_id: profile.tenant_id,
         name: name.trim(), snapshot_id: snapshotId, base_currency: baseCurrency.toUpperCase(),
         scenario_type: 'MERIT_REVIEW', rules_json: rulesJson, status: 'DRAFT',
       }).select().single();
       if (sErr) throw sErr;
-      await supabase.from('scenario_rules').insert({ scenario_id: scenario.id, rules_json: rulesJson });
+      await supabase.from('scenario_rules').insert({
+        tenant_id: profile.tenant_id,
+        scenario_id: scenario.id,
+        rules_json: rulesJson
+      });
       onCreated(); onClose();
     } catch (err: any) { setError(err.message || 'Error creating scenario'); }
     finally { setLoading(false); }

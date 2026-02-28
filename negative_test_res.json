@@ -1,0 +1,13 @@
+{
+  "ok": false,
+  "code": "GATING_FAILED",
+  "details": {
+    "closed": true,
+    "plans_locked": true,
+    "validator_ok": false,
+    "counts": {
+      "total_plans": 1,
+      "locked_plans": 1
+    }
+  }
+}

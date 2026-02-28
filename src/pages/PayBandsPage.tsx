@@ -50,7 +50,19 @@ const PayBandsPage = () => {
     if (!form.min_salary || !form.midpoint || !form.max_salary) { setFormError(t('merit.error_band_amounts_required')); return; }
     setFormLoading(true); setFormError('');
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+      
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('tenant_id')
+        .eq('id', user.id)
+        .single();
+      
+      if (!profile?.tenant_id) throw new Error('No tenant found for user');
+
       const { error } = await supabase.from('pay_bands').insert({
+        tenant_id: profile.tenant_id,
         grade: form.grade.trim().toUpperCase(), basis_type: form.basis_type,
         country_code: form.country_code.trim().toUpperCase() || null, currency: form.currency.trim().toUpperCase() || null,
         min_salary: parseFloat(form.min_salary), midpoint: parseFloat(form.midpoint), max_salary: parseFloat(form.max_salary),

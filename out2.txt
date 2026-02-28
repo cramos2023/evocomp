@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "runId": "cc39e410-735a-45b5-b880-a2a1db0ec4dd",
+  "version": "v27-final"
+}
+{
+  "ok": false,
+  "cycle_id": "2d215c07-f3dc-4518-a5ed-fd68798dcf63",
+  "generated_at": "2026-02-28T03:09:20.737Z",
+  "summary": {
+    "manager_plans_total": 0,
+    "manager_plans_locked": 0,
+    "effective_recommendations_count": 0,
+    "total_recommended_amount": 0
+  },
+  "issues": [
+    {
+      "code": "NO_MANAGER_PLANS",
+      "severity": "error",
+      "message": "No manager plans found for this cycle."
+    },
+    {
+      "code": "NO_EFFECTIVE_RECS",
+      "severity": "error",
+      "message": "No effective recommendations exist for this cycle."
+    }
+  ]
+}
+{
+  "ok": true,
+  "action": "lock_all_plans",
+  "cycle_id": "2d215c07-f3dc-4518-a5ed-fd68798dcf63",
+  "locked_count": 0
+}
+{
+  "ok": true,
+  "action": "close_cycle",
+  "cycle_id": "2d215c07-f3dc-4518-a5ed-fd68798dcf63"
+}

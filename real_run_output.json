@@ -1,0 +1,5 @@
+{
+  "ok": false,
+  "error": "NOT_PUBLISHED",
+  "message": "No effective recommendations found for this cycle. Publish first."
+}

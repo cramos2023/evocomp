@@ -1,10 +1,80 @@
 // @ts-nocheck: Deno-based Edge Function - Ignore Node TS Server errors
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7"
+import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.39.7"
+import { createSupabaseAdmin, getAuthedUserId, getTenantIdForUser } from "../_shared/auth.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+interface MeritRules {
+  comp_basis: string;
+  step_factor?: number;
+  threshold_1?: number;
+  threshold_2?: number;
+  threshold_3?: number;
+}
+
+interface Scenario {
+  id: string;
+  tenant_id: string;
+  snapshot_id: string;
+  base_currency: string;
+  scenario_type: string;
+  rules_json?: MeritRules;
+  rules?: { rules_json: MeritRules }[];
+}
+
+interface Employee {
+  id: string;
+  employee_external_id: string;
+  country_code: string;
+  local_currency: string;
+  performance_rating: string;
+  pay_grade_internal: string;
+  base_salary_local: number;
+  target_cash_local?: number;
+  total_guaranteed_local?: number;
+}
+
+interface FXRate {
+  from_currency: string;
+  rate: number;
+}
+
+interface PayBand {
+  grade: string;
+  basis_type: string;
+  min_salary: number;
+  midpoint: number;
+  max_salary: number;
+}
+
+interface RequestBody {
+  action?: 'run' | 'ping';
+  scenarioId?: string;
+}
+
+interface CalcResult {
+  tenant_id: string;
+  scenario_id: string;
+  employee_id: string;
+  employee_external_id: string;
+  salary_basis_amount: number;
+  salary_base_before: number;
+  salary_base_after: number;
+  band_min: number | null;
+  band_mid: number | null;
+  band_max: number | null;
+  compa_ratio: number | null;
+  compa_zone: string | null;
+  guideline_pct: number;
+  applied_pct: number;
+  increase_amount: number;
+  new_amount: number;
+  base_currency: string;
+  flags_json: string[];
 }
 
 function buildMeritMatrix(stepFactor: number): Record<string, Record<string, number>> {
@@ -38,60 +108,6 @@ function normalizeRating(raw: string): string {
   return map[r] ?? r
 }
 
-interface ScenarioRules {
-  comp_basis?: string;
-  approved_budget_pct?: number;
-  step_factor?: number;
-  threshold_1?: number;
-  threshold_2?: number;
-  threshold_3?: number;
-  fte_hours_standard?: number;
-  multiplier_matrix?: Record<string, Record<string, number>>;
-  eligibility?: { countries?: string[] };
-  merit_matrix?: Record<string, Record<string, number>>;
-}
-
-interface Scenario {
-  id: string;
-  tenant_id: string;
-  snapshot_id: string;
-  scenario_type: 'GENERAL' | 'MERIT_REVIEW';
-  rules_json?: ScenarioRules;
-  rules?: { rules_json: ScenarioRules }[];
-  base_currency: string;
-  budget_total?: number;
-  snapshot?: { snapshot_date: string };
-}
-
-interface GeneralResult {
-  employee_id: string;
-  before_json: Record<string, unknown>;
-  after_json: Record<string, unknown>;
-  flags_json: string[];
-  salary_base_before: number;
-  salary_base_after: number;
-  base_currency: string;
-}
-
-interface EmployeeData {
-  id: string;
-  employee_id: string;
-  employee_external_id: string;
-  performance_rating?: string;
-  pay_grade_internal?: string;
-  country_code?: string;
-  hours_per_week?: number;
-  target_cash_local?: number;
-  base_salary_local?: number;
-  total_guaranteed_local?: number;
-  local_currency: string;
-}
-
-interface ScenarioRequestBody {
-  tenantId?: string;
-  scenarioId: string;
-}
-
 function getCompaZone(cr: number, t1: number, t2: number, t3: number): string {
   if (cr < t1) return 'BELOW_MIN'
   if (cr < t2) return 'BELOW_MID'
@@ -99,7 +115,7 @@ function getCompaZone(cr: number, t1: number, t2: number, t3: number): string {
   return 'ABOVE_MAX'
 }
 
-function getBasisAmount(emp: EmployeeData, compBasis: string): number {
+function getBasisAmount(emp: Employee, compBasis: string): number {
   switch (compBasis) {
     case 'ANNUAL_TARGET_CASH': return Number(emp.target_cash_local) || Number(emp.base_salary_local) || 0
     case 'TOTAL_GUARANTEED':   return Number(emp.total_guaranteed_local) || Number(emp.base_salary_local) || 0
@@ -107,255 +123,187 @@ function getBasisAmount(emp: EmployeeData, compBasis: string): number {
   }
 }
 
-function decodeUserId(authHeader: string | null): string | null {
-  try {
-    if (!authHeader?.startsWith('Bearer ')) return null
-    const token = authHeader.split(' ')[1]
-    const payload = atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
-    return JSON.parse(payload).sub ?? null
-  } catch { return null }
-}
-
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  
+  const v = "v27-final"
+  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization')
+  console.log(`[scenario-engine] ${v} Start. Auth header length: ${authHeader?.length ?? 0}`)
+  
+  let rawBody = ""
   try {
-    const supabaseUrl    = Deno.env.get('SUPABASE_URL') ?? Deno.env.get('PROJECT_URL') ?? ''
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    const adminClient    = createClient(supabaseUrl, serviceRoleKey)
+    const supabaseUrl    = Deno.env.get('PROJECT_URL') ?? Deno.env.get('SUPABASE_URL')
+    const serviceRoleKey = Deno.env.get('SERVICE_ROLE_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    const anonKey        = Deno.env.get('ANON_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY')
 
-    const authHeader = req.headers.get('Authorization')
-    const userId     = decodeUserId(authHeader)
-    let tenantId: string | null = null
-
-    if (userId) {
-      const { data: profile } = await adminClient.from('user_profiles').select('tenant_id').eq('id', userId).single()
-      tenantId = (profile as { tenant_id: string })?.tenant_id ?? null
+    if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+      throw new Error(`Missing ENV: URL=${!!supabaseUrl}, SR=${!!serviceRoleKey}, AK=${!!anonKey}`)
+    }
+    
+    // 1. Read Raw Body
+    rawBody = await req.text()
+    console.log(`[scenario-engine] Raw body: "${rawBody}"`)
+    
+    let body: RequestBody = {}
+    if (rawBody) {
+      try {
+        body = JSON.parse(rawBody)
+      } catch (e) {
+        throw new Error(`JSON Parse Error: ${e.message}. Body was: ${rawBody}`)
+      }
     }
 
-    const body = await req.json() as ScenarioRequestBody
-    if (!tenantId) tenantId = body.tenantId ?? null
-    if (!tenantId) throw new Error('Could not determine tenant from session')
+    // Debug Ping Action
+    if (body.action === 'ping') {
+      return new Response(JSON.stringify({ pong: v, bodyReceived: body, time: new Date().toISOString() }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
 
-    const { scenarioId } = body
+    const adminClient = createSupabaseAdmin()
+    
+    if (!authHeader) throw new Error('Authorization header missing from request')
+    const token = authHeader.replace(/^Bearer\s+/i, '')
+    
+    // 2. Identity Verification
+    const userId = await getAuthedUserId(token)
+    console.log(`[scenario-engine] Authenticated User: ${userId}`)
+
+    // 3. Profile & Tenant
+    const tenantId = await getTenantIdForUser(adminClient, userId)
+    console.log(`[scenario-engine] Resolved Tenant: ${tenantId}`)
+
+    // 4. Scenario Loading
+    const scenarioId = body.scenarioId
     if (!scenarioId) throw new Error('scenarioId is required')
 
     const { data: scenario, error: scenErr } = await adminClient
-      .from('scenarios').select('*, snapshot:snapshots(*), rules:scenario_rules(rules_json)')
+      .from('scenarios').select('*, rules:scenario_rules(rules_json)')
       .eq('id', scenarioId).eq('tenant_id', tenantId).single()
-    if (scenErr || !scenario) throw new Error('Scenario not found')
+    
+    if (scenErr) throw new Error(`DB scenario fetch fail: ${scenErr.message}`)
+    if (!scenario) throw Error(`Scenario ${scenarioId} not found for tenant ${tenantId}`)
 
-    const scen = scenario as Scenario
-    if (scen.scenario_type === 'MERIT_REVIEW') {
-      return await runMeritReview(adminClient, scen, tenantId, userId)
+    const typedScenario = scenario as Scenario
+
+    if (typedScenario.scenario_type === 'MERIT_REVIEW') {
+      return await runMeritReview(adminClient, typedScenario, tenantId, userId)
     } else {
-      return await runGeneral(adminClient, scen, tenantId, body)
+      throw new Error(`Unsupported scenario_type: ${typedScenario.scenario_type}`)
     }
   } catch (err: unknown) {
     const error = err as Error
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error(`[scenario-engine] FATAL ${v}: ${error.message}\nStack: ${error.stack}`)
+    return new Response(JSON.stringify({ 
+      error: error.message, 
+      details: error.stack,
+      rawBody: rawBody,
+      version: v,
+      hint: 'Check if scenarioId exists and user has profile with tenant_id'
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400,
     })
   }
 })
 
-async function runMeritReview(adminClient: SupabaseClient, scenario: Scenario, tenantId: string, triggeredBy: string | null) {
-  const rules = scenario.rules_json ?? (scenario.rules?.[0]?.rules_json) ?? {}
-  const compBasis           = rules.comp_basis ?? 'BASE_SALARY'
-  const approvedBudgetPct   = Number(rules.approved_budget_pct ?? 0)
-  const stepFactor          = Number(rules.step_factor ?? 0.5)
-  const t1                  = Number(rules.threshold_1 ?? 0.75)
-  const t2                  = Number(rules.threshold_2 ?? 1.00)
-  const t3                  = Number(rules.threshold_3 ?? 1.25)
-  const fteStandard         = Number(rules.fte_hours_standard ?? 40)
-  if (approvedBudgetPct <= 0) throw new Error('approved_budget_pct must be > 0')
+async function runMeritReview(adminClient: SupabaseClient, scenario: Scenario, tenantId: string, userId: string): Promise<Response> {
+  const rules: MeritRules = scenario.rules?.[0]?.rules_json || scenario.rules_json || { comp_basis: 'BASE_SALARY' }
+  const matrix = buildMeritMatrix(rules.step_factor || 0.005)
+  const baseCurrency = scenario.base_currency || 'USD'
 
-  const matrix = rules.multiplier_matrix ?? buildMeritMatrix(stepFactor)
+  console.log('[scenario-engine] Fetching employee data for scenario...')
+  
+  const [empsRes, ratesRes, bandsRes] = await Promise.all([
+    adminClient.from('snapshot_employee_data').select('*').eq('snapshot_id', scenario.snapshot_id).eq('tenant_id', tenantId),
+    adminClient.from('fx_rates').select('*').eq('tenant_id', tenantId).eq('to_currency', baseCurrency).order('date', { ascending: false }),
+    adminClient.from('pay_bands').select('*').eq('tenant_id', tenantId)
+  ])
 
-  const { data: run, error: runErr } = await adminClient
-    .from('scenario_runs').insert({ tenant_id: tenantId, scenario_id: scenario.id, triggered_by: triggeredBy, status: 'RUNNING' })
-    .select().single()
-  if (runErr || !run) throw new Error('Failed to create scenario run: ' + (runErr?.message ?? 'Unknown error'))
+  if (empsRes.error) throw empsRes.error
+  if (ratesRes.error) throw ratesRes.error
+  if (bandsRes.error) throw bandsRes.error
 
-  try {
-    const { data: employees, error: empErr } = await adminClient
-      .from('snapshot_employee_data').select('*').eq('snapshot_id', scenario.snapshot_id).eq('tenant_id', tenantId)
-      .order('employee_external_id', { ascending: true, nullsFirst: false }).order('id', { ascending: true })
-    if (empErr) throw new Error('Failed to load employees: ' + empErr.message)
-    const emps = (employees as EmployeeData[]) ?? []
-    if (!emps.length) throw new Error('No employee data found in snapshot')
+  const emps = (empsRes.data || []) as Employee[]
+  const rates = (ratesRes.data || []) as FXRate[]
+  const bands = (bandsRes.data || []) as PayBand[]
+  
+  console.log(`[scenario-engine] Context: emps=${emps.length}, rates=${rates.length}, bands=${bands.length}`)
 
-    const { data: allBands } = await adminClient
-      .from('pay_bands').select('grade, basis_type, country_code, min_salary, midpoint, max_salary')
-      .eq('tenant_id', tenantId).eq('basis_type', compBasis)
+  const rateMap = new Map<string, number>(rates.map(r => [r.from_currency, Number(r.rate)]))
+  const bandMap = new Map<string, PayBand>(bands.map(b => [`${b.grade}_${b.basis_type}`, b]))
 
-    const bandMap = new Map<string, { grade: string, country_code: string | null, min_salary: number, midpoint: number, max_salary: number }>()
-    for (const b of (allBands ?? [])) bandMap.set(`${b.grade}:${b.country_code ?? ''}`, b)
-    const findBand = (grade: string, cc: string) => bandMap.get(`${grade}:${cc}`) ?? bandMap.get(`${grade}:`) ?? null
+  const results: CalcResult[] = []
+  let totalBaselineBase = 0
+  let totalIncreaseBase = 0
 
-    const results: EmployeeResult[] = []
-    const qIssues = { missing_band: 0, invalid_rating: 0, invalid_hours: 0, missing_basis_field: 0 }
-    let baselineTotal = 0
-
-    for (const emp of emps) {
-      const flags: string[] = []
-      const salaryBasisAmount = getBasisAmount(emp, compBasis)
-      baselineTotal += salaryBasisAmount
-
-      if (compBasis === 'ANNUAL_TARGET_CASH'  && !(Number(emp.target_cash_local) > 0))      { flags.push('MISSING_BASIS_FIELD'); qIssues.missing_basis_field++ }
-      if (compBasis === 'TOTAL_GUARANTEED'    && !(Number(emp.total_guaranteed_local) > 0))  { flags.push('MISSING_BASIS_FIELD'); qIssues.missing_basis_field++ }
-
-      const band   = findBand(emp.pay_grade_internal ?? '', emp.country_code ?? '')
-      const bandMid = band ? Number(band.midpoint)   : 0
-      const bandMin = band ? Number(band.min_salary) : 0
-      const bandMax = band ? Number(band.max_salary) : 0
-      if (!band) { flags.push('MISSING_BAND'); qIssues.missing_band++ }
-
-      const hoursPerWeek = Number(emp.hours_per_week) || 0
-      if (hoursPerWeek <= 0 || hoursPerWeek > 168) { flags.push('INVALID_HOURS'); qIssues.invalid_hours++ }
-
-      const normalizedRating = normalizeRating(emp.performance_rating ?? '')
-      const validRatings     = ['FE', 'E', 'FM', 'PM', 'DNM']
-      if (!validRatings.includes(normalizedRating)) { flags.push('INVALID_RATING'); qIssues.invalid_rating++ }
-
-      const effectiveHours  = hoursPerWeek > 0 && hoursPerWeek <= 168 ? hoursPerWeek : fteStandard
-      const annualizedBasis = (salaryBasisAmount / effectiveHours) * fteStandard
-      const compaRatio      = bandMid > 0 ? annualizedBasis / bandMid : 0
-
-      const hasBlocking = flags.some(f => ['MISSING_BAND', 'INVALID_RATING', 'INVALID_HOURS'].includes(f))
-      let zone = '', guidelineMultiplier = 0, guidelinePct = 0, appliedPct = 0, increaseAmount = 0, newAmount = salaryBasisAmount
-
-      if (!hasBlocking) {
-        zone                = getCompaZone(compaRatio, t1, t2, t3)
-        guidelineMultiplier = matrix[normalizedRating]?.[zone] ?? 0
-        guidelinePct        = approvedBudgetPct * guidelineMultiplier
-        appliedPct          = guidelinePct
-        increaseAmount      = salaryBasisAmount * appliedPct
-        newAmount           = salaryBasisAmount + increaseAmount
-      }
-
-      if (!hasBlocking && band) {
-        if (compaRatio < t1)  flags.push('BELOW_BAND_MIN')
-        if (compaRatio >= t3) flags.push('ABOVE_BAND_MAX')
-      }
-
-      results.push({
-        tenant_id: tenantId, scenario_id: scenario.id, scenario_run_id: run.id,
-        employee_id: emp.employee_id, employee_external_id: emp.employee_external_id,
-        base_currency: scenario.base_currency, before_json: emp as unknown as Record<string, unknown>,
-        after_json: { ...emp, salary_basis_amount: newAmount } as unknown as Record<string, unknown>, flags_json: flags,
-        salary_basis_amount: salaryBasisAmount, band_min: bandMin, band_mid: bandMid, band_max: bandMax,
-        compa_ratio: compaRatio, compa_zone: zone, guideline_pct: guidelinePct,
-        guideline_multiplier: guidelineMultiplier, applied_pct: appliedPct,
-        increase_amount: increaseAmount, new_amount: newAmount, lump_sum_amount: 0,
-        salary_base_before: salaryBasisAmount, salary_base_after: newAmount,
-      })
-    }
-
-    const approvedBudgetAmount  = baselineTotal * approvedBudgetPct
-    const totalAppliedAmount    = results.reduce((s, r) => s + (r.increase_amount || 0), 0)
-    const remainingBudgetAmount = approvedBudgetAmount - totalAppliedAmount
-    const budgetStatus          = totalAppliedAmount <= approvedBudgetAmount ? 'WITHIN' : 'OVER'
-    const qualityReport = {
-      total_employees: emps.length, processed: results.length,
-      missing_band: qIssues.missing_band, invalid_rating: qIssues.invalid_rating,
-      invalid_hours: qIssues.invalid_hours, missing_basis_field: qIssues.missing_basis_field,
-      below_band_min: results.filter(r => r.flags_json.includes('BELOW_BAND_MIN')).length,
-      above_band_max: results.filter(r => r.flags_json.includes('ABOVE_BAND_MAX')).length,
-    }
-
-    const BATCH = 200
-    for (let i = 0; i < results.length; i += BATCH) {
-      const { error: insErr } = await adminClient.from('scenario_employee_results').insert(results.slice(i, i + BATCH))
-      if (insErr) throw new Error('Failed to insert results: ' + insErr.message)
-    }
-
-    await adminClient.from('scenario_runs').update({
-      status: 'COMPLETE', baseline_total: baselineTotal, approved_budget_amount: approvedBudgetAmount,
-      total_applied_amount: totalAppliedAmount, remaining_budget_amount: remainingBudgetAmount,
-      budget_status: budgetStatus, quality_report_json: qualityReport, completed_at: new Date().toISOString(),
-    }).eq('id', run.id)
-
-    await adminClient.from('scenarios').update({ status: 'COMPLETE' }).eq('id', scenario.id)
-
-    await adminClient.from('audit_log').insert({
-      tenant_id: tenantId, user_id: triggeredBy, action: 'RUN_MERIT_REVIEW',
-      entity_type: 'SCENARIO_RUN', entity_id: run.id,
-      after_json: { scenario_id: scenario.id, run_id: run.id, run_number: (run as { run_number: number }).run_number, processed: results.length, budget_status: budgetStatus },
-    })
-
-    return new Response(JSON.stringify({
-      status: 'success', run_id: run.id, run_number: (run as { run_number: number }).run_number, processed: results.length,
-      budget_status: budgetStatus, baseline_total: baselineTotal, approved_budget_amount: approvedBudgetAmount,
-      total_applied_amount: totalAppliedAmount, remaining_budget_amount: remainingBudgetAmount,
-      quality_report: qualityReport,
-    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-
-  } catch (err: unknown) {
-    const error = err as Error
-    await adminClient.from('scenario_runs').update({ status: 'FAILED', completed_at: new Date().toISOString() }).eq('id', run.id)
-    throw error
-  }
-}
-
-async function runGeneral(adminClient: SupabaseClient, scenario: Scenario, tenantId: string, _body: ScenarioRequestBody) {
-  const rules        = scenario.rules_json ?? (scenario.rules?.[0]?.rules_json) ?? {}
-  const snapshotDate = scenario.snapshot?.snapshot_date
-  const baseCurrency = scenario.base_currency
-  const { data: rates } = await adminClient.from('fx_rates').select('*').eq('tenant_id', tenantId).eq('date', snapshotDate).eq('to_currency', baseCurrency)
-  const rateMap = new Map((rates ?? []).map((r: { from_currency: string, rate: number | string }) => [r.from_currency, Number(r.rate)]))
-  rateMap.set(baseCurrency, 1.0)
-  const { data: employees } = await adminClient.from('snapshot_employee_data').select('*').eq('snapshot_id', scenario.snapshot_id).eq('tenant_id', tenantId).order('id', { ascending: true })
-  const emps = (employees as EmployeeData[]) ?? []
-  if (!emps.length) throw new Error('No employee data in snapshot')
-  const results: GeneralResult[] = []
-  let totalProposedCostBase = 0
   for (const emp of emps) {
-    if (rules.eligibility?.countries && emp.country_code && !rules.eligibility.countries.includes(emp.country_code)) continue
-    const rate = rateMap.get(emp.local_currency)
-    if (!rate) throw new Error(`Missing FX rate for ${emp.local_currency} on ${snapshotDate}`)
-    const salaryBaseBefore     = (Number(emp.base_salary_local) || 0) * rate
-    const increasePct          = lookupMeritMatrix(rules.merit_matrix, emp.performance_rating ?? '', 1.0) ?? 0 // default compa 1.0
-    const increaseAmountLocal  = (Number(emp.base_salary_local) || 0) * (increasePct / 100)
-    const salaryLocalAfter     = (Number(emp.base_salary_local) || 0) + increaseAmountLocal
-    const salaryBaseAfter      = salaryLocalAfter * rate
-    const flags: string[] = []
-    const { data: band } = await adminClient.from('pay_bands').select('*').eq('grade', emp.pay_grade_internal).eq('tenant_id', tenantId).maybeSingle()
-    if (band) { if (salaryLocalAfter < Number(band.min_salary) || salaryLocalAfter > Number(band.max_salary)) flags.push('OUT_OF_BAND') }
-    results.push({ employee_id: emp.employee_id, before_json: emp as unknown as Record<string, unknown>, after_json: { ...emp, base_salary_local: salaryLocalAfter } as unknown as Record<string, unknown>, flags_json: flags, salary_base_before: salaryBaseBefore, salary_base_after: salaryBaseAfter, base_currency: baseCurrency })
-    totalProposedCostBase += salaryBaseAfter
+    const basisAmountLoc = getBasisAmount(emp, rules.comp_basis)
+    const rate = rateMap.get(emp.local_currency) || 1
+    const amountBase = basisAmountLoc / rate
+    totalBaselineBase += amountBase
+
+    const bandKey = `${emp.pay_grade_internal}_${rules.comp_basis}`
+    const band = bandMap.get(bandKey)
+    const midBase = band ? Number(band.midpoint) : 0
+    
+    const cr = midBase > 0 ? amountBase / midBase : null
+    const zone = cr != null ? getCompaZone(cr, rules.threshold_1 || 0.8, rules.threshold_2 || 1.0, rules.threshold_3 || 1.2) : null
+    const rating = normalizeRating(emp.performance_rating)
+    const guideline = zone && rating ? (matrix[rating]?.[zone] || 0) : 0
+    
+    const increaseBase = amountBase * guideline
+    totalIncreaseBase += increaseBase
+
+    results.push({
+      tenant_id: tenantId,
+      scenario_id: scenario.id,
+      employee_id: emp.employee_id,
+      employee_external_id: emp.employee_external_id,
+      salary_basis_amount: basisAmountLoc,
+      salary_base_before: amountBase, 
+      salary_base_after: amountBase + increaseBase, 
+      band_min: band ? Number(band.min_salary) * rate : null,
+      band_mid: band ? Number(band.midpoint) * rate : null,
+      band_max: band ? Number(band.max_salary) * rate : null,
+      compa_ratio: cr,
+      compa_zone: zone,
+      guideline_pct: guideline,
+      applied_pct: guideline,
+      increase_amount: increaseBase * rate,
+      new_amount: (amountBase + increaseBase) * rate,
+      base_currency: baseCurrency,
+      flags_json: (!band ? ['MISSING_BAND'] : []).concat(!rating || rating === 'UNKNOWN' ? ['INVALID_RATING'] : [])
+    })
   }
-  if (scenario.budget_total && totalProposedCostBase > Number(scenario.budget_total)) results.forEach(r => { if (!r.flags_json.includes('OVER_BUDGET')) r.flags_json.push('OVER_BUDGET') })
-  await adminClient.from('scenario_employee_results').delete().eq('scenario_id', scenario.id).is('scenario_run_id', null)
-  await adminClient.from('scenario_employee_results').insert(results.map(r => ({ ...r, scenario_id: scenario.id, tenant_id: tenantId })))
-  await adminClient.from('scenarios').update({ status: 'COMPLETE' }).eq('id', scenario.id)
-  return new Response(JSON.stringify({ status: 'success', processed: results.length }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
-}
 
-function lookupMeritMatrix(matrix: Record<string, Record<string, number>>, rating: string, compaRatio: number) { return matrix?.[rating]?.[compaRatioBucket(compaRatio)] }
-function compaRatioBucket(cr: number) { if (cr < 0.8) return 'LOW'; if (cr <= 1.2) return 'MID'; return 'HIGH' }
+  const runData = {
+    tenant_id: tenantId,
+    scenario_id: scenario.id,
+    status: 'COMPLETED',
+    total_headcount: emps.length,
+    total_budget_local: totalBaselineBase, 
+    total_increase_base: totalIncreaseBase,
+    base_currency: baseCurrency,
+    executed_by: userId,
+    finished_at: new Date().toISOString(),
+    engine_version: '1.0.6',
+    rules_snapshot: rules,
+    quality_report: {
+      missing_bands: results.filter(r => r.flags_json.includes('MISSING_BAND')).length,
+      invalid_ratings: results.filter(r => r.flags_json.includes('INVALID_RATING')).length
+    }
+  }
 
-interface EmployeeResult {
-  tenant_id: string;
-  scenario_id: string;
-  scenario_run_id: string;
-  employee_id: string;
-  employee_external_id: string;
-  base_currency: string;
-  before_json: Record<string, unknown>;
-  after_json: Record<string, unknown>;
-  flags_json: string[];
-  salary_basis_amount: number;
-  band_min: number;
-  band_mid: number;
-  band_max: number;
-  compa_ratio: number;
-  compa_zone: string;
-  guideline_pct: number;
-  guideline_multiplier: number;
-  applied_pct: number;
-  increase_amount: number;
-  new_amount: number;
-  lump_sum_amount: number;
-  salary_base_before: number;
-  salary_base_after: number;
+  console.log(`[scenario-engine] Finalizing run with ${emps.length} employees...`)
+  const { data: run, error: rErr } = await adminClient.from('scenario_runs').insert(runData).select('id').single()
+  if (rErr) throw new Error(`Run insert fail: ${rErr.message}`)
+
+  const finalResults = results.map(r => ({ ...r, scenario_run_id: run.id }))
+  const { error: resErr } = await adminClient.from('scenario_employee_results').insert(finalResults)
+  if (resErr) throw new Error(`Results insert fail: ${resErr.message}`)
+
+  console.log(`[scenario-engine] MeritReview completed successfully for run ${run.id}`)
+  return new Response(JSON.stringify({ success: true, runId: run.id, version: "v27-final" }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  })
 }

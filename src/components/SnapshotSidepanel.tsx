@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, Users, Calendar, Shield, Database, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { supabase } from '../lib/supabaseClient.ts';
+import { supabase } from '../lib/supabaseClient';
 
 interface Snapshot {
   id: string;
