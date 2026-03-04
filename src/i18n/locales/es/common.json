@@ -69,7 +69,13 @@
       "no_limit": "Sin límite",
       "delete_confirm_title": "¿Está seguro de que desea eliminar este escenario?",
       "delete_confirm_subtitle": "Esta acción no se puede deshacer y se perderán todos los datos modelados.",
-      "delete_confirm_button": "Borrar Definitivamente"
+      "delete_confirm_button": "Borrar Definitivamente",
+      "ready_to_run": "Listo para Ejecutar",
+      "empty_run_desc": "Este escenario aún no tiene ejecuciones. Haz clic abajo para generar el primer run y comenzar tu análisis.",
+      "run_scenario": "Ejecutar Escenario",
+      "run_failed": "La ejecución falló en el servidor. Revisa los logs.",
+      "run_timeout": "Tiempo de espera agotado (60s). Por favor, recarga o intenta de nuevo.",
+      "results_for_run": "Resultados de la ejecución:"
     },
     "reports": {
       "title": "Inteligencia e Insights",
@@ -329,7 +335,10 @@
     "next_steps": "Siguientes Pasos",
     "configure": "Configurar",
     "details": "Detalles",
-    "records": "Registros"
+    "records": "Registros",
+    "back": "Volver",
+    "back_to_scenarios": "Volver a Escenarios",
+    "running": "Ejecutando..."
   },
   "plan_status": {
     "draft": "Borrador",

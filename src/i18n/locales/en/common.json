@@ -69,7 +69,13 @@
       "no_limit": "No limit",
       "delete_confirm_title": "Are you sure you want to delete this scenario?",
       "delete_confirm_subtitle": "This action cannot be undone and all modeled data will be lost.",
-      "delete_confirm_button": "Delete Permanently"
+      "delete_confirm_button": "Delete Permanently",
+      "ready_to_run": "Ready to Run",
+      "empty_run_desc": "This scenario has no runs yet. Click below to generate the first run and start your analysis.",
+      "run_scenario": "Run Scenario",
+      "run_failed": "The run failed on the server. Please check logs.",
+      "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
+      "results_for_run": "Results for run:"
     },
     "reports": {
       "title": "Intelligence & Insights",
@@ -329,7 +335,10 @@
     "next_steps": "Next Steps",
     "configure": "Configure",
     "details": "Details",
-    "records": "Records"
+    "records": "Records",
+    "back": "Back",
+    "back_to_scenarios": "Back to Scenarios",
+    "running": "Running..."
   },
   "plan_status": {
     "draft": "Draft",
