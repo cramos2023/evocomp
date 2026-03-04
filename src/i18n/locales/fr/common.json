@@ -27,6 +27,20 @@
     "quick_actions": "Actions Rapides",
     "search_placeholder": "Rechercher des scénarios, talents o audit..."
   },
+  "dashboard": {
+    "title": "Tableau de Bord Stratégique",
+    "subtitle": "Bon retour. Votre infrastructure de rémunération est optimisée et saine.",
+    "intelligence_active": "Moteur d'Intelligence Actif",
+    "system_status": "État du Système",
+    "ready": "PRÊT",
+    "active_scenarios": "Scénarios Actifs",
+    "cycle_progress": "Progression du Cycle",
+    "budget_utilization": "Utilisation du Budget",
+    "recent_snapshots": "Captures Récentes",
+    "explore_all": "Tout explorer",
+    "sync_msg": "Votre espace de travail est en cours de synchronisation.",
+    "sync_sub": "Optimisation des graphiques de rémunération et des chemins de traçabilité..."
+  },
   "auth": {
     "sign_in": "Se Connecter",
     "sign_up": "Créer un Compte",
@@ -49,7 +63,10 @@
       "empty_subtitle": "Créez votre premier scénario pour commencer à modéliser les augmentations salariales.",
       "learn_more": "En savoir plus sur la modélisation",
       "budget": "Budget",
-      "no_limit": "Aucune limite"
+      "no_limit": "Aucune limite",
+      "delete_confirm_title": "Êtes-vous sûr de vouloir supprimer ce scénario ?",
+      "delete_confirm_subtitle": "Cette action est irréversible et toutes les données modélisées seront perdues.",
+      "delete_confirm_button": "Supprimer définitivement"
     },
     "reports": {
       "title": "Intelligence et Analyses",
@@ -83,25 +100,99 @@
     },
     "pay_bands": {
       "title": "Grilles Salariales",
-      "subtitle": "Gérez les plages de rémunération, les points médians et les écarts.",
-      "create": "Créer une Grille",
+      "subtitle": "Gérer les fourchettes de rémunération, les points médians et l'étendue.",
       "total": "Total des Grilles",
       "avg_spread": "Écart Moyen",
       "currency_policy": "Politique Monétaire Globale",
-      "currency_policy_desc": "La conversion automatique est appliquée dans les scénarios.",
+      "currency_policy_desc": "La conversion des devises s'applique automatiquement.",
+      "bulk_upload": "Téléchargement CSV en masse",
+      "download_template": "Télécharger le modèle",
+      "create": "Créer une grille",
+      "upload_success": "{{count}} grilles téléchargées avec succès.",
+      "upload_error": "Erreur lors du téléchargement. Veuillez vérifier le format CSV.",
+      "delete_confirm_title": "Êtes-vous sûr de vouloir supprimer cette bande salariale ?",
+      "delete_confirm_subtitle": "Cette action ne peut pas être annulée et supprimera définitivement cet enregistrement.",
+      "delete_confirm_button": "Supprimer la bande",
+      "fx_simulation": {
+        "title": "Simulation de Conversion",
+        "subtitle": "Aperçu des échelles converties dans une autre devise",
+        "convert_to": "Convertir en :",
+        "col_grade_basis": "Grade / Base",
+        "col_source_currency": "Devise Source",
+        "col_rate": "Taux",
+        "col_min": "Minimum",
+        "col_mid": "Milieu",
+        "col_max": "Maximum",
+        "no_data": "Pas de données à convertir"
+      },
       "table": {
         "family": "Famille d'Emplois / Niveau",
         "currency": "Devise",
-        "range": "Plage (Min - Méd - Max)",
-        "spread": "Écart"
+        "range": "PLAGE (MIN - MED - MAX)",
+        "spread": "ÉCART"
       },
       "empty": "Aucune grille définie. Cliquez sur \"Créer une Grille\" pour commencer."
     },
     "imports": {
-      "title": "Base de Données",
-      "subtitle": "Téléchargez des données de talents pour la modélisation.",
-      "upload": "Télécharger des Données",
-      "history": "Historique des Importations"
+      "title": "Base de données",
+      "subtitle": "Téléchargez des instantanés de données sur les talents pour la modélisation.",
+      "upload": "Télécharger des données",
+      "history": "Historique des importations",
+      "uploading_title": "Traitement de l'instantané",
+      "uploading_subtitle": "Notre moteur d'intelligence analyse et indexe votre couche de données.",
+      "success_title": "Téléchargement terminé",
+      "success_subtitle": "Votre instantané de talent a été traité en toute sécurité et est prêt pour la modélisation de scénarios.",
+      "delete_confirm_title": "Êtes-vous sûr de vouloir supprimer cet instantané ?",
+      "delete_confirm_subtitle": "Cela supprimera toutes les données d'employés associées et les instantanés de modélisation.",
+      "delete_confirm_button": "Supprimer l'instantané"
+    },
+    "snapshots": {
+      "fetching": "Récupération des banques de données sécurisées...",
+      "empty_message": "Aucune capture n'a encore été publiée. Importez votre premier jeu de données de talents pour commencer la modélisation.",
+      "go_to_imports": "Aller aux Importations",
+      "col_id_date": "ID de Capture & Date",
+      "col_source": "Importation Source",
+      "col_headcount": "Effectif",
+      "col_salary": "Salaire Total (Base)",
+      "col_currencies": "Devises",
+      "col_actions": "Actions",
+      "view_details": "Voir Détails",
+      "run_scenario": "Exécuter Scénario"
+    },
+    "audit": {
+      "system_of_record": "Système d'Enregistrement Immuable",
+      "subtitle": "Traçabilité médico-légale approfondie de toutes les opérations de la plateforme et des décisions de rémunération à fort enjeu.",
+      "refresh": "Actualiser le Journal",
+      "search_placeholder": "Rechercher par événement, acteur ou ID d'entité...",
+      "last": "Les",
+      "events": "Derniers Événements",
+      "col_timestamp": "Horodatage / Événement",
+      "col_actor": "Acteur",
+      "col_context": "Contexte",
+      "col_ip": "IP Source",
+      "col_trace": "Trace",
+      "scanning": "Analyse du registre médico-légal..."
+    },
+    "users": {
+      "admin_console": "Sécurité et Gouvernance",
+      "subtitle": "Gérez l'accès sécurisé et la gouvernance de plateforme de haut niveau pour les stratèges principaux de votre organisation.",
+      "invite": "Inviter un Collaborateur",
+      "global_coverage": "Couverture Mondiale",
+      "authenticated": "Authentifiés",
+      "pending_sync": "Synchronisation en attente",
+      "user_growth": "Croissance des Utilisateurs",
+      "search_placeholder": "Rechercher des stratèges par nom, e-mail ou ID...",
+      "filters": "Filtres",
+      "strategic_nodes": "Nœuds Stratégiques :",
+      "col_identity": "Identité du Stratège",
+      "col_status": "Statut d'Auth",
+      "col_roles": "Rôles de Gouvernance",
+      "col_date": "Date d'Entrée",
+      "col_control": "Contrôle",
+      "syncing": "Synchronisation des nœuds chiffrés...",
+      "security_lock": "Verrouillage de l'Infrastructure d'Entreprise",
+      "security_desc": "Imposer l'authentification multifacteur et des politiques de gouvernance avancées sur tous les nœuds stratégiques administratifs.",
+      "enforce": "Appliquer la Gouvernance"
     },
     "admin": {
       "title": "Paramètres de l'Organisation",
@@ -145,6 +236,7 @@
     "basis_base_salary": "Salaire de Base",
     "basis_annual_target_cash": "Cible Cash Annuelle",
     "basis_total_guaranteed": "Total Garanti",
+    "basis_best_match": "Flexible (Meilleure Correspondance)",
     "approved_budget_pct": "Budget Approuvé (%)",
     "budget_pct_hint": "Ex: 20 = 20%",
     "step_factor": "Facteur Échelon",
@@ -165,6 +257,10 @@
     "budget_pct_label": "Budget",
     "run_number": "Exécution",
     "run_scenario": "Exécuter",
+    "generate_guidelines": "Générer les Directives",
+    "open_workbench": "Ouvrir le Workbench",
+    "mode_execution": "Exécution",
+    "mode_guidelines": "Directives",
     "running": "En cours...",
     "no_runs_title": "Aucune exécution",
     "no_runs_subtitle": "Cliquez sur Exécuter.",
@@ -184,6 +280,8 @@
     "qr_invalid_rating": "Évaluation Invalide",
     "qr_invalid_hours": "Heures Invalides",
     "qr_missing_basis": "Base Manquante",
+    "qr_missing_variable": "Variable Manquante",
+    "qr_missing_fx": "FX Manquant",
     "qr_below_min": "Sous Min",
     "qr_above_max": "Au-dessus Max",
     "col_employee_id": "ID",
@@ -197,6 +295,12 @@
     "col_applied_pct": "% App.",
     "col_increase": "Augment.",
     "col_new_amount": "Nouveau",
+    "col_requested_pct": "% Demandé",
+    "col_gross_increase": "Brut",
+    "col_consolidated": "Consolidé",
+    "col_lump_sum": "Versement Unique",
+    "col_budget_spend": "Dépense Budg.",
+    "col_compa_after": "Compa Après",
     "col_flags": "Indicateurs",
     "band_min": "Min",
     "band_mid": "Méd",
@@ -204,7 +308,12 @@
     "error_name_required": "Nom requis.",
     "error_snapshot_required": "Sélectionner une capture.",
     "error_grade_required": "Niveau requis.",
-    "error_band_amounts_required": "Min/Méd/Max requis."
+    "error_band_amounts_required": "Min/Méd/Max requis.",
+    "page_showing": "Affichage",
+    "page_of": "sur",
+    "page_prev": "Précédent",
+    "page_next": "Suivant",
+    "page_rows_per_page": "Lignes par page"
   },
   "common": {
     "optional": "optionnel",
@@ -213,7 +322,10 @@
     "cancel": "Annuler",
     "error": "Erreur",
     "success": "Succès",
-    "next_steps": "Étapes suivantes"
+    "next_steps": "Étapes suivantes",
+    "configure": "Configurer",
+    "details": "Détails",
+    "records": "Registres"
   },
   "plan_status": {
     "draft": "Brouillon",
@@ -226,7 +338,12 @@
   },
   "approvals": {
     "manager_workspace": "Espace gestionnaire",
+    "no_active_plan": "Aucun plan de mérite actif trouvé pour votre compte.",
+    "review_team_recs": "Passez en revue les recommandations de mérite de votre équipe et soumettez-les pour approbation. Une fois soumis, votre plan sera examiné par votre approbateur.",
+    "cycle_progress": "Progression du Cycle",
+    "view_reports": "Voir les rapports détaillés de l'impact de l'équipe",
     "approver_inbox": "Centre d'approbations",
+    "approver_inbox_subtitle": "Examinez les recommandations et gérez la gouvernance hiérarchique.",
     "submit_for_approval": "Soumettre pour approbation",
     "rejection_reason": "Motif du rejet",
     "reject_placeholder": "Veuillez fournir un motif de rejet...",
@@ -255,7 +372,34 @@
       "remediation": "Relancez le moteur de scénario avec un nouveau snapshot. Assurez-vous que les salaires et les augmentations recommandées sont correctement renseignés."
     }
   },
+  "pay_bands": {
+    "filter_all": "Tous",
+    "search_placeholder": "Rechercher par niveau...",
+    "results": "bandes",
+    "col_grade": "Niveau",
+    "col_basis": "Type de Base",
+    "col_country": "Pays",
+    "col_currency": "Devise",
+    "create_title": "Nouvelle Bande Salariale",
+    "bulk_upload": "Chargement Massif CSV",
+    "download_template": "Télécharger le Modèle",
+    "uploading": "Téléchargement...",
+    "upload_success": "{{count}} bandes téléchargées avec succès.",
+    "upload_error": "Erreur de téléchargement. Veuillez vérifier le format CSV."
+  },
   "merit_admin": {
+    "create_cycle": {
+      "title": "Nouveau Cycle",
+      "subtitle": "Configurer une nouvelle période d'examen.",
+      "name_label": "Nom du Cycle",
+      "name_placeholder": "ex. Révision Salariale T1 2026",
+      "start_date": "Date de Début",
+      "end_date": "Date de Fin",
+      "budget": "Budget",
+      "currency": "Devise",
+      "cancel": "Annuler",
+      "submit": "Créer le Cycle"
+    },
     "sidebar_label": "Administration des cycles de mérite",
     "page_title": "Administration du cycle de mérite",
     "page_subtitle": "Valider la préparation de la paie, verrouiller les plans des managers et fermer/rouvrir les cycles avec des traces d'audit.",
@@ -321,6 +465,225 @@
     "gate_closed": "Cycle fermé",
     "gate_locked": "Tous les plans verrouillés",
     "gate_validator": "Validateur prêt",
-    "error_gating_failed": "Conditions de gating non remplies pour la publication."
+    "error_gating_failed": "Conditions de gating non remplies pour la publication.",
+    "guide": {
+      "title": "Guide d'Opération de Paie",
+      "step1_title": "Étape 1 : Validation des Données",
+      "step1_desc": "Assurez-vous que tous les managers ont terminé et qu'il n'y a pas d'erreurs budgétaires.",
+      "step2_title": "Étape 2 : Clôture Officielle",
+      "step2_desc": "Verrouillez le cycle pour empêcher toute modification. C'est le point de contrôle final avant le paiement.",
+      "step3_title": "Étape 3 : Publication & Paie",
+      "step3_desc": "Choisissez le scénario gagnant et générez le fichier CSV pour votre système de paie.",
+      "step_progress": "Étape {{current}} sur {{total}}",
+      "action_required": "Action Requise"
+    },
+    "tooltips": {
+      "gating": "Règles automatiques prévenant les erreurs avant le paiement.",
+      "validator": "Scanne des milliers de lignes pour détecter les incohérences mathématiques."
+    },
+    "onboarding": {
+      "title": "Bienvenue sur EvoComp Intelligence",
+      "subtitle": "Guide rapide pour les processus de rémunération",
+      "next": "Suivant",
+      "back": "Précédent",
+      "finish": "Terminer",
+      "skip": "Ignorer le tour",
+      "step1_title": "1. Importation des Données",
+      "step1_content": "Téléchargez vos données d'employés dans 'Importations' en utilisant notre modèle CSV. Vous recevrez une confirmation instantanée.",
+      "step2_title": "2. Sélection & Source",
+      "step2_content": "Dans 'Importations', utilisez la flèche dans 'Operations' pour envoyer vos données vers la section Scénarios.",
+      "step3_title": "3. Gestion des Scénarios",
+      "step3_content": "Allez dans 'Scénarios' pour retrouver vos importations prêtes pour l'évaluation de la rémunération.",
+      "step4_title": "4. Paramétrage",
+      "step4_content": "Utilisez 'Nouveau Scénario' pour définir les budgets, devises et règles de calcul avant la modélisation.",
+      "step5_title": "5. Exécution & Modélisation",
+      "step5_content": "Ouvrez votre scénario et lancez le moteur pour modéliser précisément les augmentations par employé."
+    },
+    "cycles": {
+      "title": "Cycles de Rémunération",
+      "subtitle": "Gérez les périodes de révision salariale, les primes et les ajustements d'équité.",
+      "new": "Nouveau Cycle",
+      "active_count": "Cycles Actifs",
+      "planned_count": "En Planification",
+      "completed_count": "Terminés",
+      "history": "Historique des Cycles",
+      "no_cycles": "Aucun cycle configuré",
+      "learn_more": "En savoir plus sur les cycles",
+      "loading": "Chargement des cycles...",
+      "no_active_cycle": "Aucun cycle actif"
+    },
+    "snapshots": {
+      "title": "Captures de Données",
+      "subtitle": "Référentiel sécurisé des recensements de talents et de rémunération.",
+      "upload": "Charger des Données",
+      "fetching": "Récupération des entrepôts de données sécurisés...",
+      "empty_title": "Aucune capture trouvée",
+      "empty_message": "Aucune capture n'a encore été publiée. Importez votre premier jeu de données pour commencer.",
+      "go_to_imports": "Aller aux Importations",
+      "col_id_date": "ID de Capture et Date",
+      "col_source": "Source",
+      "col_headcount": "Effectif",
+      "col_salary": "Salaire Total (Base)",
+      "col_currencies": "Devises",
+      "col_actions": "Actions",
+      "view_details": "Voir Détails",
+      "run_scenario": "Exécuter Scénario"
+    }
+  },
+  "landing": {
+    "nav": {
+      "services": "Services",
+      "advantage": "The EvoComp Advantage",
+      "security": "Enterprise Security",
+      "about": "About Us",
+      "client_workspace": "Client Workspace"
+    },
+    "hero": {
+      "title_1": "Expert Compensation",
+      "title_2": "Consulting — Powered by",
+      "title_3": "Next-Gen Technology",
+      "subtitle": "Built for Total Rewards teams across the Americas. We deliver bank-grade, data-driven compensation decisions faster—using EvoComp's interactive scenario engine, not static spreadsheets.",
+      "cta_workspace": "Client Workspace",
+      "cta_consultation": "Book a Consultation",
+      "mono_text": "Not a PDF shop. Not an Excel factory. A secure decision system."
+    },
+    "features": {
+      "card1_label": "Scenario Execution",
+      "card1_t1": "What-if pools, matrices, caps, and constraints—deterministic results.",
+      "card1_t2": "From modeling to execution: budget control, approvals, and governance.",
+      "card1_t3": "Traceability by design: decisions you can explain in audits.",
+      "card2_label": "Live System Status",
+      "card2_m1": "Loading secure tenant workspace…",
+      "card2_m2": "Validating JWT session token…",
+      "card2_m3": "Applying Row Level Security policies…",
+      "card2_m4": "Simulating merit cycle scenarios…",
+      "card2_m5": "Generating audit trail & evidence pack…",
+      "card3_label": "Approval Protocol",
+      "card3_lock": "Lock Scenario",
+      "card3_status": "Scenario locked • Version stamped"
+    },
+    "manifesto": {
+      "t1": "The usual question is: What went wrong?",
+      "t2_1": "We ask: What can be optimized—",
+      "t2_2": "securely, measurably, fast?",
+      "t3": ">_ From spreadsheets to a secure decision operating system."
+    },
+    "archive": {
+      "label": "Archive File 0{{num}}",
+      "card1_title": "Salary Scenario Modeling & Execution",
+      "card1_b1": "What-if scenarios across teams, countries, and pay bases.",
+      "card1_b2": "Pools, matrices, caps, eligibility rules—deterministic outcomes.",
+      "card1_b3": "Ready for approvals and controlled rollout.",
+      "card2_title": "Salary & Compensation Structures + Job Architecture",
+      "card2_b1": "Market-aligned pay bands and job leveling.",
+      "card2_b2": "Analytical job evaluation and architecture design.",
+      "card2_b3": "Consistency across geographies in the Americas.",
+      "card3_title": "Variable Pay Design + Bonus Calculations",
+      "card3_b1": "Incentive plan design with measurable levers.",
+      "card3_b2": "Bonus modeling and forecasting tied to performance.",
+      "card3_b3": "Transparent outputs for Finance and leadership."
+    },
+    "security": {
+      "title": "Enterprise-Grade Security",
+      "c1_title": "Bank-Grade Data Protection",
+      "c1_desc": "Encrypted at rest and in transit. Designed to satisfy the most stringent compliance audits requested by IT and InfoSec stakeholders in large enterprises.",
+      "c2_title": "Backend & Authentication",
+      "c2_desc": "Stateless authentication validation via rigorously verified JWT tokens. Every API call requires fresh credential resolution ensuring session integrity.",
+      "c3_title": "Tenant Isolation (RLS)",
+      "c3_desc": "Strict Row Level Security implemented directly on the PostgreSQL (Supabase) engine. Cross-tenant data bleeds are mathematically impossible by design."
+    },
+    "pricing": {
+      "title": "Engagement Models",
+      "c1_title": "Advisory Essentials",
+      "c1_b1": "Comp consulting engagements + secure deliverables",
+      "c1_b2": "Band / job architecture support",
+      "c1_b3": "Limited workspace access",
+      "c1_btn": "Request Scope",
+      "c2_badge": "Recommended",
+      "c2_title": "EvoComp Workspace",
+      "c2_b1": "Full scenario engine access + guided consulting",
+      "c2_b2": "Merit cycle execution workflows",
+      "c2_b3": "Audit-ready traceability and governance",
+      "c2_btn": "Book a Consultation",
+      "c3_title": "Enterprise",
+      "c3_b1": "Custom security posture alignment",
+      "c3_b2": "IT review support + controls documentation",
+      "c3_b3": "Multi-region operating model",
+      "c3_btn": "Talk to Security"
+    },
+    "footer": {
+      "badge": "Operating System / Active",
+      "desc": "Built for auditability, tenant isolation, and bank-grade data protection.",
+      "sitemap": "Sitemap",
+      "home": "Home",
+      "services": "Services",
+      "advantage": "Advantage",
+      "security": "Security",
+      "about": "About Us",
+      "legal": "Legal & Locale",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact",
+      "rights": "© {{year}} EvoComp. All rights reserved."
+    }
+  },
+  "workspace_hub": {
+    "header": {
+      "title": "EvoComp Workspace",
+      "subtitle": "Secure Tenant Environment",
+      "badge": "WORKSPACE ACTIVE",
+      "logout": "Secure Sign Out"
+    },
+    "hero": {
+      "welcome": "Welcome to your ",
+      "highlight": "Strategic Hub",
+      "desc": "Select a module to enter the secure environment. Your current session isolates all operations strictly to your tenant data architecture."
+    },
+    "modules": {
+      "m1": {
+        "title": "Compensation Scenarios",
+        "desc": "Model, simulate, and execute merit cycles across teams and geographies with audit-ready deterministic outputs."
+      },
+      "m2": {
+        "title": "Pay Bands & Structures",
+        "desc": "Establish market-aligned pay bands, analytical job leveling, and structured compensation consistency."
+      },
+      "m3": {
+        "title": "Job Architecture & Evaluation",
+        "desc": "Design analytical job structures, levels, and mappings to ensure internal equity and market alignment."
+      },
+      "m4": {
+        "title": "Variable Pay",
+        "desc": "Design incentive plans with measurable levers, matrix thresholds, and performance-based outcomes."
+      },
+      "m5": {
+        "title": "Bonus Calculations",
+        "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
+      },
+      "badges": {
+        "active": "Active",
+        "concept": "Concept"
+      },
+      "actions": {
+        "launch": "Launch Module",
+        "preview": "Preview Roadmap"
+      }
+    }
+  },
+  "workbench": {
+    "title": "Workbench d'Exécution",
+    "budget_summary": "Résumé du Budget",
+    "budget_pool": "Poche Budgétaire",
+    "budget_spent": "Dépensé",
+    "budget_remaining": "Restant",
+    "search_placeholder": "Rechercher des employés...",
+    "run_execution": "Exécuter",
+    "saving": "Enregistrement...",
+    "status_draft": "BROUILLON",
+    "status_runnable": "PRÊT",
+    "status_executed": "EXÉCUTÉ",
+    "validation_error_over_guideline": "Dépasse la directive",
+    "validation_error_required": "Requis",
+    "col_name": "Nom"
   }
 }

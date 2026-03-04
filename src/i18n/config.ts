@@ -10,17 +10,25 @@ import frCommon from './locales/fr/common.json';
 import deCommon from './locales/de/common.json';
 import itCommon from './locales/it/common.json';
 
+// Job Evaluation specific translations
+import enJobEval from '../modules/job-evaluation/translations/en.json';
+import esJobEval from '../modules/job-evaluation/translations/es.json';
+import ptJobEval from '../modules/job-evaluation/translations/pt.json';
+import frJobEval from '../modules/job-evaluation/translations/fr.json';
+import deJobEval from '../modules/job-evaluation/translations/de.json';
+import itJobEval from '../modules/job-evaluation/translations/it.json';
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
-      en: { common: enCommon },
-      es: { common: esCommon },
-      pt: { common: ptCommon },
-      fr: { common: frCommon },
-      de: { common: deCommon },
-      it: { common: itCommon },
+      en: { common: enCommon, jobEvaluation: enJobEval },
+      es: { common: esCommon, jobEvaluation: esJobEval },
+      pt: { common: ptCommon, jobEvaluation: ptJobEval },
+      fr: { common: frCommon, jobEvaluation: frJobEval },
+      de: { common: deCommon, jobEvaluation: deJobEval },
+      it: { common: itCommon, jobEvaluation: itJobEval },
     },
     fallbackLng: 'en',
     ns: ['common'],

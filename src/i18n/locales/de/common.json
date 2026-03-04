@@ -24,6 +24,20 @@
     "quick_actions": "Schnellaktionen",
     "search_placeholder": "Suche Szenarien, Talente oder Audits..."
   },
+  "dashboard": {
+    "title": "Strategisches Dashboard",
+    "subtitle": "Willkommen zurück. Ihre Vergütungsinfrastruktur ist optimiert und gesund.",
+    "intelligence_active": "Intelligenz-Engine Aktiv",
+    "system_status": "Systemstatus",
+    "ready": "BEREIT",
+    "active_scenarios": "Aktive Szenarien",
+    "cycle_progress": "Zyklusfortschritt",
+    "budget_utilization": "Budgetauslastung",
+    "recent_snapshots": "Kürzliche Snapshots",
+    "explore_all": "Alles erkunden",
+    "sync_msg": "Ihr Arbeitsbereich wird synchronisiert.",
+    "sync_sub": "Optimierung von Vergütungsdiagrammen & Nachverfolgbarkeitspfaden..."
+  },
   "auth": {
     "sign_in": "Anmelden",
     "sign_up": "Registrieren",
@@ -46,7 +60,10 @@
       "empty_subtitle": "Erstellen Sie Ihr erstes Szenario, um mit der Modellierung zu beginnen.",
       "learn_more": "Mehr über Modellierung erfahren",
       "budget": "Budget",
-      "no_limit": "Kein Limit"
+      "no_limit": "Kein Limit",
+      "delete_confirm_title": "Sind Sie sicher, dass Sie dieses Szenario löschen möchten?",
+      "delete_confirm_subtitle": "Diese Aktion kann nicht rückgängig gemacht werden und alle modellierten Daten gehen verloren.",
+      "delete_confirm_button": "Endgültig löschen"
     },
     "reports": {
       "title": "Intelligenz & Einblicke",
@@ -92,13 +109,88 @@
         "range": "Bereich (Min - Mid - Max)",
         "spread": "Spanne"
       },
-      "empty": "Noch keine Gehaltsbänder definiert."
+      "empty": "Noch keine Gehaltsbänder definiert. Klicken Sie auf \"Band erstellen\", um zu beginnen.",
+      "bulk_upload": "CSV Massen-Upload",
+      "download_template": "Vorlage herunterladen",
+      "uploading": "Wird hochgeladen...",
+      "upload_success": "{{count}} Bänder erfolgreich hochgeladen.",
+      "upload_error": "Fehler beim Hochladen der Datei. Bitte überprüfen Sie das CSV-Format.",
+      "delete_confirm_title": "Sind Sie sicher, dass Sie dieses Gehaltsband löschen möchten?",
+      "delete_confirm_subtitle": "Diese Aktion kann nicht rückgängig gemacht werden und wird diesen Datensatz dauerhaft entfernen.",
+      "delete_confirm_button": "Band löschen",
+      "fx_simulation": {
+        "title": "Währungssimulation",
+        "subtitle": "Vorschau der in eine andere Währung umgerechneten Gehaltsbänder",
+        "convert_to": "Umrechnen in:",
+        "col_grade_basis": "Gehaltsstufe / Basis",
+        "col_source_currency": "Quellwährung",
+        "col_rate": "Kurs",
+        "col_min": "Minimum",
+        "col_mid": "Mittelwert",
+        "col_max": "Maximum",
+        "no_data": "Keine Daten zum Umrechnen vorhanden"
+      }
     },
     "imports": {
-      "title": "Datenbasis",
-      "subtitle": "Talentdaten-Snapshots für Modellierung hochladen.",
-      "upload": "Snapshot hochladen",
-      "history": "Import-Verlauf"
+      "title": "Datenbank",
+      "subtitle": "Laden Sie Talentdaten-Snapshots für die Modellierung hoch.",
+      "upload": "Daten hochladen",
+      "history": "Importverlauf",
+      "uploading_title": "Snapshot wird verarbeitet",
+      "uploading_subtitle": "Unsere Intelligence Engine analysiert und indiziert Ihre Datenebene.",
+      "success_title": "Upload abgeschlossen",
+      "success_subtitle": "Ihr Talentdaten-Snapshot wurde sicher verarbeitet und ist bereit für die Szenariomodellierung.",
+      "delete_confirm_title": "Sind Sie sicher, dass Sie diesen Snapshot löschen möchten?",
+      "delete_confirm_subtitle": "Dadurch werden alle zugehörigen Mitarbeiterdaten und Modellierungs-Snapshots entfernt.",
+      "delete_confirm_button": "Snapshot löschen"
+    },
+    "snapshots": {
+      "fetching": "Sichere Datenspeicher abrufen...",
+      "empty_message": "Es wurden noch keine Snapshots veröffentlicht. Importieren Sie Ihren ersten Talentdatensatz, um mit der Modellierung zu beginnen.",
+      "go_to_imports": "Zu Importe gehen",
+      "col_id_date": "Snapshot-ID & Datum",
+      "col_source": "Quellimport",
+      "col_headcount": "Mitarbeiterzahl",
+      "col_salary": "Gesamtgehalt (Basis)",
+      "col_currencies": "Währungen",
+      "col_actions": "Aktionen",
+      "view_details": "Details anzeigen",
+      "run_scenario": "Szenario ausführen"
+    },
+    "audit": {
+      "system_of_record": "Unveränderliches Aufzeichnungssystem",
+      "subtitle": "Umfassende forensische Rückverfolgbarkeit aller Plattformoperationen und kritischen Vergütungsentscheidungen.",
+      "refresh": "Audit-Protokoll aktualisieren",
+      "search_placeholder": "Nach Ereignis, Akteur oder Entitäts-ID suchen...",
+      "last": "Letzte",
+      "events": "Ereignisse",
+      "col_timestamp": "Zeitstempel / Ereignis",
+      "col_actor": "Akteur",
+      "col_context": "Kontext",
+      "col_ip": "Quell-IP",
+      "col_trace": "Spur",
+      "scanning": "Forensisches Protokoll wird gescannt..."
+    },
+    "users": {
+      "admin_console": "Sicherheit & Governance",
+      "subtitle": "Verwalten Sie den sicheren Zugriff und die übergeordnete Plattform-Governance für die wichtigsten Strategen Ihres Unternehmens.",
+      "invite": "Mitarbeiter einladen",
+      "global_coverage": "Globale Abdeckung",
+      "authenticated": "Authentifiziert",
+      "pending_sync": "Ausstehende Synchronisation",
+      "user_growth": "Benutzerwachstum",
+      "search_placeholder": "Strategen nach Name, E-Mail oder ID suchen...",
+      "filters": "Filter",
+      "strategic_nodes": "Strategische Knoten:",
+      "col_identity": "Identität des Strategen",
+      "col_status": "Auth-Status",
+      "col_roles": "Governance-Rollen",
+      "col_date": "Eintrittsdatum",
+      "col_control": "Kontrolle",
+      "syncing": "Verschlüsselte Knoten werden synchronisiert...",
+      "security_lock": "Sperre der Unternehmensinfrastruktur",
+      "security_desc": "Erzwingen Sie die Multi-Faktor-Authentifizierung und erweiterte Governance-Richtlinien über alle administrativen strategischen Knoten hinweg.",
+      "enforce": "Governance erzwingen"
     },
     "admin": {
       "title": "Organisationseinstellungen",
@@ -142,6 +234,7 @@
     "basis_base_salary": "Grundgehalt",
     "basis_annual_target_cash": "Jahresziel-Cash",
     "basis_total_guaranteed": "Gesamt garantiert",
+    "basis_best_match": "Flexibel (Beste Übereinstimmung)",
     "approved_budget_pct": "Budget (%)",
     "budget_pct_hint": "z.B. 20%",
     "step_factor": "Schritt-Faktor",
@@ -162,6 +255,10 @@
     "budget_pct_label": "Budget",
     "run_number": "Lauf",
     "run_scenario": "Ausführen",
+    "generate_guidelines": "Richtlinien generieren",
+    "open_workbench": "Workbench öffnen",
+    "mode_execution": "Ausführung",
+    "mode_guidelines": "Richtlinien",
     "running": "Läuft...",
     "no_runs_title": "Noch keine Läufe",
     "no_runs_subtitle": "Klicken Sie auf Ausführen.",
@@ -181,6 +278,8 @@
     "qr_invalid_rating": "Rating ungültig",
     "qr_invalid_hours": "Stunden ungültig",
     "qr_missing_basis": "Basis fehlt",
+    "qr_missing_variable": "Variable fehlt",
+    "qr_missing_fx": "FX fehlt",
     "qr_below_min": "Unter Min",
     "qr_above_max": "Über Max",
     "col_employee_id": "ID",
@@ -194,6 +293,12 @@
     "col_applied_pct": "% Angew.",
     "col_increase": "Erhöhung",
     "col_new_amount": "Neu",
+    "col_requested_pct": "% Angefragt",
+    "col_gross_increase": "Brutto",
+    "col_consolidated": "Konsolidiert",
+    "col_lump_sum": "Einmalzahlung",
+    "col_budget_spend": "Budget-Ausgabe",
+    "col_compa_after": "Compa Danach",
     "col_flags": "Flags",
     "band_min": "Min",
     "band_mid": "Mid",
@@ -201,7 +306,12 @@
     "error_name_required": "Name erforderlich.",
     "error_snapshot_required": "Snapshot erforderlich.",
     "error_grade_required": "Grad erforderlich.",
-    "error_band_amounts_required": "Min/Mid/Max erforderlich."
+    "error_band_amounts_required": "Min/Mid/Max erforderlich.",
+    "page_showing": "Anzeige",
+    "page_of": "von",
+    "page_prev": "Zurück",
+    "page_next": "Weiter",
+    "page_rows_per_page": "Zeilen pro Seite"
   },
   "common": {
     "optional": "optional",
@@ -210,7 +320,10 @@
     "cancel": "Abbrechen",
     "error": "Fehler",
     "success": "Erfolg",
-    "next_steps": "Nächste Schritte"
+    "next_steps": "Nächste Schritte",
+    "configure": "Konfigurieren",
+    "details": "Details",
+    "records": "Einträge"
   },
   "plan_status": {
     "draft": "Entwurf",
@@ -223,7 +336,12 @@
   },
   "approvals": {
     "manager_workspace": "Manager-Workspace",
+    "no_active_plan": "Kein aktiver Leistungsplan für Ihr Konto gefunden.",
+    "review_team_recs": "Überprüfen Sie die Leistungsempfehlungen Ihres Teams und reichen Sie sie zur Genehmigung ein. Nach der Einreichung wird Ihr Plan von Ihrem Genehmiger geprüft.",
+    "cycle_progress": "Zyklusfortschritt",
+    "view_reports": "Detaillierte Berichte zu den Auswirkungen im Team anzeigen",
     "approver_inbox": "Genehmigungszentrum",
+    "approver_inbox_subtitle": "Anforderungen prüfen und hierarchische Governance verwalten.",
     "submit_for_approval": "Zur Genehmigung einreichen",
     "rejection_reason": "Ablehnungsgrund",
     "reject_placeholder": "Bitte geben Sie einen Grund für die Ablehnung an...",
@@ -252,7 +370,37 @@
       "remediation": "Führen Sie die Szenario-Engine mit einem neuen Snapshot erneut aus. Stellen Sie sicher, dass Mitarbeitergehälter und empfohlene Erhöhungen korrekt ausgefüllt sind."
     }
   },
+  "pay_bands": {
+    "filter_all": "Alle",
+    "search_placeholder": "Nach Stufe suchen...",
+    "results": "Bänder",
+    "col_grade": "Stufe",
+    "col_basis": "Basis-Typ",
+    "col_country": "Land",
+    "col_currency": "Währung",
+    "create_title": "Neues Gehaltsband",
+    "bulk_upload": "CSV Massen-Upload",
+    "download_template": "Vorlage herunterladen",
+    "uploading": "Wird hochgeladen...",
+    "upload_success": "{{count}} Bänder erfolgreich hochgeladen.",
+    "upload_error": "Fehler beim Hochladen der Datei. Bitte überprüfen Sie das CSV-Format.",
+    "delete_confirm_title": "Sind Sie sicher, dass Sie dieses Entgeltband löschen möchten?",
+    "delete_confirm_subtitle": "Diese Aktion kann nicht rückgängig gemacht werden. Dieses Band wird aus der Datenbank entfernt.",
+    "delete_confirm_button": "Band löschen"
+  },
   "merit_admin": {
+    "create_cycle": {
+      "title": "Neuer Zyklus",
+      "subtitle": "Konfigurieren Sie einen neuen Überprüfungszeitraum.",
+      "name_label": "Zyklusname",
+      "name_placeholder": "z.B. Gehaltsüberprüfung Q1 2026",
+      "start_date": "Startdatum",
+      "end_date": "Enddatum",
+      "budget": "Budget",
+      "currency": "Währung",
+      "cancel": "Abbrechen",
+      "submit": "Zyklus erstellen"
+    },
     "sidebar_label": "Verwaltung von Merit-Zyklen",
     "page_title": "Steuerung der Merit-Zyklen",
     "page_subtitle": "Lohnabrechnungsbereitschaft validieren, Managerpläne sperren und Zyklen mit Audit-Trails schließen/wieder öffnen.",
@@ -318,6 +466,225 @@
     "gate_closed": "Zyklus geschlossen",
     "gate_locked": "Alle Pläne gesperrt",
     "gate_validator": "Validator bereit",
-    "error_gating_failed": "Gating-Bedingungen für die Veröffentlichung nicht erfüllt."
+    "error_gating_failed": "Gating-Bedingungen für die Veröffentlichung nicht erfüllt.",
+    "guide": {
+      "title": "Abrechnungs-Leitfaden",
+      "step1_title": "Schritt 1: Datenvalidierung",
+      "step1_desc": "Stellen Sie sicher, dass alle Manager fertig sind und keine Budgetfehler vorliegen.",
+      "step2_title": "Schritt 2: Offizieller Abschluss",
+      "step2_desc": "Sperren Sie den Zyklus, um Änderungen zu verhindern. Dies ist der letzte Kontrollpunkt vor der Auszahlung.",
+      "step3_title": "Schritt 3: Veröffentlichung & Abrechnung",
+      "step3_desc": "Wählen Sie das Gewinnszenario und generieren Sie die CSV-Datei für Ihr Zahlungssystem.",
+      "step_progress": "Schritt {{current}} von {{total}}",
+      "action_required": "Aktion erforderlich"
+    },
+    "tooltips": {
+      "gating": "Automatische Regeln, die Fehler vor der Auszahlung verhindern.",
+      "validator": "Scannt Tausende von Zeilen auf mathematische Inkonsistenzen."
+    },
+    "onboarding": {
+      "title": "Willkommen bei EvoComp Intelligence",
+      "subtitle": "Kurzanleitung für Vergütungsprozesse",
+      "next": "Weiter",
+      "back": "Zurück",
+      "finish": "Abschließen",
+      "skip": "Tour überspringen",
+      "step1_title": "1. Datenimport",
+      "step1_content": "Laden Sie Ihre Mitarbeiterdaten unter 'Importe' mit unserer CSV-Vorlage hoch. Sie erhalten sofort eine Bestätigung.",
+      "step2_title": "2. Auswahl & Quelle",
+      "step2_content": "Verwenden Sie unter 'Importe' den Pfeil in 'Operations', um Ihre Daten in den Bereich Szenarien zu übertragen.",
+      "step3_title": "3. Szenario-Management",
+      "step3_content": "Gehen Sie zu 'Szenarien', um Ihre Importe bereit für die Vergütungsbewertung zu finden.",
+      "step4_title": "4. Parametrisierung",
+      "step4_content": "Nutzen Sie 'Neues Szenario', um Budgets, Währungen und Berechnungsregeln vor der Modellierung festzulegen.",
+      "step5_title": "5. Ausführung & Modellierung",
+      "step5_content": "Öffnen Sie Ihr Szenario und führen Sie die Engine aus, um Erhöhungen für jeden Mitarbeiter genau zu modellieren."
+    },
+    "cycles": {
+      "title": "Vergütungszyklen",
+      "subtitle": "Verwalten Sie Gehaltsüberprüfungszeiträume, Boni und Gerechtigkeitsanpassungen.",
+      "new": "Neuer Zyklus",
+      "active_count": "Aktive Zyklen",
+      "planned_count": "In Planung",
+      "completed_count": "Abgeschlossen",
+      "history": "Zyklushistorie",
+      "no_cycles": "Keine Zyklen konfiguriert",
+      "learn_more": "Mehr über Zyklen erfahren",
+      "loading": "Zyklen werden geladen...",
+      "no_active_cycle": "Kein aktiver Zyklus"
+    },
+    "snapshots": {
+      "title": "Daten-Snapshots",
+      "subtitle": "Sicheres Repository für Talent- und Vergütungsdaten.",
+      "upload": "Daten hochladen",
+      "fetching": "Sichere Datenspeicher werden abgerufen...",
+      "empty_title": "Keine Snapshots gefunden",
+      "empty_message": "Es wurden noch keine Snapshots veröffentlicht. Importieren Sie Ihren ersten Datensatz, um zu beginnen.",
+      "go_to_imports": "Zu den Importen",
+      "col_id_date": "Snapshot-ID & Datum",
+      "col_source": "Quelle",
+      "col_headcount": "Mitarbeiterzahl",
+      "col_salary": "Gesamtgehalt (Basis)",
+      "col_currencies": "Währungen",
+      "col_actions": "Aktionen",
+      "view_details": "Details anzeigen",
+      "run_scenario": "Szenario ausführen"
+    }
+  },
+  "landing": {
+    "nav": {
+      "services": "Services",
+      "advantage": "The EvoComp Advantage",
+      "security": "Enterprise Security",
+      "about": "About Us",
+      "client_workspace": "Client Workspace"
+    },
+    "hero": {
+      "title_1": "Expert Compensation",
+      "title_2": "Consulting — Powered by",
+      "title_3": "Next-Gen Technology",
+      "subtitle": "Built for Total Rewards teams across the Americas. We deliver bank-grade, data-driven compensation decisions faster—using EvoComp's interactive scenario engine, not static spreadsheets.",
+      "cta_workspace": "Client Workspace",
+      "cta_consultation": "Book a Consultation",
+      "mono_text": "Not a PDF shop. Not an Excel factory. A secure decision system."
+    },
+    "features": {
+      "card1_label": "Scenario Execution",
+      "card1_t1": "What-if pools, matrices, caps, and constraints—deterministic results.",
+      "card1_t2": "From modeling to execution: budget control, approvals, and governance.",
+      "card1_t3": "Traceability by design: decisions you can explain in audits.",
+      "card2_label": "Live System Status",
+      "card2_m1": "Loading secure tenant workspace…",
+      "card2_m2": "Validating JWT session token…",
+      "card2_m3": "Applying Row Level Security policies…",
+      "card2_m4": "Simulating merit cycle scenarios…",
+      "card2_m5": "Generating audit trail & evidence pack…",
+      "card3_label": "Approval Protocol",
+      "card3_lock": "Lock Scenario",
+      "card3_status": "Scenario locked • Version stamped"
+    },
+    "manifesto": {
+      "t1": "The usual question is: What went wrong?",
+      "t2_1": "We ask: What can be optimized—",
+      "t2_2": "securely, measurably, fast?",
+      "t3": ">_ From spreadsheets to a secure decision operating system."
+    },
+    "archive": {
+      "label": "Archive File 0{{num}}",
+      "card1_title": "Salary Scenario Modeling & Execution",
+      "card1_b1": "What-if scenarios across teams, countries, and pay bases.",
+      "card1_b2": "Pools, matrices, caps, eligibility rules—deterministic outcomes.",
+      "card1_b3": "Ready for approvals and controlled rollout.",
+      "card2_title": "Salary & Compensation Structures + Job Architecture",
+      "card2_b1": "Market-aligned pay bands and job leveling.",
+      "card2_b2": "Analytical job evaluation and architecture design.",
+      "card2_b3": "Consistency across geographies in the Americas.",
+      "card3_title": "Variable Pay Design + Bonus Calculations",
+      "card3_b1": "Incentive plan design with measurable levers.",
+      "card3_b2": "Bonus modeling and forecasting tied to performance.",
+      "card3_b3": "Transparent outputs for Finance and leadership."
+    },
+    "security": {
+      "title": "Enterprise-Grade Security",
+      "c1_title": "Bank-Grade Data Protection",
+      "c1_desc": "Encrypted at rest and in transit. Designed to satisfy the most stringent compliance audits requested by IT and InfoSec stakeholders in large enterprises.",
+      "c2_title": "Backend & Authentication",
+      "c2_desc": "Stateless authentication validation via rigorously verified JWT tokens. Every API call requires fresh credential resolution ensuring session integrity.",
+      "c3_title": "Tenant Isolation (RLS)",
+      "c3_desc": "Strict Row Level Security implemented directly on the PostgreSQL (Supabase) engine. Cross-tenant data bleeds are mathematically impossible by design."
+    },
+    "pricing": {
+      "title": "Engagement Models",
+      "c1_title": "Advisory Essentials",
+      "c1_b1": "Comp consulting engagements + secure deliverables",
+      "c1_b2": "Band / job architecture support",
+      "c1_b3": "Limited workspace access",
+      "c1_btn": "Request Scope",
+      "c2_badge": "Recommended",
+      "c2_title": "EvoComp Workspace",
+      "c2_b1": "Full scenario engine access + guided consulting",
+      "c2_b2": "Merit cycle execution workflows",
+      "c2_b3": "Audit-ready traceability and governance",
+      "c2_btn": "Book a Consultation",
+      "c3_title": "Enterprise",
+      "c3_b1": "Custom security posture alignment",
+      "c3_b2": "IT review support + controls documentation",
+      "c3_b3": "Multi-region operating model",
+      "c3_btn": "Talk to Security"
+    },
+    "footer": {
+      "badge": "Operating System / Active",
+      "desc": "Built for auditability, tenant isolation, and bank-grade data protection.",
+      "sitemap": "Sitemap",
+      "home": "Home",
+      "services": "Services",
+      "advantage": "Advantage",
+      "security": "Security",
+      "about": "About Us",
+      "legal": "Legal & Locale",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact",
+      "rights": "© {{year}} EvoComp. All rights reserved."
+    }
+  },
+  "workspace_hub": {
+    "header": {
+      "title": "EvoComp Workspace",
+      "subtitle": "Secure Tenant Environment",
+      "badge": "WORKSPACE ACTIVE",
+      "logout": "Secure Sign Out"
+    },
+    "hero": {
+      "welcome": "Welcome to your ",
+      "highlight": "Strategic Hub",
+      "desc": "Select a module to enter the secure environment. Your current session isolates all operations strictly to your tenant data architecture."
+    },
+    "modules": {
+      "m1": {
+        "title": "Compensation Scenarios",
+        "desc": "Model, simulate, and execute merit cycles across teams and geographies with audit-ready deterministic outputs."
+      },
+      "m2": {
+        "title": "Pay Bands & Structures",
+        "desc": "Establish market-aligned pay bands, analytical job leveling, and structured compensation consistency."
+      },
+      "m3": {
+        "title": "Job Architecture & Evaluation",
+        "desc": "Design analytical job structures, levels, and mappings to ensure internal equity and market alignment."
+      },
+      "m4": {
+        "title": "Variable Pay",
+        "desc": "Design incentive plans with measurable levers, matrix thresholds, and performance-based outcomes."
+      },
+      "m5": {
+        "title": "Bonus Calculations",
+        "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
+      },
+      "badges": {
+        "active": "Active",
+        "concept": "Concept"
+      },
+      "actions": {
+        "launch": "Launch Module",
+        "preview": "Preview Roadmap"
+      }
+    }
+  },
+  "workbench": {
+    "title": "Ausführungs-Workbench",
+    "budget_summary": "Budgetübersicht",
+    "budget_pool": "Budget-Pool",
+    "budget_spent": "Ausgegeben",
+    "budget_remaining": "Verbleibend",
+    "search_placeholder": "Mitarbeiter suchen...",
+    "run_execution": "Ausführen",
+    "saving": "Wird gespeichert...",
+    "status_draft": "ENTWURF",
+    "status_runnable": "BEREIT",
+    "status_executed": "AUSGEFÜHRT",
+    "validation_error_over_guideline": "Überschreitet Richtlinie",
+    "validation_error_required": "Erforderlich",
+    "col_name": "Name"
   }
 }
