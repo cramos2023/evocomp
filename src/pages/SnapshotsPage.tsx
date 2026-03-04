@@ -77,20 +77,20 @@ const SnapshotsPage = () => {
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] tracking-tighter leading-none mb-3 transition-colors">
             {t('sidebar.snapshots')}
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-[rgb(var(--text-secondary))] text-lg font-bold transition-colors">
             {t('pages.imports.subtitle')}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button 
             type="button"
             onClick={() => navigate('/app/data/imports')}
-            className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm"
+            className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] text-[rgb(var(--text-secondary))] px-5 py-2.5 rounded-[var(--radius-btn)] font-black text-xs uppercase tracking-widest flex items-center gap-2.5 hover:bg-[rgb(var(--bg-surface-2))] transition-all shadow-sm"
           >
             <Database className="w-4 h-4" />
             {t('pages.imports.upload')}
@@ -98,7 +98,7 @@ const SnapshotsPage = () => {
           <button 
             type="button"
             onClick={fetchSnapshots}
-            className="p-2 bg-slate-100 text-slate-500 rounded-xl hover:text-slate-900 transition-colors"
+            className="p-3 bg-[rgb(var(--bg-surface-2))] text-[rgb(var(--text-muted))] rounded-[var(--radius-btn)] border border-[rgb(var(--border))] hover:text-[rgb(var(--text-primary))] transition-all shadow-sm"
             title="Refresh"
           >
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -106,129 +106,119 @@ const SnapshotsPage = () => {
         </div>
       </div>
 
-      <div className="mb-6 relative group max-w-md">
-        <Search className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 group-focus-within:text-blue-500 transition-colors" />
+      <div className="mb-8 relative group max-w-md">
+        <Search className="w-5 h-5 text-[rgb(var(--text-muted))] absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-[rgb(var(--primary))] transition-colors" />
         <input 
           type="text"
           placeholder={t('common.search')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full bg-white border border-slate-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all shadow-sm"
+          className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] pl-12 pr-4 py-3 text-sm text-[rgb(var(--text-primary))] placeholder:text-[rgb(var(--text-muted))] outline-none focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all font-bold shadow-sm"
         />
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden min-h-[400px]">
+      <div className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] overflow-hidden min-h-[400px] animate-in fade-in slide-in-from-bottom-8 duration-1000">
         {loading && snapshots.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-20 gap-4">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-            <p className="text-slate-400 font-medium tracking-wide">Fetching secure data stores...</p>
+          <div className="flex flex-col items-center justify-center p-32 gap-6">
+            <div className="animate-spin rounded-full h-10 w-10 border-2 border-[rgb(var(--border))] border-b-[rgb(var(--primary))]"></div>
+            <p className="text-[rgb(var(--text-muted))] font-black uppercase tracking-[0.2em] text-xs">{t('pages.snapshots.fetching', 'Fetching secure data stores...')}</p>
           </div>
         ) : filteredSnapshots.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-20 text-center">
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-              <Database className="w-10 h-10 text-slate-200" />
+          <div className="flex flex-col items-center justify-center p-32 text-center">
+            <div className="w-20 h-20 bg-[rgb(var(--bg-surface-2))] rounded-3xl flex items-center justify-center mb-8 border border-[rgb(var(--border))]">
+              <Database className="w-10 h-10 text-[rgb(var(--text-muted))]" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">
+            <h3 className="text-2xl font-black text-[rgb(var(--text-primary))] mb-3 tracking-tight">
               {t('pages.scenarios.empty_title')}
             </h3>
-            <p className="text-slate-500 max-w-sm mb-8">
-              No snapshots have been published yet. Import your first talent dataset to start modeling.
-            </p>
+              {t('pages.snapshots.empty_message', 'No snapshots have been published yet. Import your first talent dataset to start modeling.')}
             <button 
               type="button"
               onClick={() => navigate('/app/data/imports')}
-              className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:shadow-lg hover:shadow-blue-600/20 transition-all active:scale-95"
+              className="btn-premium px-8 py-3.5"
             >
-              Go to Imports
+              {t('pages.snapshots.go_to_imports', 'Go to Imports')}
             </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-50/50 border-b border-slate-100 uppercase text-[10px] font-bold text-slate-400 tracking-widest">
-                  <th className="px-6 py-5">Snapshot ID & Date</th>
-                  <th className="px-6 py-5">Source Import</th>
-                  <th className="px-6 py-5">Headcount</th>
-                  <th className="px-6 py-5">Total Salary (Base)</th>
-                  <th className="px-6 py-5">Currencies</th>
-                  <th className="px-6 py-5 text-right">Actions</th>
+                <tr className="bg-[rgb(var(--bg-surface-2))] border-b border-[rgb(var(--border))] uppercase text-[10px] font-black text-[rgb(var(--text-muted))] tracking-[0.25em]">
+                  <th className="px-8 py-5">{t('pages.snapshots.col_id_date', 'Snapshot ID & Date')}</th>
+                  <th className="px-8 py-5">{t('pages.snapshots.col_source', 'Source Import')}</th>
+                  <th className="px-8 py-5">{t('pages.snapshots.col_headcount', 'Headcount')}</th>
+                  <th className="px-8 py-5">{t('pages.snapshots.col_salary', 'Total Salary (Base)')}</th>
+                  <th className="px-8 py-5">{t('pages.snapshots.col_currencies', 'Currencies')}</th>
+                  <th className="px-8 py-5 text-right">{t('pages.snapshots.col_actions', 'Actions')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[rgb(var(--border))]">
                 {filteredSnapshots.map((item) => (
-                  <tr key={item.snapshot_id} className="group hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                          <Database className="w-5 h-5" />
+                  <tr key={item.snapshot_id} className="group hover:bg-[rgb(var(--bg-surface-2))] transition-colors cursor-default">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-blue-50 text-[rgb(var(--primary))] rounded-xl flex items-center justify-center border border-blue-100 group-hover:scale-110 transition-all">
+                          <Database className="w-6 h-6" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-slate-900 font-mono">
+                          <p className="text-sm font-black text-[rgb(var(--text-primary))] font-mono tracking-tight leading-none mb-1.5">
                             {item.snapshot_id.substring(0, 8)}...
                           </p>
-                          <div className="flex items-center gap-1 text-[11px] text-slate-400 mt-0.5">
-                            <Clock className="w-3 h-3" />
+                          <div className="flex items-center gap-1.5 text-[10px] text-[rgb(var(--text-muted))] font-bold uppercase tracking-tight">
+                            <Clock className="w-3.5 h-3.5" />
                             {new Date(item.created_at).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
+                      <p className="text-sm text-[rgb(var(--text-secondary))] font-bold truncate max-w-[200px]" title={item.import_file_name || item.source || item.snapshot_name}>
+                        {item.import_file_name || item.source || item.snapshot_name}
+                      </p>
+                    </td>
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-slate-600 truncate max-w-[200px]" title={item.import_file_name || item.source || item.snapshot_name}>
-                          {item.import_file_name || item.source || item.snapshot_name}
-                        </span>
+                        <Users className="w-4 h-4 text-[rgb(var(--text-muted))]" />
+                        <span className="text-sm font-black text-[rgb(var(--text-primary))]">{item.employee_count}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-slate-300" />
-                        <span className="text-sm font-bold text-slate-900">{item.employee_count}</span>
-                      </div>
+                    <td className="px-8 py-6">
+                      <span className="text-sm font-black text-[rgb(var(--text-primary))]">
+                        {formatCurrency(item.total_salary_base)}
+                      </span>
                     </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-2">
-                         <Shield className="w-4 h-4 text-blue-400 opacity-50" />
-                         <span className="text-sm font-bold text-slate-900">
-                           {formatCurrency(item.total_salary_base)}
-                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex flex-wrap gap-1.5">
+                    <td className="px-8 py-6">
+                      <div className="flex flex-wrap gap-2">
                         {item.currencies.slice(0, 3).map(curr => (
-                          <span key={curr} className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">
+                          <span key={curr} className="bg-[rgb(var(--bg-surface-2))] text-[rgb(var(--text-secondary))] px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest border border-[rgb(var(--border))]">
                             {curr}
                           </span>
                         ))}
                         {item.currencies.length > 3 && (
-                          <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-[10px] font-bold border border-blue-100">
+                          <span className="bg-blue-50 text-[rgb(var(--primary))] px-2 py-1 rounded text-[10px] font-black border border-blue-100">
                             +{item.currencies.length - 3}
                           </span>
                         )}
-                        {item.currencies.length === 0 && (
-                          <span className="text-[10px] text-slate-300 italic">None detected</span>
-                        )}
                       </div>
                     </td>
-                    <td className="px-6 py-5 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-8 py-6 text-right">
+                      <div className="flex items-center justify-end gap-3">
                         <button 
                           type="button"
                           onClick={() => handleOpenSidepanel(item.snapshot_id)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                          title="View Details"
+                          className="p-3 bg-[rgb(var(--bg-surface-2))] text-[rgb(var(--text-muted))] hover:text-[rgb(var(--primary))] rounded-[var(--radius-btn)] border border-[rgb(var(--border))] transition-all"
+                          title={t('pages.snapshots.view_details', 'View Details')}
                         >
                           <ArrowRight className="w-5 h-5" />
                         </button>
                         <button 
                           type="button"
                           onClick={() => navigate(`/app/comp/scenarios?fromSnapshot=${item.snapshot_id}`)}
-                          className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold transition-all shadow-md active:scale-95"
+                          className="flex items-center gap-2.5 bg-[rgb(var(--primary))] hover:bg-[rgb(var(--primary-hover))] text-white px-5 py-2.5 rounded-[var(--radius-btn)] text-[10px] font-black uppercase tracking-widest transition-all shadow-md active:scale-95"
                         >
-                          <Calculator className="w-3.5 h-3.5" />
-                          Run Scenario
+                          <Calculator className="w-4 h-4" />
+                          {t('pages.snapshots.run_scenario', 'Run Scenario')}
                         </button>
                       </div>
                     </td>

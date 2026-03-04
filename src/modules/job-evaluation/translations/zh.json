@@ -1,0 +1,38 @@
+
+{
+  "header.features": "功能",
+  "header.jobEvaluation": "职位评估",
+  "header.salaryBenchmarking": "薪资基准",
+  "header.organizationAnalysis": "组织分析",
+  "header.about": "关于",
+  "header.getStarted": "开始使用",
+  "header.language": "语言",
+  
+  "languages.en": "英语",
+  "languages.es": "西班牙语",
+  "languages.fr": "法语",
+  "languages.de": "德语",
+  "languages.zh": "中文",
+  "languages.ja": "日语",
+  
+  "calculator.calculate": "计算",
+  "calculator.calculateAll": "全部计算",
+  "calculator.addPosition": "添加职位",
+  "calculator.removePosition": "删除职位",
+  "calculator.position": "职位",
+  "calculator.title": "标题",
+  "calculator.organizationFields": "组织字段",
+  "calculator.dimensions": "维度",
+  "calculator.results": "结果",
+  
+  "matrix.show": "显示{{name}}矩阵",
+  "matrix.hide": "隐藏{{name}}矩阵",
+  "matrix.impactContribution": "影响/贡献",
+  "matrix.communicationFrame": "沟通/框架",
+  "matrix.innovationComplexity": "创新/复杂性",
+  "matrix.knowledgeTeams": "知识-团队矩阵",
+  "matrix.knowledge": "知识",
+  "matrix.teams": "团队",
+  "matrix.breadth": "广度",
+  "matrix.innovationComplexity.axes": "创新 ↓ / 复杂性 →"
+}

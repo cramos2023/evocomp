@@ -24,18 +24,18 @@ function buildMatrix(stepFactor: number, budgetPct: number): Record<string, Reco
 
 const ZONES   = ['BELOW_MIN', 'BELOW_MID', 'ABOVE_MID', 'ABOVE_MAX'];
 const RATINGS = ['FE', 'E', 'FM', 'PM', 'DNM'];
-const BASIS_OPTIONS = ['BASE_SALARY', 'ANNUAL_TARGET_CASH', 'TOTAL_GUARANTEED'];
+const BASIS_OPTIONS = ['BASE_SALARY', 'ANNUAL_TARGET_CASH', 'TOTAL_GUARANTEED', 'BEST_MATCH'];
 
-interface Props { isOpen: boolean; onClose: () => void; onCreated: () => void; }
+interface Props { isOpen: boolean; onClose: () => void; onCreated: () => void; initialSnapshotId?: string; }
 
-const MeritScenarioBuilderModal: React.FC<Props> = ({ isOpen, onClose, onCreated }) => {
+const MeritScenarioBuilderModal: React.FC<Props> = ({ isOpen, onClose, onCreated, initialSnapshotId }) => {
   const { t } = useTranslation();
   const [step, setStep]           = useState(1);
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState('');
   const [snapshots, setSnapshots] = useState<any[]>([]);
   const [name, setName]           = useState('');
-  const [snapshotId, setSnapshotId] = useState('');
+  const [snapshotId, setSnapshotId] = useState(initialSnapshotId || '');
   const [baseCurrency, setBaseCurrency] = useState('USD');
   const [compBasis, setCompBasis]   = useState('BASE_SALARY');
   const [budgetPct, setBudgetPct]   = useState('20');
@@ -46,11 +46,19 @@ const MeritScenarioBuilderModal: React.FC<Props> = ({ isOpen, onClose, onCreated
   const [fteStandard, setFteStandard] = useState('40');
 
   useEffect(() => {
-    if (isOpen) { fetchSnapshots(); setStep(1); setError(''); }
-  }, [isOpen]);
+    if (isOpen) { 
+      fetchSnapshots(); 
+      setStep(1); 
+      setError(''); 
+      if (initialSnapshotId) {
+        setSnapshotId(initialSnapshotId);
+      }
+    }
+  }, [isOpen, initialSnapshotId]);
 
   async function fetchSnapshots() {
-    const { data } = await supabase.from('snapshots').select('id, name, snapshot_date').order('created_at', { ascending: false });
+    const { data, error: fetchErr } = await supabase.from('snapshots').select('id, name, snapshot_date').order('created_at', { ascending: false });
+    if (fetchErr) console.error('Error fetching snapshots in modal:', fetchErr);
     setSnapshots(data || []);
   }
 

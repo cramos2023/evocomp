@@ -69,43 +69,45 @@ const TenantSettingsPage = () => {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{t('admin.title')}</h1>
-        <p className="text-slate-500 mt-1">{t('admin.subtitle')}</p>
+    <div className="p-10 max-w-5xl mx-auto transition-colors duration-500">
+      <div className="mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
+        <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] tracking-tighter leading-none mb-3">
+          {t('pages.admin.title', 'Organization Settings')}
+        </h1>
+        <p className="text-[rgb(var(--text-secondary))] text-lg font-bold">{t('pages.admin.subtitle', 'Configure workspace identity and governance.')}</p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-          Loading...
+        <div className="p-32 text-center text-[rgb(var(--text-muted))] flex flex-col items-center gap-6">
+          <Loader2 className="w-10 h-10 animate-spin text-[rgb(var(--primary))]" />
+          <p className="font-black uppercase tracking-[0.2em] text-xs">Syncing enterprise data...</p>
         </div>
       ) : (
-        <form onSubmit={handleSave} className="space-y-6">
-          <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-              <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
-                <Building2 className="w-5 h-5" />
+        <form onSubmit={handleSave} className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] overflow-hidden">
+            <div className="p-8 bg-[rgb(var(--bg-surface-2))] border-b border-[rgb(var(--border))] flex items-center gap-4">
+              <div className="w-12 h-12 bg-[rgb(var(--bg-surface))] rounded-2xl flex items-center justify-center text-[rgb(var(--primary))] border border-[rgb(var(--border))] shadow-sm">
+                <Building2 className="w-6 h-6" />
               </div>
-              <h2 className="font-bold text-slate-900">{t('admin.general')}</h2>
+              <h2 className="text-xl font-black text-[rgb(var(--text-primary))] tracking-tight">{t('pages.admin.general', 'General Profile')}</h2>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-8 space-y-8">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('admin.org_name')}</label>
+                <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest mb-3">{t('pages.admin.org_name', 'Organization Name')}</label>
                 <input 
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                  className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] p-4 text-sm text-[rgb(var(--text-primary))] font-bold outline-none focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('admin.base_currency')}</label>
-                <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-slate-400" />
+                <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest mb-3">{t('pages.admin.base_currency', 'Base Currency')}</label>
+                <div className="relative group">
+                  <Globe className="w-5 h-5 text-[rgb(var(--text-muted))] absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[rgb(var(--primary))]" />
                   <select 
                     value={currency}
                     onChange={e => setCurrency(e.target.value)}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none cursor-pointer"
+                    className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] pl-12 pr-4 py-4 text-sm text-[rgb(var(--text-primary))] font-bold outline-none cursor-pointer focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all appearance-none"
                   >
                     <option value="USD">USD - US Dollar</option>
                     <option value="EUR">EUR - Euro</option>
@@ -113,96 +115,102 @@ const TenantSettingsPage = () => {
                     <option value="MXN">MXN - Mexican Peso</option>
                   </select>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2 px-1">{t('admin.currency_desc')}</p>
+                <p className="text-[10px] text-[rgb(var(--text-muted))] mt-3 px-1 font-bold uppercase tracking-tight">{t('pages.admin.currency_desc', 'Base for all scenario calculations.')}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
-                <Shield className="w-5 h-5" />
+          <div className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] overflow-hidden">
+            <div className="p-8 bg-[rgb(var(--bg-surface-2))] border-b border-[rgb(var(--border))] flex items-center gap-4">
+              <div className="w-12 h-12 bg-[rgb(var(--bg-surface))] rounded-2xl flex items-center justify-center text-[rgb(var(--primary))] border border-[rgb(var(--border))] shadow-sm">
+                <Shield className="w-6 h-6" />
               </div>
-              <h2 className="font-bold text-slate-900">{t('admin.governance')}</h2>
+              <h2 className="text-xl font-black text-[rgb(var(--text-primary))] tracking-tight">{t('pages.admin.governance', 'Operational Governance')}</h2>
             </div>
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <button 
                   type="button"
                   onClick={() => setMode('ADVISORY')}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all relative ${
-                    mode === 'ADVISORY' ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100 hover:border-slate-200'
+                  className={`p-8 rounded-[var(--radius-card)] border-2 text-left transition-all ${
+                    mode === 'ADVISORY' 
+                      ? 'border-[rgb(var(--primary))] bg-[rgba(46,79,210,0.04)] ring-4 ring-[rgba(46,79,210,0.08)]' 
+                      : 'border-[rgb(var(--border))] hover:border-[rgb(var(--text-muted))]'
                   }`}
                 >
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mb-4 ${
-                    mode === 'ADVISORY' ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-6 transition-all ${
+                    mode === 'ADVISORY' ? 'border-[rgb(var(--primary))] bg-[rgb(var(--primary))] text-white shadow-lg' : 'border-[rgb(var(--border))]'
                   }`}>
-                    {mode === 'ADVISORY' && <div className="w-2 h-2 bg-white rounded-full" />}
+                    {mode === 'ADVISORY' && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
                   </div>
-                  <h3 className="font-bold text-slate-900">{t('admin.advisory')}</h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    {t('admin.advisory_desc')}
+                  <h3 className="text-lg font-black text-[rgb(var(--text-primary))] mb-2 tracking-tight">{t('pages.admin.advisory', 'Advisory Mode')}</h3>
+                  <p className="text-sm text-[rgb(var(--text-secondary))] font-bold leading-relaxed">
+                    {t('pages.admin.advisory_desc', 'Model without modifying base data.')}
                   </p>
                 </button>
 
                 <button 
                   type="button"
                   onClick={() => setMode('SYSTEM_OF_RECORD')}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all relative ${
-                    mode === 'SYSTEM_OF_RECORD' ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100 hover:border-slate-200'
+                  className={`p-8 rounded-[var(--radius-card)] border-2 text-left transition-all ${
+                    mode === 'SYSTEM_OF_RECORD' 
+                      ? 'border-[rgb(var(--primary))] bg-[rgba(46,79,210,0.04)] ring-4 ring-[rgba(46,79,210,0.08)]' 
+                      : 'border-[rgb(var(--border))] hover:border-[rgb(var(--text-muted))]'
                   }`}
                 >
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mb-4 ${
-                    mode === 'SYSTEM_OF_RECORD' ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-6 transition-all ${
+                    mode === 'SYSTEM_OF_RECORD' ? 'border-[rgb(var(--primary))] bg-[rgb(var(--primary))] text-white shadow-lg' : 'border-[rgb(var(--border))]'
                   }`}>
-                    {mode === 'SYSTEM_OF_RECORD' && <div className="w-2 h-2 bg-white rounded-full" />}
+                    {mode === 'SYSTEM_OF_RECORD' && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
                   </div>
-                  <h3 className="font-bold text-slate-900">{t('admin.sor')}</h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    {t('admin.sor_desc')}
+                  <h3 className="text-lg font-black text-[rgb(var(--text-primary))] mb-2 tracking-tight">{t('pages.admin.sor', 'System of Record')}</h3>
+                  <p className="text-sm text-[rgb(var(--text-secondary))] font-bold leading-relaxed">
+                    {t('pages.admin.sor_desc', 'Updates history upon publishing.')}
                   </p>
                 </button>
               </div>
 
               {mode === 'SYSTEM_OF_RECORD' && (
-                <div className="mt-6 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-orange-800">
-                  <AlertTriangle className="w-5 h-5 shrink-0" />
-                  <p className="text-xs leading-relaxed">
-                    <span className="font-bold block">{t('admin.caution')}</span>
-                    {t('admin.caution_desc')}
-                  </p>
+                <div className="mt-8 p-6 bg-orange-50 border border-orange-100 rounded-2xl flex gap-4 text-orange-900 shadow-sm animate-in zoom-in duration-300">
+                  <AlertTriangle className="w-6 h-6 shrink-0 text-orange-600" />
+                  <div className="space-y-1">
+                    <span className="text-xs font-black uppercase tracking-widest">{t('pages.admin.caution', 'Caution: Full Write Enabled')}</span>
+                    <p className="text-sm font-bold leading-relaxed">
+                      {t('pages.admin.caution_desc', 'Scenarios will modify persistent records.')}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-6 pt-6">
             <button 
               type="button"
-              className="px-6 py-3 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
+              className="px-8 py-4 text-xs font-black text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text-primary))] transition-all uppercase tracking-widest"
             >
-              {t('admin.discard')}
+              {t('pages.admin.discard', 'Discard Changes')}
             </button>
             <button 
               type="submit"
               disabled={saving}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20"
+              className="btn-premium px-12 py-4 text-xs"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {t('admin.save')}
+              {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+              {t('pages.admin.save', 'Save Changes')}
             </button>
           </div>
         </form>
       )}
 
-      <div className="mt-12 p-8 border border-white/40 bg-white/40 backdrop-blur-sm rounded-3xl flex items-start gap-4">
-        <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600 shrink-0">
-          <Info className="w-5 h-5" />
+      <div className="mt-20 p-10 bg-[rgb(var(--bg-surface-2))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] flex items-start gap-8 transition-all hover:bg-[rgb(var(--bg-surface))] group shadow-sm">
+        <div className="w-14 h-14 bg-[rgb(var(--bg-surface))] rounded-2xl shadow-sm flex items-center justify-center text-[rgb(var(--primary))] border border-[rgb(var(--border))] shrink-0 group-hover:scale-110 transition-transform duration-500">
+          <Info className="w-7 h-7" />
         </div>
         <div>
-          <h3 className="font-bold text-slate-900">{t('admin.privacy')}</h3>
-          <p className="text-slate-500 text-sm mt-1 leading-relaxed">
-            {t('admin.privacy_desc')}
+          <h3 className="text-xl font-black text-[rgb(var(--text-primary))] tracking-tighter mb-2">{t('pages.admin.privacy', 'Infrastructure Privacy')}</h3>
+          <p className="text-[rgb(var(--text-secondary))] font-bold leading-relaxed max-w-2xl">
+            {t('pages.admin.privacy_desc', 'RLS layer guarantees data separation.')}
           </p>
         </div>
       </div>

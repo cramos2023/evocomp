@@ -83,7 +83,7 @@ export async function listManagerPlansByCycle(
 ): Promise<ManagerPlanRowLite[]> {
   const { data, error } = await supabase
     .from("comp_merit_manager_plans")
-    .select("id,cycle_id,manager_user_id,status,locked_at,updated_at")
+    .select("id,cycle_id,manager_user_id,status,is_locked,locked_at,updated_at")
     .eq("cycle_id", cycleId)
     .order("updated_at", { ascending: false });
 

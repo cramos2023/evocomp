@@ -13,6 +13,9 @@ import {
   FileSpreadsheet,
   Send,
   CheckCircle,
+  ChevronDown,
+  Info,
+  ArrowRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -132,6 +135,125 @@ function ConfirmationModal({
   );
 }
 
+interface CreateCycleModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  newCycle: any;
+  setNewCycle: (c: any) => void;
+  isLoading: boolean;
+}
+
+function CreateCycleModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  newCycle,
+  setNewCycle,
+  isLoading,
+}: CreateCycleModalProps) {
+  const { t } = useTranslation();
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 ring-1 ring-slate-200 animate-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+              <Shield className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">{t('merit_admin.create_cycle.title', 'Nuevo Ciclo')}</h3>
+              <p className="text-sm text-slate-500">{t('merit_admin.create_cycle.subtitle', 'Configura un nuevo periodo de revisión.')}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-lg transition-colors">
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{t('merit_admin.create_cycle.name_label', 'Nombre del Ciclo')}</label>
+            <input
+              type="text"
+              placeholder={t('merit_admin.create_cycle.name_placeholder', 'ej. Revisión Salarial Q1 2026')}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              value={newCycle.name}
+              onChange={(e) => setNewCycle({ ...newCycle, name: e.target.value })}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{t('merit_admin.create_cycle.start_date', 'Fecha Inicio')}</label>
+              <input
+                type="date"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                value={newCycle.start_date}
+                onChange={(e) => setNewCycle({ ...newCycle, start_date: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{t('merit_admin.create_cycle.end_date', 'Fecha Fin')}</label>
+              <input
+                type="date"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                value={newCycle.end_date}
+                onChange={(e) => setNewCycle({ ...newCycle, end_date: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{t('merit_admin.create_cycle.budget', 'Presupuesto')}</label>
+              <input
+                type="number"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                value={newCycle.budget_total}
+                onChange={(e) => setNewCycle({ ...newCycle, budget_total: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{t('merit_admin.create_cycle.currency', 'Moneda')}</label>
+              <select
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                value={newCycle.currency}
+                onChange={(e) => setNewCycle({ ...newCycle, currency: e.target.value })}
+              >
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="MXN">MXN</option>
+                <option value="COP">COP</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={onClose}
+              disabled={isLoading}
+              className="flex-1 px-6 py-3 text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl border border-slate-200 transition-all"
+            >
+              {t('merit_admin.create_cycle.cancel', 'Cancelar')}
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={!newCycle.name || isLoading}
+              className="flex-1 px-8 py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
+            >
+              {isLoading && <RefreshCcw className="w-4 h-4 animate-spin" />}
+              {t('merit_admin.create_cycle.submit', 'Crear Ciclo')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MeritCycleAdminPage() {
   const { t } = useTranslation();
   const [cyclesStatus, setCyclesStatus] = useState<UiStatus>("idle");
@@ -174,6 +296,18 @@ export default function MeritCycleAdminPage() {
   const [publishReason, setPublishReason] = useState<string>("");
   const [isExporting, setIsExporting] = useState(false);
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
+  const [newCycleData, setNewCycleData] = useState({
+    name: "",
+    status: "planned",
+    year: new Date().getFullYear(),
+    start_date: new Date().toISOString().split("T")[0],
+    end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    budget_total: 0,
+    currency: "USD",
+  });
+
   const [gatingDetails, setGatingDetails] = useState<{
     closed: boolean;
     plans_locked: boolean;
@@ -191,7 +325,7 @@ export default function MeritCycleAdminPage() {
     
     // 2. Plans Locked: check plan summary
     const totalPlans = plans.length;
-    const lockedPlans = plans.filter(p => p.status === 'locked').length;
+    const lockedPlans = plans.filter(p => p.is_locked).length;
     const arePlansLocked = totalPlans > 0 && lockedPlans === totalPlans;
 
     // 3. Validator OK
@@ -238,6 +372,46 @@ export default function MeritCycleAdminPage() {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function handleCreateCycle() {
+    if (!newCycleData.name) return;
+    try {
+      setActionStatus("loading");
+      const { data: userRes } = await supabase.auth.getUser();
+      if (!userRes.user) throw new Error("No auth user");
+
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("tenant_id")
+        .eq("id", userRes.user.id)
+        .single();
+
+      if (!profile?.tenant_id) throw new Error("No tenant id");
+
+      const { error } = await supabase.from("cycles").insert({
+        ...newCycleData,
+        tenant_id: profile.tenant_id,
+      });
+
+      if (error) throw error;
+
+      setShowCreateModal(false);
+      // Re-fetch cycles
+      const rows = await listCyclesLite();
+      const mapped = rows.map((c) => ({
+        id: c.id,
+        label: `${c.name || c.title || c.id.slice(0, 8)}${c.status ? ` · ${c.status}` : ""}`,
+      }));
+      setCycles(mapped);
+      if (mapped.length > 0) setCycleId(mapped[0].id);
+
+      setActionStatus("success");
+      setActionOkMsg("Ciclo creado exitosamente.");
+    } catch (e) {
+      setActionStatus("error");
+      setActionError(e instanceof Error ? e.message : "Failed to create cycle");
+    }
+  }
 
   async function refreshAudit() {
     if (!hasCycleSelected) return;
@@ -501,11 +675,26 @@ export default function MeritCycleAdminPage() {
 
   const planSummary = useMemo(() => {
     const total = plans.length;
-    const locked = plans.filter((p) => p.status === "locked").length;
+    const locked = plans.filter((p) => p.is_locked).length;
     const reopened = plans.filter((p) => p.status === "reopened").length;
     const other = total - locked - reopened;
     return { total, locked, reopened, other };
   }, [plans]);
+
+  const activeStep = useMemo(() => {
+    if (!report || !report.ok) return 1;
+    if (!gatingStatus.isClosed) return 2;
+    return 3;
+  }, [report, gatingStatus.isClosed]);
+
+  const StepBadge = ({ num, active }: { num: number; active: boolean }) => (
+    <div className={clsx(
+      "flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-extrabold mr-2",
+      active ? "bg-blue-600 text-white ring-4 ring-blue-100" : "bg-slate-100 text-slate-400"
+    )}>
+      {num}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -534,6 +723,61 @@ export default function MeritCycleAdminPage() {
             <RefreshCcw className="h-4 w-4" />
             {t("merit_admin.refresh_audit")}
           </button>
+
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-blue-600/10 hover:bg-blue-700 transition-all"
+          >
+            <Shield className="h-4 w-4" />
+            {t("merit_admin.btn_new_cycle", "Nuevo Ciclo")}
+          </button>
+        </div>
+
+        {/* Process Guide */}
+        <div className="mt-8 rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-sm transition-all">
+          <button 
+            onClick={() => setShowGuide(!showGuide)}
+            className="w-full bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between hover:bg-slate-100 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Info className="w-4 h-4 text-blue-600" />
+              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-widest">
+                {t("merit_admin.guide.title")}
+              </h2>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-slate-400 font-medium tracking-tight">
+                {t("merit_admin.guide.step_progress", { current: activeStep, total: 3 })}
+              </span>
+              <ChevronDown className={clsx("w-4 h-4 text-slate-400 transition-transform", !showGuide && "-rotate-90")} />
+            </div>
+          </button>
+          
+          {showGuide && (
+            <div className="p-6 grid gap-6 md:grid-cols-3 animate-in fade-in slide-in-from-top-2 duration-300">
+              {[1, 2, 3].map((s) => (
+                <div key={s} className={clsx(
+                  "relative flex flex-col gap-2 p-4 rounded-2xl transition-all",
+                  activeStep === s ? "bg-blue-50/50 ring-1 ring-blue-100" : "opacity-60 grayscale-[0.5]"
+                )}>
+                  <div className="flex items-center gap-2">
+                    <div className={clsx(
+                      "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black",
+                      activeStep === s ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-500"
+                    )}>{s}</div>
+                    <h3 className="text-xs font-bold text-slate-900">{t(`merit_admin.guide.step${s}_title`)}</h3>
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed font-medium">{t(`merit_admin.guide.step${s}_desc`)}</p>
+                  {activeStep === s && (
+                    <div className="mt-auto pt-2 flex items-center gap-1 text-[9px] font-bold text-blue-600 uppercase tracking-wider">
+                      <span>{t("merit_admin.guide.action_required")}</span>
+                      <ArrowRight className="w-3 h-3 animate-pulse" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Cycle selector */}
@@ -577,6 +821,7 @@ export default function MeritCycleAdminPage() {
               >
                 <CheckCircle2 className="h-4 w-4" />
                 {t("merit_admin.validate_readiness")}
+                {activeStep === 1 && <ArrowRight className="w-4 h-4 animate-bounce-x" />}
               </button>
 
               <button
@@ -597,9 +842,12 @@ export default function MeritCycleAdminPage() {
         {/* Validator Report */}
         <div className="mt-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-sm font-semibold text-slate-900">
-              {t("merit_admin.report_title")}
-            </h2>
+            <div className="flex items-center">
+              <StepBadge num={1} active={activeStep === 1} />
+              <h2 className="text-sm font-semibold text-slate-900">
+                {t("merit_admin.report_title")}
+              </h2>
+            </div>
 
             {report && (
               <div
@@ -695,8 +943,14 @@ export default function MeritCycleAdminPage() {
         </div>
 
         {/* Admin Actions */}
-        <div className="mt-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-sm font-semibold text-slate-900">{t("merit_admin.actions_title")}</h2>
+        <div className={clsx(
+          "mt-4 rounded-2xl bg-white p-4 shadow-sm ring-1 transition-all",
+          activeStep === 2 ? "ring-blue-400 shadow-blue-100/50" : "ring-slate-200 shadow-transparent"
+        )}>
+          <div className="flex items-center mb-1">
+            <StepBadge num={2} active={activeStep === 2} />
+            <h2 className="text-sm font-semibold text-slate-900">{t("merit_admin.actions_title")}</h2>
+          </div>
 
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
@@ -716,6 +970,7 @@ export default function MeritCycleAdminPage() {
               >
                 <Lock className="h-4 w-4" />
                 {t("merit_admin.btn_lock_all")}
+                {activeStep === 2 && !gatingStatus.arePlansLocked && <ArrowRight className="w-4 h-4 animate-bounce-x text-blue-400" />}
               </button>
             </div>
 
@@ -738,6 +993,7 @@ export default function MeritCycleAdminPage() {
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   {t("merit_admin.btn_close_cycle")}
+                  {activeStep === 2 && gatingStatus.arePlansLocked && <ArrowRight className="w-4 h-4 animate-bounce-x" />}
                 </button>
 
                 <button
@@ -771,12 +1027,18 @@ export default function MeritCycleAdminPage() {
         </div>
 
         {/* Publish & Export Section */}
-        <div className="mt-8 rounded-3xl bg-white p-6 shadow-xl shadow-slate-200/50 ring-1 ring-slate-200">
+        <div className={clsx(
+          "mt-8 rounded-3xl bg-white p-6 shadow-xl ring-1 transition-all",
+          activeStep === 3 ? "ring-blue-400 shadow-blue-200/50" : "ring-slate-200 shadow-slate-200/50"
+        )}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-                {t("merit_admin.publish_export_title")}
-              </h2>
+              <div className="flex items-center mb-1">
+                <StepBadge num={3} active={activeStep === 3} />
+                <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+                  {t("merit_admin.publish_export_title")}
+                </h2>
+              </div>
               <p className="text-sm text-slate-500 mt-1">
                 {t("merit_admin.publish_export_desc")}
               </p>
@@ -880,6 +1142,7 @@ export default function MeritCycleAdminPage() {
                 >
                   <Send className="w-4 h-4" />
                   {t("merit_admin.btn_publish")}
+                  {activeStep === 3 && <ArrowRight className="w-4 h-4 animate-bounce-x" />}
                 </button>
                 
                 <button
@@ -1084,6 +1347,15 @@ export default function MeritCycleAdminPage() {
         commentPlaceholder={t("merit_admin.publish_reason_placeholder")}
         confirmLabel={t("merit_admin.modal_confirm_btn")}
         cancelLabel={t("merit_admin.modal_cancel_btn")}
+        isLoading={actionStatus === "loading"}
+      />
+
+      <CreateCycleModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onConfirm={handleCreateCycle}
+        newCycle={newCycleData}
+        setNewCycle={setNewCycleData}
         isLoading={actionStatus === "loading"}
       />
     </div>

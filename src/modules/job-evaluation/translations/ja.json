@@ -1,0 +1,38 @@
+
+{
+  "header.features": "機能",
+  "header.jobEvaluation": "職務評価",
+  "header.salaryBenchmarking": "給与ベンチマーキング",
+  "header.organizationAnalysis": "組織分析",
+  "header.about": "について",
+  "header.getStarted": "始める",
+  "header.language": "言語",
+  
+  "languages.en": "英語",
+  "languages.es": "スペイン語",
+  "languages.fr": "フランス語",
+  "languages.de": "ドイツ語",
+  "languages.zh": "中国語",
+  "languages.ja": "日本語",
+  
+  "calculator.calculate": "計算",
+  "calculator.calculateAll": "すべて計算",
+  "calculator.addPosition": "ポジション追加",
+  "calculator.removePosition": "ポジション削除",
+  "calculator.position": "ポジション",
+  "calculator.title": "タイトル",
+  "calculator.organizationFields": "組織フィールド",
+  "calculator.dimensions": "ディメンション",
+  "calculator.results": "結果",
+  
+  "matrix.show": "{{name}}マトリックスを表示",
+  "matrix.hide": "{{name}}マトリックスを非表示",
+  "matrix.impactContribution": "影響/貢献",
+  "matrix.communicationFrame": "コミュニケーション/フレーム",
+  "matrix.innovationComplexity": "革新/複雑性",
+  "matrix.knowledgeTeams": "知識/チームマトリックス",
+  "matrix.knowledge": "知識",
+  "matrix.teams": "チーム",
+  "matrix.breadth": "範囲",
+  "matrix.innovationComplexity.axes": "革新 ↓ / 複雑性 →"
+}

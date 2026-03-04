@@ -41,7 +41,7 @@ export default function LoginPage() {
         if (error) throw error;
 
         if (data.session) {
-          navigate("/", { replace: true });
+          navigate("/workspace", { replace: true });
         } else {
           setMessage({ text: "Signed in, but no session returned.", type: 'error' });
         }
@@ -53,7 +53,7 @@ export default function LoginPage() {
         if (error) throw error;
 
         if (data.session) {
-          navigate("/", { replace: true });
+          navigate("/workspace", { replace: true });
         } else {
           setMessage({ 
             text: "Account created. Please check your inbox to confirm your email before signing in.", 

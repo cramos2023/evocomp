@@ -59,48 +59,79 @@ export const ApprovalsInboxPage: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 p-6 animate-in fade-in duration-500">
-      {/* Header */}
+      {/* Header - Always visible to prevent layout shift */}
       <div className="flex items-center justify-between glass-card p-6 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-indigo-500/10 rounded-xl">
             <Inbox className="w-8 h-8 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">{t('approvals.approver_inbox')}</h1>
-            <p className="text-slate-400 text-sm">Review recommendations and manage hierarchical governance.</p>
+            <h1 className="text-2xl font-black text-[rgb(var(--text-primary))]">{t('approvals.approver_inbox')}</h1>
+            <p className="text-[rgb(var(--text-secondary))] text-sm font-medium">
+              {t('approvals.approver_inbox_subtitle')}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-slate-950/50 border border-slate-800 rounded-lg px-3 py-2">
-            <Search className="w-4 h-4 text-slate-500 mr-2" />
+          <div className="flex items-center bg-[rgb(var(--bg-surface-2))] border border-[rgb(var(--border))] rounded-lg px-3 py-2 shadow-inner">
+            <Search className="w-4 h-4 text-[rgb(var(--text-muted))] mr-2" />
             <input 
               type="text" 
-              placeholder="Filter plans..." 
-              className="bg-transparent border-none text-slate-200 text-sm focus:outline-none w-48"
+              placeholder={t('approvals.filter_placeholder', 'Filter plans...')}
+              className="bg-transparent border-none text-[rgb(var(--text-primary))] text-sm focus:outline-none w-48 font-bold"
             />
           </div>
-          <button className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors">
+          <button className="p-2 text-[rgb(var(--text-muted))] hover:text-[rgb(var(--primary))] hover:bg-[rgb(var(--bg-surface-2))] rounded-lg transition-all border border-transparent hover:border-[rgb(var(--border))]">
             <Filter className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      {/* Grid of Plans */}
-      {plans.length === 0 ? (
-        <div className="glass-card p-20 text-center space-y-4 rounded-2xl border-dashed border-2 border-slate-800">
-          <CheckCircle2 className="w-16 h-16 text-slate-700 mx-auto" />
-          <h3 className="text-xl font-semibold text-slate-400">{t('approvals.empty_inbox')}</h3>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="glass-card flex flex-col h-[320px] animate-pulse">
+              <div className="p-5 border-b border-[rgb(var(--border))] flex items-start justify-between">
+                <div className="space-y-2">
+                  <div className="w-20 h-3 bg-[rgb(var(--bg-surface-2))] rounded" />
+                  <div className="w-32 h-5 bg-[rgb(var(--bg-surface-2))] rounded" />
+                </div>
+                <div className="w-20 h-6 bg-[rgb(var(--bg-surface-2))] rounded-full" />
+              </div>
+              <div className="p-5 flex-1 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="w-16 h-2 bg-[rgb(var(--bg-surface-2))] rounded" />
+                    <div className="w-24 h-6 bg-[rgb(var(--bg-surface-2))] rounded" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="w-16 h-2 bg-[rgb(var(--bg-surface-2))] rounded" />
+                    <div className="w-12 h-6 bg-[rgb(var(--bg-surface-2))] rounded" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <div className="w-24 h-2 bg-[rgb(var(--bg-surface-2))] rounded" />
+                    <div className="w-8 h-2 bg-[rgb(var(--bg-surface-2))] rounded" />
+                  </div>
+                  <div className="h-2 w-full bg-[rgb(var(--bg-surface-2))] rounded-full" />
+                </div>
+              </div>
+              <div className="p-4 bg-[rgb(var(--bg-surface-2))] border-t border-[rgb(var(--border))] flex gap-3">
+                <div className="flex-1 h-8 bg-[rgb(var(--bg-surface-2))] rounded-lg" />
+                <div className="flex-1 h-8 bg-[rgb(var(--bg-surface-2))] rounded-lg" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : plans.length === 0 ? (
+        <div className="glass-card p-20 text-center space-y-4 rounded-2xl border-dashed border-2 border-[rgb(var(--border))]">
+          <CheckCircle2 className="w-16 h-16 text-[rgb(var(--text-muted))] mx-auto" />
+          <h3 className="text-xl font-black text-[rgb(var(--text-muted))] uppercase tracking-widest">{t('approvals.empty_inbox')}</h3>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,6 +1,7 @@
-import { Bell, Search, LogOut, User, Zap, Globe } from 'lucide-react';
+import { Bell, Search, LogOut, User, Zap, Globe, Sun, Moon } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface HeaderProps {
   profile: any;
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 const Header = ({ profile }: HeaderProps) => {
   const { t, i18n } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -27,87 +29,94 @@ const Header = ({ profile }: HeaderProps) => {
   ];
 
   return (
-    <header className="h-20 bg-slate-950/50 backdrop-blur-xl border-b border-white/5 px-8 flex items-center justify-between sticky top-0 z-40">
+    <header className="h-20 bg-[rgb(var(--surface-shell))] border-b border-[rgb(var(--border))] px-8 flex items-center justify-between sticky top-0 z-40 transition-colors duration-500">
       <div className="flex items-center gap-6 flex-1">
         <div className="relative w-full max-w-lg group">
-          <div className="absolute inset-0 bg-blue-600/5 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
-          <div className="relative flex items-center gap-4 bg-slate-900/50 px-4 py-2.5 rounded-2xl border border-white/5 group-focus-within:border-blue-500/50 transition-all">
-            <Search className="w-5 h-5 text-slate-500 group-focus-within:text-blue-500" />
+          <div className="relative flex items-center gap-4 bg-[rgb(var(--bg-surface-2))] px-4 py-2.5 rounded-[var(--radius-btn)] border border-[rgb(var(--border))] group-focus-within:ring-[3px] group-focus-within:ring-[rgba(46,79,210,0.18)] group-focus-within:border-[rgb(var(--primary))] transition-all">
+            <Search className="w-5 h-5 text-[rgb(var(--text-muted))] group-focus-within:text-[rgb(var(--primary))] transition-colors" />
             <input 
               placeholder={t('header.search_placeholder', { defaultValue: 'Search scenarios, talent, or audit records...' })}
-              className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-slate-600"
+              className="bg-transparent border-none outline-none text-sm w-full text-[rgb(var(--text-primary))] placeholder:text-[rgb(var(--text-muted))] transition-colors"
             />
-            <div className="flex items-center gap-1.5 bg-slate-800 px-2 py-1 rounded-lg border border-slate-700">
-               <span className="text-[10px] font-bold text-slate-400">⌘</span>
-               <span className="text-[10px] font-bold text-slate-400">K</span>
+            <div className="flex items-center gap-1.5 bg-[rgb(var(--bg-surface))] px-2 py-1 rounded-lg border border-[rgb(var(--border))] shadow-sm transition-colors">
+               <span className="text-[10px] font-bold text-[rgb(var(--text-muted))] uppercase">Cmd</span>
+               <span className="text-[10px] font-bold text-[rgb(var(--text-muted))] uppercase">K</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          className="p-2.5 bg-[rgb(var(--bg-surface-2))] hover:bg-[rgb(var(--bg-surface))] rounded-[var(--radius-btn)] border border-[rgb(var(--border))] text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--primary))] transition-all shadow-sm"
+          title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+        >
+          {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+        </button>
+
         {/* Language Selector */}
-        <div className="relative group/lang mr-2">
-          <button className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 px-3 py-2 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all text-xs font-bold">
-            <Globe className="w-4 h-4 text-blue-500" />
-            <span className="uppercase">{i18n.language.split('-')[0]}</span>
+        <div className="relative group/lang">
+          <button className="flex items-center gap-3 px-4 py-2.5 bg-[rgb(var(--bg-surface-2))] hover:bg-[rgb(var(--bg-surface))] rounded-[var(--radius-btn)] border border-[rgb(var(--border))] text-[rgb(var(--text-secondary))] transition-all shadow-sm group-hover/lang:border-[rgb(var(--primary))] group/lang-btn">
+            <Globe className="w-4 h-4 text-[rgb(var(--text-muted))] group-hover/lang-btn:text-[rgb(var(--primary))]" />
+            <span className="text-xs font-black uppercase tracking-widest">{i18n.language.toUpperCase()}</span>
           </button>
           
-          <div className="absolute top-full right-0 pt-2 w-40 opacity-0 translate-y-2 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:translate-y-0 group-hover/lang:pointer-events-auto transition-all z-50">
-            <div className="bg-slate-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden py-2">
-              {languages.map((lng) => (
-                <button
-                  key={lng.code}
-                  onClick={() => changeLanguage(lng.code)}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold transition-all hover:bg-white/5 ${
-                    i18n.language.startsWith(lng.code) ? 'text-blue-400 bg-blue-500/5' : 'text-slate-400'
-                  }`}
-                >
-                  <span className="text-base">{lng.flag}</span>
-                  {lng.name}
-                </button>
-              ))}
-            </div>
+          <div className="absolute right-0 mt-3 w-56 bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-2xl shadow-[var(--shadow-md)] py-3 opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-50">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => changeLanguage(lang.code)}
+                className={`w-full flex items-center gap-4 px-6 py-3.5 text-sm font-bold transition-all ${
+                  i18n.language === lang.code 
+                    ? 'text-[rgb(var(--primary))] bg-[rgba(46,79,210,0.08)]' 
+                    : 'text-[rgb(var(--text-secondary))] hover:bg-[rgb(var(--bg-surface-2))] hover:text-[rgb(var(--text-primary))]'
+                }`}
+              >
+                <span className="text-lg">{lang.flag}</span>
+                <div className="flex-1 text-left">{lang.name}</div>
+                {i18n.language === lang.code && <div className="w-1.5 h-1.5 rounded-full bg-[rgb(var(--primary))]" />}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 px-4 py-2 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all text-xs font-bold uppercase tracking-wider">
-            <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
-            {t('header.quick_actions')}
-          </button>
-          
-          <button className="relative p-2.5 bg-slate-900 hover:bg-slate-800 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all group">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-blue-500 rounded-full border-2 border-slate-950 group-hover:scale-110 transition-transform"></span>
-          </button>
-        </div>
+        <div className="w-px h-8 bg-[rgb(var(--border))] mx-2" />
+        
+        <button className="relative p-3 bg-[rgb(var(--bg-surface-2))] hover:bg-[rgb(var(--bg-surface))] rounded-[var(--radius-btn)] border border-[rgb(var(--border))] text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--primary))] transition-all group shadow-sm">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-[rgb(var(--bg-surface))] shadow-sm" />
+        </button>
 
-        <div className="h-10 w-px bg-white/5"></div>
-
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-bold text-white tracking-tight">{profile?.full_name || 'System Administrator'}</p>
-            <div className="flex items-center justify-end gap-1.5 mt-0.5">
-               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-               <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.1em]">{t('header.verified_admin')}</p>
+        <div className="flex items-center gap-4 ml-2 group/user relative cursor-pointer">
+          <div className="flex flex-col items-end">
+            <p className="text-xs font-black text-[rgb(var(--text-primary))] uppercase tracking-widest transition-colors mb-0.5">{profile?.full_name || 'System Admin'}</p>
+            <div className="flex items-center gap-2">
+              <Zap className="w-3 h-3 text-blue-500 fill-blue-500" />
+              <p className="text-[10px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest transition-colors">{profile?.role || 'Administrator'}</p>
             </div>
           </div>
           
-          <div className="relative group">
-            <div className="absolute inset-0 bg-blue-600/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-blue-500/50 transition-all cursor-pointer">
-              <User className="w-6 h-6 text-slate-400 group-hover:text-white transition-colors" />
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl p-0.5 shadow-lg group-hover/user:scale-105 transition-all">
+            <div className="w-full h-full bg-[rgb(var(--bg-surface))] rounded-[14px] flex items-center justify-center border border-white/20">
+              <User className="w-6 h-6 text-blue-600" />
             </div>
           </div>
 
-          <button 
-            onClick={handleLogout}
-            className="p-2.5 bg-red-500/10 hover:bg-red-500/20 rounded-xl border border-red-500/20 text-red-400 hover:text-red-300 transition-all"
-            title={t('header.sign_out')}
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
+          <div className="absolute right-0 top-full mt-3 w-64 bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-md)] py-3 opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300 z-50 overflow-hidden">
+            <div className="px-6 py-4 border-b border-[rgb(var(--border))] mb-2">
+              <p className="text-xs font-black text-[rgb(var(--text-muted))] uppercase tracking-tighter mb-1">Signed in as</p>
+              <p className="text-sm font-black text-[rgb(var(--text-primary))] truncate">{profile?.email || 'admin@evocomp.com'}</p>
+            </div>
+            
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-4 px-6 py-4 text-sm font-black text-rose-500 hover:bg-rose-50 transition-all uppercase tracking-[0.2em]"
+            >
+              <LogOut className="w-4 h-4" /> {t('header.logout')}
+            </button>
+          </div>
         </div>
       </div>
     </header>

@@ -79,6 +79,7 @@ export interface ManagerPlanRowLite {
   cycle_id: string;
   manager_user_id: string;
   status: string;
+  is_locked: boolean;
   locked_at: string | null;
   updated_at?: string | null;
 }
