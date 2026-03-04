@@ -82,19 +82,82 @@ async function handlePublish(supabase: SupabaseClient, importId: string, tenantI
     .eq('import_id', importId)
     .eq('status', 'VALID')
 
+  // --- Data Quality Report tracking ---
+  const expectedV2Columns = [
+    'annual_variable_target_local',
+    'annual_guaranteed_cash_target_local'
+  ]
+  const missingColumns: string[] = []
+  const missingValues: Record<string, { total: number; missing: number }> = {}
+  let derivedOk = 0
+  let derivedFailed = 0
+  const totalRows = rows?.length ?? 0
+
+  // Initialize missing values tracking for v2 cols
+  for (const col of expectedV2Columns) {
+    missingValues[col] = { total: 0, missing: 0 }
+  }
+
+  // Detect missing columns from first row sample
+  if (rows && rows.length > 0) {
+    const sampleRow = rows[0].row_json || {}
+    for (const col of expectedV2Columns) {
+      if (!(col in sampleRow) && !(col.replace('_local', '') in sampleRow)) {
+        missingColumns.push(col)
+      }
+    }
+  }
+
   if (rows) {
     for (const row of rows) {
       const rowData = row.row_json
-      
-      // Always insert into snapshot_employee_data
+
+      // Map v2 fields (backward compatible — use null if missing)
+      const annualVariable = rowData.annual_variable_target_local != null
+        ? Number(rowData.annual_variable_target_local)
+        : null
+      const annualGuaranteed = rowData.annual_guaranteed_cash_target_local != null
+        ? Number(rowData.annual_guaranteed_cash_target_local)
+        : null
+      const baseSalary = rowData.base_salary != null ? Number(rowData.base_salary) : null
+
+      // Compute derived fields
+      let targetCash: number | null = null
+      let totalGuaranteed: number | null = null
+
+      if (baseSalary != null && annualVariable != null) {
+        targetCash = baseSalary + annualVariable
+      }
+      if (targetCash != null && annualGuaranteed != null) {
+        totalGuaranteed = targetCash + annualGuaranteed
+      }
+
+      if (targetCash != null && totalGuaranteed != null) {
+        derivedOk++
+      } else {
+        derivedFailed++
+      }
+
+      // Track missing values
+      for (const col of expectedV2Columns) {
+        missingValues[col].total++
+        if (rowData[col] == null) missingValues[col].missing++
+      }
+
+      // Insert into snapshot_employee_data with v2 fields + derived
       await supabase.from('snapshot_employee_data').insert({
         tenant_id: tenantId,
         snapshot_id: snapshot.id,
-        employee_id: rowData.employee_id, // assuming mapping provided this
+        employee_id: rowData.employee_id,
         country_code: rowData.country_code,
-        base_salary_local: rowData.base_salary,
+        base_salary_local: baseSalary,
         local_currency: rowData.currency,
-        // ... more fields
+        annual_variable_target_local: annualVariable,
+        annual_guaranteed_cash_target_local: annualGuaranteed,
+        target_cash_local: targetCash,
+        total_guaranteed_local: totalGuaranteed,
+        full_name: rowData.full_name,
+        performance_rating: rowData.performance_rating,
       })
 
       // If System-of-Record, upsert persistent employees and compensation
@@ -112,13 +175,57 @@ async function handlePublish(supabase: SupabaseClient, importId: string, tenantI
             employee_id: emp.id,
             effective_date: new Date().toISOString().split('T')[0],
             local_currency: rowData.currency,
-            base_salary_local: rowData.base_salary,
-            base_salary_base: rowData.base_salary_base // calculated via FX logic (to be added)
+            base_salary_local: baseSalary,
+            base_salary_base: rowData.base_salary_base
           })
         }
       }
     }
   }
+
+  // --- Build & persist Data Quality Report ---
+  const missingValuesPct: Record<string, string> = {}
+  for (const [col, stats] of Object.entries(missingValues)) {
+    missingValuesPct[col] = stats.total > 0
+      ? `${((stats.missing / stats.total) * 100).toFixed(1)}%`
+      : 'N/A'
+  }
+
+  const impactOnPresetsV2: string[] = []
+  if (missingColumns.includes('annual_variable_target_local') ||
+      (missingValues['annual_variable_target_local']?.missing ?? 0) > 0) {
+    impactOnPresetsV2.push('calc_new_target_cash_local → NULL for affected rows')
+  }
+  if (missingColumns.includes('annual_guaranteed_cash_target_local') ||
+      (missingValues['annual_guaranteed_cash_target_local']?.missing ?? 0) > 0) {
+    impactOnPresetsV2.push('calc_new_total_guaranteed_local → NULL for affected rows')
+    impactOnPresetsV2.push('calc_total_increase_local → NULL (cascaded)')
+    impactOnPresetsV2.push('calc_increase_pct_of_target_cash → NULL (cascaded)')
+  }
+
+  const reportStatus = missingColumns.length === 0 && derivedFailed === 0
+    ? 'PASS'
+    : missingColumns.length > 0 || derivedFailed > 0
+      ? 'WARN'
+      : 'FAIL'
+
+  const report = {
+    missing_columns: missingColumns,
+    missing_values: missingValuesPct,
+    derived_fields_status: {
+      target_cash_local: derivedOk > 0 ? `${derivedOk}/${totalRows} computed` : 'Not computable',
+      total_guaranteed_local: derivedOk > 0 ? `${derivedOk}/${totalRows} computed` : 'Not computable',
+    },
+    impact_on_presets_v2: impactOnPresetsV2,
+  }
+
+  await supabase.from('snapshot_import_quality_reports').upsert({
+    snapshot_id: snapshot.id,
+    tenant_id: tenantId,
+    total_rows: totalRows,
+    status: reportStatus,
+    report,
+  }, { onConflict: 'snapshot_id' })
 
   // 4. Log to Audit Log
   await supabase.from('audit_log').insert({
@@ -126,10 +233,14 @@ async function handlePublish(supabase: SupabaseClient, importId: string, tenantI
     action: 'PUBLISH_IMPORT',
     entity_type: 'IMPORT',
     entity_id: importId,
-    after_json: { snapshot_id: snapshot.id, mode: tenant.mode }
+    after_json: { snapshot_id: snapshot.id, mode: tenant.mode, quality_status: reportStatus }
   })
 
-  return new Response(JSON.stringify({ status: 'published', snapshotId: snapshot.id }), {
+  return new Response(JSON.stringify({
+    status: 'published',
+    snapshotId: snapshot.id,
+    qualityStatus: reportStatus
+  }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 }

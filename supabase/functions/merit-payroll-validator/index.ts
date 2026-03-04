@@ -14,7 +14,7 @@
 // - Role check: user_roles.role_id in ('admin','superadmin')
 // - Uses service role for DB reads (bypasses RLS). Still validates caller role.
 
-import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 type Json = Record<string, unknown>;
 
@@ -42,6 +42,7 @@ interface ManagerPlan {
   id: string;
   status: string;
   manager_user_id: string;
+  is_locked: boolean;
   locked_at: string | null;
 }
 
@@ -169,7 +170,7 @@ Deno.serve(async (req: Request) => {
   // 2) Manager plans and locked count
   const { data: plans, error: plansErr } = await supabaseAdmin
     .from("comp_merit_manager_plans")
-    .select("id,status,manager_user_id,locked_at")
+    .select("id,status,manager_user_id,is_locked,locked_at")
     .eq("cycle_id", cycleId);
 
   if (plansErr) {
@@ -178,7 +179,7 @@ Deno.serve(async (req: Request) => {
 
   const typedPlans = (plans as unknown as ManagerPlan[]) ?? [];
   const managerPlansTotal = typedPlans.length;
-  const managerPlansLocked = typedPlans.filter((p) => p.status === "locked").length;
+  const managerPlansLocked = typedPlans.filter((p) => p.is_locked === true).length;
 
   if (managerPlansTotal === 0) {
     issues.push({
