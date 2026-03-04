@@ -15,6 +15,7 @@ const WorkspaceHome = React.lazy(() => import('./pages/WorkspaceHome'))
 const JobEvaluationPage = React.lazy(() => import('./pages/JobEvaluationPage'))
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
 const ScenariosPage = React.lazy(() => import('./pages/ScenariosPage'))
+const ScenarioResultsPage = React.lazy(() => import('./pages/ScenarioResultsPage'))
 const MeritResultsPage = React.lazy(() => import('./pages/MeritResultsPage'))
 const ExecutionWorkbenchPage = React.lazy(() => import('./pages/ExecutionWorkbenchPage'))
 const CyclesPage = React.lazy(() => import('./pages/CyclesPage'))
@@ -160,7 +161,7 @@ function App() {
                     } />
                     <Route path="pay-bands" element={<PayBandsPage />} />
                     <Route path="comp/scenarios" element={<ScenariosPage />} />
-                    <Route path="comp/scenarios/:scenarioId/results" element={<MeritResultsPage />} />
+                    <Route path="comp/scenarios/:id/results" element={<ScenarioResultsPage />} />
                     <Route path="comp/scenarios/:scenarioId/execute" element={<ExecutionWorkbenchPage />} />
                     <Route path="comp/cycles" element={
                       ['COMP_ADMIN', 'TENANT_ADMIN'].includes(profile?.role || '') 
