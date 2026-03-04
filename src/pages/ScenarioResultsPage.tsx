@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calculator, Users, TrendingUp, 
   Download, Filter, Search, Settings, RefreshCw,
-  AlertCircle, AlertTriangle, List, Clock
+  AlertCircle, AlertTriangle, List, Clock, FileCheck
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
@@ -13,8 +13,12 @@ import { ManageColumnsModal } from '../components/scenarios/ManageColumnsModal';
 import { JobHistoryModal } from '../components/scenarios/JobHistoryModal';
 import { getCalculationMode, SYNC_ROW_LIMIT } from '../components/scenarios/columnsExport';
 import { DataQualityReportModal } from '../components/scenarios/DataQualityReportModal';
-import { FileCheck } from 'lucide-react';
+import { DuplicateRunModal } from '../components/scenarios/DuplicateRunModal';
+import { CompareRunsModal } from '../components/scenarios/CompareRunsModal';
+import { BudgetConfigModal } from '../components/scenarios/BudgetConfigModal';
 import { formatCsvValue, buildCsv, downloadCsv } from '../utils/csv';
+import type { BudgetConfig, BudgetSummary } from '../types/budget';
+import { DEFAULT_BUDGET_CONFIG } from '../types/budget';
 
 
 interface Scenario {
@@ -33,6 +37,7 @@ interface ScenarioRun {
   total_increase_local: number;
   total_increase_base: number;
   finished_at: string;
+  created_at: string; // Added for display in dropdown
   quality_report?: {
     missing_fx: number;
     missing_pay_band: number;
@@ -82,6 +87,17 @@ const ScenarioResultsPage = () => {
   const [snapshotId, setSnapshotId] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
+  // Phase 6B: Multiple Runs & Compare State
+  const [allRuns, setAllRuns] = useState<ScenarioRun[]>([]);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [isDuplicateOpen, setIsDuplicateOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  // Phase 6C: Budget Controls State
+  const [budgetConfig, setBudgetConfig] = useState<BudgetConfig>(DEFAULT_BUDGET_CONFIG);
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+  const [isSavingBudget, setIsSavingBudget] = useState(false);
+
 
   // Filter state
   const [searchTerm, setSearchTerm] = useState('');
@@ -110,7 +126,7 @@ const ScenarioResultsPage = () => {
     }, 2000);
   }, []);
 
-  async function fetchResults() {
+  async function fetchResults(requestedRunId?: string) {
     setLoading(true);
     try {
       // 1. Fetch scenario details
@@ -124,25 +140,37 @@ const ScenarioResultsPage = () => {
       setScenario(scenarioData);
       if (scenarioData?.snapshot_id) setSnapshotId(scenarioData.snapshot_id);
 
-      // 2. Fetch the absolute latest COMPLETED run
-      const { data: runData, error: runError } = await supabase
+      // 2. Fetch all runs for the scenario
+      const { data: runsData, error: runsError } = await supabase
         .from('scenario_runs')
         .select('*')
         .eq('scenario_id', id)
-        .eq('status', 'COMPLETED')
-        .order('finished_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
-      if (runError) throw runError;
+      if (runsError) throw runsError;
       
-      if (!runData) {
-        setError('No completed runs found for this scenario.');
+      if (!runsData || runsData.length === 0) {
+        setError('No runs found for this scenario.');
         setLoading(false);
         return;
       }
-      
-      setLatestRun(runData);
+
+      setAllRuns(runsData);
+
+      // Determine which run to load
+      let targetRun = null;
+      if (requestedRunId) {
+        targetRun = runsData.find((r: ScenarioRun) => r.id === requestedRunId);
+      }
+      if (!targetRun && activeRunId) {
+        targetRun = runsData.find((r: ScenarioRun) => r.id === activeRunId);
+      }
+      if (!targetRun) {
+        targetRun = runsData.find((r: ScenarioRun) => r.status === 'COMPLETED') || runsData[0];
+      }
+
+      setLatestRun(targetRun);
+      setActiveRunId(targetRun.id);
 
       // 3. Fetch dataset and columns
       let { data: datasetData } = await supabase
@@ -183,7 +211,7 @@ const ScenarioResultsPage = () => {
       const { data: resultsData, error: resultsError } = await supabase
         .from('scenario_employee_results')
         .select('*')
-        .eq('run_id', runData.id)
+        .eq('run_id', targetRun.id)
         .order('employee_id', { ascending: true });
 
       if (resultsError) throw resultsError;
@@ -384,6 +412,113 @@ const ScenarioResultsPage = () => {
   const qualityStats = latestRun?.quality_report || { missing_fx: 0, missing_pay_band: 0, missing_rating: 0 };
   const hasIssues = qualityStats.missing_fx > 0 || qualityStats.missing_pay_band > 0 || qualityStats.missing_rating > 0;
 
+  // --- Phase 6C: Budget Computation (reactive) ---
+  const budgetSummary: BudgetSummary = useMemo(() => {
+    // Compute spent per employee
+    let totalSpent = 0;
+    for (const r of results) {
+      const aj = r.after_json || {};
+      const inc = (aj.calc_total_increase_local ?? aj.calc_merit_increase_amount_local ?? 0) as number;
+      const lump = (aj.input_lump_sum_local ?? 0) as number;
+      totalSpent += inc + lump;
+    }
+
+    // Compute base total for % mode (total_guaranteed_local > target_cash_local > base_salary_local)
+    let baseTotal = 0;
+    let baseMissing = false;
+    for (const r of results) {
+      const snap = (r as any).snapshot_employee_data || {};
+      const val = snap.total_guaranteed_local ?? snap.target_cash_local ?? snap.base_salary_local ?? r.salary_base_before;
+      if (val != null) {
+        baseTotal += Number(val);
+      } else {
+        baseMissing = true;
+      }
+    }
+
+    // Compute cap
+    let cap = 0;
+    if (budgetConfig.mode === 'percent') {
+      cap = baseTotal * budgetConfig.percent_cap;
+    } else {
+      cap = budgetConfig.fixed_cap_local;
+    }
+
+    const remaining = cap - totalSpent;
+    const pctUsed = cap > 0 ? totalSpent / cap : 0;
+
+    return {
+      spent: totalSpent,
+      cap,
+      remaining,
+      pctUsed,
+      isOverBudget: totalSpent > cap && cap > 0,
+      baseTotal,
+      baseMissing,
+    };
+  }, [results, budgetConfig]);
+
+  // Top 10 employees by spent (for row highlight when over budget)
+  const overBudgetHighlightIds = useMemo(() => {
+    if (!budgetSummary.isOverBudget) return new Set<string>();
+    const spentByEmp = results.map(r => {
+      const aj = r.after_json || {};
+      const inc = (aj.calc_total_increase_local ?? aj.calc_merit_increase_amount_local ?? 0) as number;
+      const lump = (aj.input_lump_sum_local ?? 0) as number;
+      return { id: r.id, spent: inc + lump };
+    }).sort((a, b) => b.spent - a.spent).slice(0, 10);
+    return new Set(spentByEmp.map(s => s.id));
+  }, [results, budgetSummary.isOverBudget]);
+
+  // Load budget config from run's rules_snapshot
+  useEffect(() => {
+    if (latestRun) {
+      const rs = (latestRun as any).rules_snapshot;
+      if (rs?.budget_config) {
+        setBudgetConfig(rs.budget_config);
+      } else {
+        // Try localStorage fallback
+        const stored = localStorage.getItem(`evocomp_budget_cap_${id}_${latestRun.id}`);
+        if (stored) {
+          try { setBudgetConfig(JSON.parse(stored)); } catch { /* ignore */ }
+        } else {
+          setBudgetConfig(DEFAULT_BUDGET_CONFIG);
+        }
+      }
+    }
+  }, [latestRun, id]);
+
+  // Save budget config
+  const handleSaveBudgetConfig = async (newConfig: BudgetConfig) => {
+    setIsSavingBudget(true);
+    try {
+      setBudgetConfig(newConfig);
+
+      // Persist to rules_snapshot.budget_config on scenario_runs
+      const currentRs = (latestRun as any)?.rules_snapshot || {};
+      const updatedRs = { ...currentRs, budget_config: newConfig };
+
+      const { error: updateErr } = await supabase
+        .from('scenario_runs')
+        .update({ rules_snapshot: updatedRs })
+        .eq('id', activeRunId);
+
+      if (updateErr) {
+        console.warn('Failed to persist budget to DB, falling back to localStorage:', updateErr);
+        localStorage.setItem(`evocomp_budget_cap_${id}_${activeRunId}`, JSON.stringify(newConfig));
+      }
+
+      setIsBudgetModalOpen(false);
+    } catch (err) {
+      console.error('Budget save error:', err);
+      // localStorage fallback
+      localStorage.setItem(`evocomp_budget_cap_${id}_${activeRunId}`, JSON.stringify(newConfig));
+      setIsBudgetModalOpen(false);
+    } finally {
+      setIsSavingBudget(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-8 animate-pulse">
@@ -435,11 +570,49 @@ const ScenarioResultsPage = () => {
               {latestRun?.status}
             </span>
           </div>
-          <p className="text-slate-500">
-            {t('pages.scenarios.results_for_run')} {latestRun?.finished_at ? new Date(latestRun.finished_at).toLocaleString() : 'N/A'}
+          <p className="text-sm text-slate-500">
+            {t('pages.scenarios.results_for_run')} 
+            <select 
+              className="ml-2 bg-transparent border-b border-dashed border-slate-300 text-slate-700 font-bold focus:outline-none focus:border-indigo-500 cursor-pointer"
+              value={activeRunId || ''}
+              onChange={(e) => fetchResults(e.target.value)}
+            >
+              {allRuns.map(r => (
+                <option key={r.id} value={r.id}>
+                  {r.status} — {r.created_at ? new Date(r.created_at).toLocaleString() : 'N/A'}
+                </option>
+              ))}
+            </select>
           </p>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center flex-wrap">
+          <button
+            type="button"
+            onClick={() => setIsBudgetModalOpen(true)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm ${
+              budgetSummary.isOverBudget
+                ? 'bg-red-50 border-2 border-red-300 text-red-700 hover:bg-red-100'
+                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            💰 Budget
+          </button>
+          <button 
+            type="button" 
+            onClick={() => setIsCompareOpen(true)}
+            disabled={allRuns.length < 2 || results.length === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50"
+          >
+            Compare Runs
+          </button>
+          <button 
+            type="button" 
+            onClick={() => setIsDuplicateOpen(true)}
+            disabled={results.length === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50"
+          >
+            Duplicate Run
+          </button>
           <button 
             type="button" 
             onClick={() => setIsManageColumnsOpen(true)}
@@ -489,6 +662,64 @@ const ScenarioResultsPage = () => {
           </button>
         </div>
       </div>
+
+      {/* Phase 6C: Budget Summary Bar */}
+      {budgetSummary.cap > 0 && results.length > 0 && (
+        <div className={`mb-4 flex items-center gap-6 px-5 py-3 rounded-2xl border text-sm ${
+          budgetSummary.isOverBudget
+            ? 'bg-red-50 border-red-200'
+            : 'bg-emerald-50/50 border-emerald-200'
+        }`}>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Spent</span>
+            <p className="font-bold text-slate-900">${budgetSummary.spent.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+          </div>
+          <div className="text-slate-300">/</div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Cap</span>
+            <p className="font-bold text-slate-900">${budgetSummary.cap.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+          </div>
+          <div className="text-slate-300">/</div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Remaining</span>
+            <p className={`font-bold ${budgetSummary.remaining < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+              ${budgetSummary.remaining.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            </p>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${budgetSummary.isOverBudget ? 'bg-red-500' : 'bg-emerald-500'}`}
+                style={{ width: `${Math.min(budgetSummary.pctUsed * 100, 100)}%` }}
+              />
+            </div>
+            <span className={`text-sm font-bold ${budgetSummary.isOverBudget ? 'text-red-600' : 'text-emerald-600'}`}>
+              {(budgetSummary.pctUsed * 100).toFixed(1)}%
+            </span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+              budgetSummary.isOverBudget
+                ? 'bg-red-100 text-red-700'
+                : 'bg-emerald-100 text-emerald-700'
+            }`}>
+              {budgetSummary.isOverBudget ? 'OVER' : 'OK'}
+            </span>
+          </div>
+          {budgetSummary.baseMissing && (
+            <span className="text-[10px] text-amber-600 font-bold">⚠ Budget may be incomplete (missing base fields)</span>
+          )}
+        </div>
+      )}
+
+      {/* Phase 6C: Over Budget Banner */}
+      {budgetSummary.isOverBudget && (
+        <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 flex items-center gap-3">
+          <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+          <div>
+            <strong>Over budget by ${Math.abs(budgetSummary.remaining).toLocaleString(undefined, { maximumFractionDigits: 0 })}</strong>
+            <span className="text-red-600 ml-2">— Top 10 highest-cost employees are highlighted below.</span>
+          </div>
+        </div>
+      )}
 
       {activeJob && (
         <div className="mb-6">
@@ -649,7 +880,9 @@ const ScenarioResultsPage = () => {
               {filteredResults.map((res) => {
                 const snap = (res as any).snapshot_employee_data || {};
                 return (
-                <tr key={res.id} className="hover:bg-slate-50/50 transition-colors">
+                <tr key={res.id} className={`hover:bg-slate-50/50 transition-colors ${
+                  overBudgetHighlightIds.has(res.id) ? 'ring-2 ring-inset ring-red-200 bg-red-50/30' : ''
+                }`}>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">
@@ -773,6 +1006,35 @@ const ScenarioResultsPage = () => {
           snapshotId={snapshotId}
         />
       )}
+
+      {/* Phase 6B Modals */}
+      <DuplicateRunModal
+        isOpen={isDuplicateOpen}
+        onClose={() => setIsDuplicateOpen(false)}
+        scenarioId={id!}
+        sourceRunId={activeRunId!}
+        onSuccess={(newRunId) => {
+          setIsDuplicateOpen(false);
+          fetchResults(newRunId); // Reload page with new run active
+        }}
+      />
+
+      <CompareRunsModal
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+        scenarioId={id!}
+        runs={allRuns}
+        activeRunId={activeRunId!}
+        currentResults={results}
+      />
+
+      <BudgetConfigModal
+        isOpen={isBudgetModalOpen}
+        onClose={() => setIsBudgetModalOpen(false)}
+        config={budgetConfig}
+        onSave={handleSaveBudgetConfig}
+        isSaving={isSavingBudget}
+      />
     </div>
   );
 };
