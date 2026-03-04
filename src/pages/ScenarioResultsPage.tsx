@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calculator, Users, TrendingUp, 
   Download, Filter, Search, Settings, RefreshCw,
-  AlertCircle, AlertTriangle, List, Clock, FileCheck
+  AlertCircle, AlertTriangle, List, Clock, FileCheck, Play
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
@@ -98,6 +98,9 @@ const ScenarioResultsPage = () => {
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [isSavingBudget, setIsSavingBudget] = useState(false);
 
+  // Phase 6G: Initial Run State
+  const [isInitialRunning, setIsInitialRunning] = useState(false);
+  const [initialRunError, setInitialRunError] = useState<string | null>(null);
 
   // Filter state
   const [searchTerm, setSearchTerm] = useState('');
@@ -150,7 +153,8 @@ const ScenarioResultsPage = () => {
       if (runsError) throw runsError;
       
       if (!runsData || runsData.length === 0) {
-        setError('No runs found for this scenario.');
+        setAllRuns([]);
+        setLatestRun(null);
         setLoading(false);
         return;
       }
@@ -249,6 +253,69 @@ const ScenarioResultsPage = () => {
     } catch (err: any) {
       alert('Recalculation failed: ' + err.message);
       setIsRecalculating(false);
+    }
+  };
+
+  const handleInitialRun = async () => {
+    if (!id) return;
+    setIsInitialRunning(true);
+    setInitialRunError(null);
+    let errorCatcher: string = '';
+    try {
+      // Re-using the exact existing engine from MeritResultsPage
+      const { data, error } = await supabase.functions.invoke('scenario-engine-v30-bundled', { 
+        body: { scenarioId: id, action: 'run' }
+      });
+      
+      if (error) {
+        try {
+          const body = await error.context.json();
+          errorCatcher = `${body.error || error.message}${body.hint ? ` - ${body.hint}` : ''}`;
+        } catch {
+          errorCatcher = error.message || 'Run failed';
+        }
+        throw new Error(errorCatcher);
+      }
+      
+      if (data?.error) throw new Error(data.error);
+
+      // Start robust polling for the new run
+      let pollCount = 0;
+      const MAX_POLLS = 30; // 60 seconds maximum polling (2s * 30)
+      
+      const pollObj = setInterval(async () => {
+        pollCount++;
+        const { data: currentRuns } = await supabase
+          .from('scenario_runs')
+          .select('*')
+          .eq('scenario_id', id)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (currentRuns && currentRuns.length > 0) {
+          const run = currentRuns[0];
+          if (run.status === 'COMPLETED' || run.status === 'FAILED') {
+            clearInterval(pollObj);
+            setIsInitialRunning(false);
+            if (run.status === 'FAILED') {
+              setInitialRunError(t('pages.scenarios.run_failed', 'El run ha fallado en el servidor. Revisa los logs.'));
+            } else {
+              // Successfully generated! Reload entire page data.
+              fetchResults();
+            }
+          }
+        }
+
+        if (pollCount >= MAX_POLLS) {
+          clearInterval(pollObj);
+          setIsInitialRunning(false);
+          setInitialRunError(t('pages.scenarios.run_timeout', 'Tiempo de espera agotado (60s). Por favor, recarga la página o intenta nuevamente.'));
+        }
+      }, 2000);
+
+    } catch (err: any) {
+      setInitialRunError(err.message || 'Error invocando el engine.');
+      setIsInitialRunning(false);
     }
   };
 
@@ -545,8 +612,73 @@ const ScenarioResultsPage = () => {
           onClick={() => navigate('/app/comp/scenarios')}
           className="text-blue-600 font-bold hover:underline"
         >
-          {t('common.back')}
+          {t('common.back', 'Back')}
         </button>
+      </div>
+    );
+  }
+
+  // Phase 6G Empty State
+  if (!loading && allRuns.length === 0) {
+    return (
+      <div className="p-8 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in duration-500">
+        <div className="w-full max-w-lg bg-white border border-slate-200 rounded-3xl shadow-xl p-12 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-500"></div>
+          
+          <div className="w-24 h-24 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-sm border border-indigo-100 transform -rotate-6">
+            <Calculator className="w-12 h-12" />
+          </div>
+          
+          <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">
+            {t('pages.scenarios.ready_to_run', 'Ready to Run')}
+          </h2>
+          
+          <p className="text-slate-500 mb-10 font-medium leading-relaxed text-lg">
+            {t('pages.scenarios.empty_run_desc', 'This scenario has no runs yet. Click below to generate the first run and start your analysis.')}
+          </p>
+          
+          {initialRunError && (
+            <div className="mb-10 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-start gap-3 text-left w-full shadow-sm animate-in slide-in-from-top-4">
+              <AlertCircle className="w-6 h-6 flex-shrink-0 mt-0.5 text-red-500" />
+              <div>
+                <p className="font-bold text-sm uppercase tracking-wider mb-1 text-red-800">{t('common.error', 'Error')}</p>
+                <p className="text-sm font-medium">{initialRunError}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4">
+            <button 
+              type="button"
+              onClick={handleInitialRun}
+              disabled={isInitialRunning}
+              className={`py-5 px-8 text-lg font-black tracking-wide shadow-lg flex items-center justify-center gap-3 w-full shrink-0 transition-all rounded-2xl
+                ${isInitialRunning 
+                  ? 'bg-slate-100 text-slate-400 border-2 border-slate-200 cursor-not-allowed' 
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white active:scale-95 hover:shadow-indigo-500/25'}`}
+            >
+              {isInitialRunning ? (
+                <>
+                  <div className="w-5 h-5 border-[3px] border-slate-300 border-t-slate-500 rounded-full animate-spin" />
+                  {t('common.running', 'Running...')}
+                </>
+              ) : (
+                <>
+                  <Play className="w-6 h-6 fill-current" />
+                  {t('pages.scenarios.run_scenario', 'Run Scenario')}
+                </>
+              )}
+            </button>
+            
+            <button 
+              type="button"
+              onClick={() => navigate('/app/comp/scenarios')}
+              className="text-slate-500 font-bold hover:text-slate-900 transition-colors py-3"
+            >
+              &larr; {t('common.back_to_scenarios', 'Back to Scenarios')}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
