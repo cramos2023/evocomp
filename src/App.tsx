@@ -1,55 +1,48 @@
+import React, { Suspense, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from './lib/supabaseClient'
-import LoginPage from './pages/LoginPage'
-import ScenariosPage from './pages/ScenariosPage'
-import ImportsPage from './pages/ImportsPage'
-import PayBandsPage from './pages/PayBandsPage'
-import UsersPage from './pages/UsersPage'
-import ReportsPage from './pages/ReportsPage'
-import ApprovalsPage from './pages/ApprovalsPage'
-import { ManagerWorkspacePage } from './pages/approvals/ManagerWorkspacePage'
-import { ApprovalsInboxPage } from './pages/approvals/ApprovalsInboxPage'
-import TenantSettingsPage from './pages/TenantSettingsPage'
-import AuditLogPage from './pages/AuditLogPage'
-import ResetPasswordPage from './pages/ResetPasswordPage'
-import OnboardingPage from './pages/OnboardingPage'
-import MeritResultsPage from './pages/MeritResultsPage'
+import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
-import MeritCycleAdminPage from './pages/admin/MeritCycleAdminPage'
-const Dashboard = () => (
-  <div className="p-8">
-    <div className="mb-8">
-      <h1 className="text-3xl font-bold text-slate-900">Compensation Intelligence</h1>
-      <p className="text-slate-500">Welcome to the EvoComp Strategic Dashboard.</p>
-    </div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      {[1, 2, 3].map(i => (
-        <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm animate-pulse">
-          <div className="h-4 w-24 bg-slate-100 rounded mb-4"></div>
-          <div className="h-8 w-32 bg-slate-200 rounded"></div>
-        </div>
-      ))}
-    </div>
+import OnboardingTour from './components/OnboardingTour'
+import RouteLoader from './components/common/RouteLoader'
 
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-        <h2 className="font-bold text-lg text-slate-900">Recent Scenarios</h2>
-        <button className="text-blue-600 font-semibold text-sm">View all</button>
-      </div>
-      <div className="p-20 text-center text-slate-400">
-        <p>Your workspace is being prepared.</p>
-      </div>
-    </div>
-  </div>
+// --- Lazy page imports (route-level code splitting) ---
+const LandingPage = React.lazy(() => import('./pages/LandingPage'))
+const LoginPage = React.lazy(() => import('./pages/LoginPage'))
+const WorkspaceHome = React.lazy(() => import('./pages/WorkspaceHome'))
+const JobEvaluationPage = React.lazy(() => import('./pages/JobEvaluationPage'))
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'))
+const ScenariosPage = React.lazy(() => import('./pages/ScenariosPage'))
+const MeritResultsPage = React.lazy(() => import('./pages/MeritResultsPage'))
+const ExecutionWorkbenchPage = React.lazy(() => import('./pages/ExecutionWorkbenchPage'))
+const CyclesPage = React.lazy(() => import('./pages/CyclesPage'))
+const ImportsPage = React.lazy(() => import('./pages/ImportsPage'))
+const SnapshotsPage = React.lazy(() => import('./pages/SnapshotsPage'))
+const PayBandsPage = React.lazy(() => import('./pages/PayBandsPage'))
+const ReportsPage = React.lazy(() => import('./pages/ReportsPage'))
+const AuditLogPage = React.lazy(() => import('./pages/AuditLogPage'))
+const UsersPage = React.lazy(() => import('./pages/UsersPage'))
+const TenantSettingsPage = React.lazy(() => import('./pages/TenantSettingsPage'))
+const MeritCycleAdminPage = React.lazy(() => import('./pages/admin/MeritCycleAdminPage'))
+const ApprovalsPage = React.lazy(() => import('./pages/ApprovalsPage'))
+// Named exports wrapped for lazy compatibility
+const ManagerWorkspacePage = React.lazy(() =>
+  import('./pages/approvals/ManagerWorkspacePage').then(m => ({ default: m.ManagerWorkspacePage }))
 )
+const ApprovalsInboxPage = React.lazy(() =>
+  import('./pages/approvals/ApprovalsInboxPage').then(m => ({ default: m.ApprovalsInboxPage }))
+)
+const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'))
+const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
 
-const Layout = ({ children, profile }: { children: React.ReactNode, profile: any }) => (
-  <div className="flex bg-slate-50 min-h-screen">
-    <Sidebar />
-    <div className="flex-1 flex flex-col">
+
+
+const Layout = ({ children, profile, onStartTour }: { children: React.ReactNode, profile: any, onStartTour?: () => void }) => (
+  <div className="flex bg-[rgb(var(--surface-main))] min-h-screen transition-colors duration-500 text-[rgb(var(--text-primary))] font-sans font-medium">
+    <Sidebar onStartTour={onStartTour} />
+    <div className="flex-1 flex flex-col min-w-0">
       <Header profile={profile} />
       <main className="flex-1 overflow-y-auto">
         {children}
@@ -58,10 +51,20 @@ const Layout = ({ children, profile }: { children: React.ReactNode, profile: any
   </div>
 )
 
+const WorkspaceToolLayout = ({ children, profile }: { children: React.ReactNode, profile: any }) => (
+  <div className="flex flex-col bg-[rgb(var(--surface-main))] min-h-screen transition-colors duration-500 text-[rgb(var(--text-primary))] font-sans font-medium">
+    <Header profile={profile} />
+    <main className="flex-1 overflow-y-auto">
+      {children}
+    </main>
+  </div>
+)
+
 function App() {
   const [session, setSession] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [isTourOpen, setIsTourOpen] = useState(false)
 
   useEffect(() => {
     // Initial session check
@@ -111,62 +114,90 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">
-        <div className="animate-pulse text-xl">Loading EvoComp...</div>
+      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
+        <div className="animate-pulse text-xl font-bold tracking-tight">Loading EvoComp...</div>
       </div>
     )
   }
 
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={
-          session ? <Navigate to="/app" replace /> : <LoginPage />
-        } />
-        
-        <Route path="/app/*" element={
-          session ? (
-            profile?.tenant_id ? (
-              <Layout profile={profile}>
-                <Routes>
-                  <Route path="admin/tenants" element={<TenantSettingsPage />} />
-                  <Route path="admin/users" element={<UsersPage />} />
-                  <Route path="admin/merit-cycle" element={<MeritCycleAdminPage />} />
-                  <Route path="data/imports" element={<ImportsPage />} />
-                  <Route path="data/snapshots" element={<Dashboard />} />
-                  <Route path="comp/bands" element={<PayBandsPage />} />
-                  <Route path="comp/scenarios" element={<ScenariosPage />} />
-                  <Route path="comp/scenarios/:scenarioId/results" element={<MeritResultsPage />} />
-                  <Route path="comp/cycles" element={<Dashboard />} />
-                  
-                  {/* Phase 5 Approvals Routes */}
-                  <Route path="approvals/my-plan" element={<ManagerWorkspacePage />} />
-                  <Route path="approvals/inbox" element={<ApprovalsInboxPage />} />
-                  
-                  {/* Legacy Redirect for /app/approvals */}
-                  <Route path="approvals" element={<ApprovalsPage />} />
-                  
-                  <Route path="reports" element={<ReportsPage />} />
-                  <Route path="audit" element={<AuditLogPage />} />
-                  <Route path="*" element={<Navigate to="/app/comp/scenarios" replace />} />
-                </Routes>
-              </Layout>
-            ) : (
-              <Navigate to="/onboarding" replace />
-            )
-          ) : <Navigate to="/login" replace />
-        } />
+      <Suspense fallback={<RouteLoader />}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          
+          <Route path="/login" element={
+            session ? <Navigate to="/workspace" replace /> : <LoginPage />
+          } />
 
-        <Route path="/onboarding" element={
-          session ? (
-            profile?.tenant_id ? <Navigate to="/app" replace /> : <OnboardingPage onComplete={() => fetchProfile(session.user.id)} />
-          ) : <Navigate to="/login" replace />
-        } />
+          <Route path="/workspace" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceHome profile={profile} />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/workspace/job-evaluation" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceToolLayout profile={profile}>
+                <JobEvaluationPage profile={profile} />
+              </WorkspaceToolLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/app/*" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <>
+                <Layout profile={profile} onStartTour={() => setIsTourOpen(true)}>
+                  <Routes>
+                    <Route path="admin/tenants" element={<TenantSettingsPage />} />
+                    <Route path="admin/users" element={<UsersPage />} />
+                    <Route path="admin/merit-cycle" element={<MeritCycleAdminPage />} />
+                    <Route path="data/imports" element={<ImportsPage />} />
+                    <Route path="data/snapshots" element={
+                      ['COMP_ADMIN', 'TENANT_ADMIN'].includes(profile?.role || '') 
+                        ? <SnapshotsPage /> 
+                        : <Navigate to="/app/comp/scenarios" replace />
+                    } />
+                    <Route path="pay-bands" element={<PayBandsPage />} />
+                    <Route path="comp/scenarios" element={<ScenariosPage />} />
+                    <Route path="comp/scenarios/:scenarioId/results" element={<MeritResultsPage />} />
+                    <Route path="comp/scenarios/:scenarioId/execute" element={<ExecutionWorkbenchPage />} />
+                    <Route path="comp/cycles" element={
+                      ['COMP_ADMIN', 'TENANT_ADMIN'].includes(profile?.role || '') 
+                        ? <CyclesPage /> 
+                        : <Navigate to="/app/comp/scenarios" replace />
+                    } />
+                    
+                    {/* Phase 5 Approvals Routes */}
+                    <Route path="approvals/my-plan" element={<ManagerWorkspacePage />} />
+                    <Route path="approvals/inbox" element={<ApprovalsInboxPage />} />
+                    
+                    {/* Legacy Redirect for /app/approvals */}
+                    <Route path="approvals" element={<ApprovalsPage />} />
+                    
+                    <Route path="reports" element={<ReportsPage />} />
+                    <Route path="audit-log" element={<AuditLogPage />} />
+                    
+                    <Route index element={<Navigate to="/app/comp/scenarios" replace />} />
+                    <Route path="*" element={<Navigate to="/app/comp/scenarios" replace />} />
+                  </Routes>
+                </Layout>
+                <OnboardingTour isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
+              </>
+            </ProtectedRoute>
+          } />
 
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/onboarding" element={
+            <ProtectedRoute session={session} profile={profile} requireTenant={false}>
+              {profile?.tenant_id ? <Navigate to="/workspace" replace /> : <OnboardingPage onComplete={() => fetchProfile(session.user.id)} />}
+            </ProtectedRoute>
+          } />
 
-        <Route path="/" element={<Navigate to="/app" replace />} />
-      </Routes>
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </Router>
   )
 }
