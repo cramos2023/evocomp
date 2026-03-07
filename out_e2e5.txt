@@ -1,0 +1,19 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+--- EvoComp Golden Example E2E Paybands Builder UI/Engine ---
+[1] Login successful. User: carlosiramosp20@gmail.com
+
+[2] Executing validate_market_import...
+Γ£à Import Success: import_id=4f45c819-2dcc-4fa4-af05-ddab51e9eb2f, valid_rows=3, status=COMPLETED
+
+[3] Setting up vendor_grade_mappings...
+Inserted mapping: M3 -> G3
+Inserted mapping: M4 -> G4
+Inserted mapping: M5 -> G5
+
+[4] Validating global weights...
+Γ£à Weight Validation: isValid=true, errors=0
+
+[5] Creating scenario record...
+Error: Scenario Create Failed: Could not find the 'aging_policies' column of 'payband_build_scenarios' in the schema cache
+    at runE2E (C:\Users\carlo\Documents\evocomp\E2E_PAYBANDS.ts:105:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calculator, Users, TrendingUp, 
   Download, Filter, Search, Settings, RefreshCw,
-  AlertCircle, AlertTriangle, List, Clock, FileCheck, Play
+  AlertCircle, AlertTriangle, List, Clock, FileCheck, Play,
+  ChevronLeft, ChevronRight, FileSpreadsheet, Lock, Unlock
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,7 @@ import { JobStatusBadge, type FormulaJob } from '../components/scenarios/JobStat
 import { ManageColumnsModal } from '../components/scenarios/ManageColumnsModal';
 import { JobHistoryModal } from '../components/scenarios/JobHistoryModal';
 import { getCalculationMode, SYNC_ROW_LIMIT } from '../components/scenarios/columnsExport';
+import { updateEmployeeResultsBulk } from '../utils/bulkUpdates';
 import { DataQualityReportModal } from '../components/scenarios/DataQualityReportModal';
 import { DuplicateRunModal } from '../components/scenarios/DuplicateRunModal';
 import { CompareRunsModal } from '../components/scenarios/CompareRunsModal';
@@ -19,6 +21,8 @@ import { BudgetConfigModal } from '../components/scenarios/BudgetConfigModal';
 import { formatCsvValue, buildCsv, downloadCsv } from '../utils/csv';
 import type { BudgetConfig, BudgetSummary } from '../types/budget';
 import { DEFAULT_BUDGET_CONFIG } from '../types/budget';
+import { EmployeeDetailsDrawer } from '../components/scenarios/EmployeeDetailsDrawer';
+import { downloadXlsx, triggerXlsxExport } from '../utils/xlsx';
 
 
 interface Scenario {
@@ -56,8 +60,10 @@ interface EmployeeData {
 interface EmployeeResult {
   id: string;
   employee_id: string;
+  employee_external_id?: string;
   salary_base_before: number;
   salary_base_after: number;
+  total_cash_before?: number;
   before_json: EmployeeData;
   after_json: EmployeeData;
   flags_json: string[];
@@ -73,6 +79,9 @@ const ScenarioResultsPage = () => {
   const [latestRun, setLatestRun] = useState<ScenarioRun | null>(null);
   const [results, setResults] = useState<EmployeeResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // Phase 7A.1 Guideline Matrix State
+  const [guidelineMatrix, setGuidelineMatrix] = useState<any[]>([]);
 
   // Column Config State
   const [dataset, setDataset] = useState<any>(null);
@@ -102,8 +111,27 @@ const ScenarioResultsPage = () => {
   const [isInitialRunning, setIsInitialRunning] = useState(false);
   const [initialRunError, setInitialRunError] = useState<string | null>(null);
 
-  // Filter state
+  // Filter and Pagination state
   const [searchTerm, setSearchTerm] = useState('');
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+
+  // Phase 7A.2 Column Visibility Presets
+  type ViewPreset = 'default' | 'hr_base' | 'comp_base' | 'compa' | 'inputs' | 'outputs';
+  const [activePreset, setActivePreset] = useState<ViewPreset>('default');
+
+  // Phase 7A.3 Drawer State
+  const [selectedDrawerEmployee, setSelectedDrawerEmployee] = useState<EmployeeResult | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Phase 7A.4 Export Dropdown State
+  const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  // Reset page when search or run changes
+  useEffect(() => {
+    setPageIndex(0);
+  }, [searchTerm, activeRunId, pageSize]);
 
   useEffect(() => {
     if (id) fetchResults();
@@ -151,6 +179,13 @@ const ScenarioResultsPage = () => {
         .order('created_at', { ascending: false });
 
       if (runsError) throw runsError;
+
+      // Fetch guideline matrix (Phase 7A.1)
+      const { data: matrixData } = await supabase
+        .from('scenario_guideline_matrix')
+        .select('*')
+        .eq('scenario_id', id);
+      setGuidelineMatrix(matrixData || []);
       
       if (!runsData || runsData.length === 0) {
         setAllRuns([]);
@@ -176,46 +211,38 @@ const ScenarioResultsPage = () => {
       setLatestRun(targetRun);
       setActiveRunId(targetRun.id);
 
-      // 3. Fetch dataset and columns
-      let { data: datasetData } = await supabase
-        .from('dynamic_datasets')
-        .select('*')
-        .eq('scenario_id', id)
-        .maybeSingle();
-
-      if (!datasetData) {
-        const tenantId = (await supabase.auth.getUser()).data.user?.id || '00000000-0000-0000-0000-000000000000';
-        const { data: newDataset } = await supabase
+      // 3. Fetch dataset and columns (non-fatal — Column Config feature may not be available)
+      try {
+        let { data: datasetData } = await supabase
           .from('dynamic_datasets')
-          .insert({ scenario_id: id, tenant_id: tenantId, base_currency_code: 'USD' })
-          .select()
-          .single();
-        datasetData = newDataset;
-
-        // Seed preset columns server-side after creating the dataset
-        if (newDataset) {
-          await supabase.functions.invoke('seed-presets', {
-            body: { dataset_id: newDataset.id, tenant_id: tenantId }
-          });
-        }
-      }
-      setDataset(datasetData);
-
-      if (datasetData) {
-        const { data: cols } = await supabase
-          .from('column_definitions')
           .select('*')
-          .eq('dataset_id', datasetData.id)
-          .eq('is_active', true)
-          .order('created_at', { ascending: true });
-        setColumns(cols || []);
+          .eq('scenario_id', id)
+          .maybeSingle();
+
+        if (datasetData) {
+          setDataset(datasetData);
+          const { data: cols } = await supabase
+            .from('column_definitions')
+            .select('*')
+            .eq('dataset_id', datasetData.id)
+            .eq('is_active', true)
+            .order('created_at', { ascending: true });
+          setColumns(cols || []);
+        } else {
+          setDataset(null);
+          setColumns([]);
+        }
+      } catch (datasetErr) {
+        // Column Config feature unavailable — results page still works without dynamic columns
+        console.warn('[ScenarioResultsPage] dynamic_datasets unavailable:', datasetErr);
       }
 
       // 4. Fetch employee results for this run
+
       const { data: resultsData, error: resultsError } = await supabase
         .from('scenario_employee_results')
         .select('*')
-        .eq('run_id', targetRun.id)
+        .eq('scenario_run_id', targetRun.id)
         .order('employee_id', { ascending: true });
 
       if (resultsError) throw resultsError;
@@ -231,7 +258,11 @@ const ScenarioResultsPage = () => {
   }
 
   const handleRecalculate = async () => {
-    if (!latestRun || !dataset) return;
+    if (!latestRun) return;
+    if (!dataset) {
+      alert(t('pages.scenarios.recalculate_no_dataset', 'No column configuration dataset found. Please click "Config Columns" to initialize it before recalculating.'));
+      return;
+    }
     setIsRecalculating(true);
     try {
       const { data: jobData, error: jobErr } = await supabase.from('formula_jobs').insert({
@@ -319,16 +350,86 @@ const ScenarioResultsPage = () => {
     }
   };
 
+  // --- Phase 7A.1: Guideline Max Calculation ---
+  const getGuidelineMaxPct = useCallback((row: EmployeeResult): number | null => {
+    // 1. Check direct properties (after_json or direct column)
+    if (row.after_json?.guideline_max_pct !== undefined) return Number(row.after_json.guideline_max_pct);
+    if ((row as any).guideline_max_pct !== undefined) return Number((row as any).guideline_max_pct);
+
+    // 2. Compute from matrix using rules_json structure
+    if (!scenario || !guidelineMatrix.length) return null;
+    const rules = (latestRun as any)?.rules_snapshot || (scenario as any).rules_json || {};
+
+    // Map rating to bucket code
+    const rawRating = row.before_json?.performance_rating || (row as any).snapshot_employee_data?.performance_rating || '';
+    let bucketCode = rawRating;
+    if (rules.performance_buckets && Array.isArray(rules.performance_buckets)) {
+      const bucket = rules.performance_buckets.find((b: any) => b.code === rawRating || b.label === rawRating);
+      if (bucket) bucketCode = bucket.code;
+    }
+
+    if (!bucketCode) return null;
+
+    // Map compa ratio to zone key
+    const compa = (row as any).compa_ratio ?? row.before_json?.compa_ratio ?? (row as any).snapshot_employee_data?.compa_ratio;
+    if (compa === undefined || compa === null) return null;
+    const compaNum = Number(compa);
+
+    let zoneKey = '';
+    if (rules.compa_bands && Array.isArray(rules.compa_bands)) {
+      const band = rules.compa_bands.find((b: any) => 
+        compaNum >= (b.min ?? -Infinity) && compaNum < (b.max ?? Infinity)
+      );
+      if (band) zoneKey = band.key;
+    } else {
+      // Legacy threshold fallback
+      const t1 = rules.threshold_1 ?? 0.8;
+      const t2 = rules.threshold_2 ?? 1.0;
+      const t3 = rules.threshold_3 ?? 1.2;
+      if (compaNum < t1) zoneKey = 'BELOW_MIN';
+      else if (compaNum < t2) zoneKey = 'BELOW_MID';
+      else if (compaNum < t3) zoneKey = 'ABOVE_MID';
+      else zoneKey = 'ABOVE_MAX';
+    }
+
+    if (!zoneKey) return null;
+
+    const match = guidelineMatrix.find(m => m.rating_key === bucketCode && m.zone_key === zoneKey);
+    return match ? Number(match.max_pct) : null;
+  }, [scenario, latestRun, guidelineMatrix]);
+
   const handleUpdateInput = async (resultId: string, key: string, value: string) => {
     const numericValue = parseFloat(value);
     if (isNaN(numericValue)) return;
+    
+    let finalValue = numericValue;
+
+    // Phase 7A.1 Validation
+    if (key === 'input_merit_pct') {
+      const row = results.find(r => r.id === resultId);
+      if (row) {
+        const maxPct = getGuidelineMaxPct(row);
+        if (maxPct !== null && numericValue > maxPct) {
+          const rules = (latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {};
+          const mode = rules.guidelines?.enforcement_mode || 'warn';
+          
+          if (mode === 'block') {
+             alert(`Error: ${(numericValue * 100).toFixed(2)}% exceeds the guideline max of ${(maxPct * 100).toFixed(2)}%.`);
+             setResults(prev => [...prev]); // Trigger re-render to revert input visually if it's uncontrolled
+             return;
+          } else if (mode === 'clamp') {
+             finalValue = maxPct;
+          }
+        }
+      }
+    }
     
     // Update local state for immediate feedback
     setResults(prev => prev.map(r => {
       if (r.id === resultId) {
         return {
           ...r,
-          after_json: { ...r.after_json, [key]: numericValue }
+          after_json: { ...r.after_json, [key]: finalValue }
         };
       }
       return r;
@@ -336,7 +437,7 @@ const ScenarioResultsPage = () => {
 
     // Fetch current after_json and merge (don't overwrite other keys)
     const row = results.find(r => r.id === resultId);
-    const merged = { ...(row?.after_json || {}), [key]: numericValue };
+    const merged = { ...(row?.after_json || {}), [key]: finalValue };
 
     // Async DB update without triggering immediate recalculation
     await supabase.from('scenario_employee_results')
@@ -351,10 +452,138 @@ const ScenarioResultsPage = () => {
     input_promotion_pct: { min: 0, max: 0.50, label: '0–50%' },
   };
 
-  const getInputWarning = (key: string, value: number): string | null => {
+  // --- Phase 7B Bulk Allocation Handlers ---
+  const [isApplyingBulk, setIsApplyingBulk] = useState(false);
+  const [scaleResult, setScaleResult] = useState<{ factor: number; remaining: number } | null>(null);
+
+  const handleApplyGuidelines = async () => {
+    if (!latestRun || results.length === 0) return;
+    setIsApplyingBulk(true);
+    setScaleResult(null);
+    try {
+      const updates: { id: string; after_json: any }[] = [];
+      const newResults = [...results];
+      let changes = 0;
+
+      for (let i = 0; i < newResults.length; i++) {
+        const row = newResults[i];
+        if (row.after_json?.locked_merit) continue; // Phase 7B: skip locked rows
+
+        const maxPct = getGuidelineMaxPct(row);
+        if (maxPct !== null) {
+          const currentInput = Number(row.after_json?.input_merit_pct ?? 0);
+          if (currentInput !== maxPct) {
+            const merged = { ...(row.after_json || {}), input_merit_pct: maxPct };
+            newResults[i] = { ...row, after_json: merged };
+            updates.push({ id: row.id, after_json: merged });
+            changes++;
+          }
+        }
+      }
+
+      if (changes > 0) {
+        setResults(newResults);
+        await updateEmployeeResultsBulk(updates);
+      }
+    } catch (err) {
+      console.error('Error applying guidelines:', err);
+    } finally {
+      setIsApplyingBulk(false);
+    }
+  };
+
+  const handleScaleToBudget = async () => {
+    if (!latestRun || results.length === 0 || budgetSummary.cap <= 0) return;
+    setIsApplyingBulk(true);
+    
+    try {
+      // 1. Calculate budget_if_all_current_inputs for unlocked rows
+      // Aproximación usada: base_salary_local * input_merit_pct
+      let lockedSpent = 0;
+      let totalIncrement = 0;
+
+      for (const r of results) {
+        const aj = r.after_json || {};
+        const isLocked = aj.locked_merit;
+        const inc = (aj.calc_total_increase_local ?? aj.calc_merit_increase_amount_local ?? 0) as number;
+        const lump = (aj.input_lump_sum_local ?? 0) as number;
+        
+        if (isLocked) {
+          lockedSpent += inc + lump;
+        } else {
+           const snap = (r as any).snapshot_employee_data || {};
+           const baseLocal = Number(snap.base_salary_local ?? r.salary_base_before ?? 0);
+           const inputMerit = Number(aj.input_merit_pct ?? 0);
+           totalIncrement += baseLocal * inputMerit;
+        }
+      }
+
+      const availableForUnlocked = Math.max(0, budgetSummary.cap - lockedSpent);
+      const scaleFactor = totalIncrement > 0 ? availableForUnlocked / totalIncrement : 1;
+      const finalScale = scaleFactor > 1 ? 1 : scaleFactor;
+
+      const updates: { id: string; after_json: any }[] = [];
+      const newResults = [...results];
+      let changes = 0;
+
+      for (let i = 0; i < newResults.length; i++) {
+        const row = newResults[i];
+        if (row.after_json?.locked_merit) continue;
+
+        const currentInput = Number(row.after_json?.input_merit_pct ?? 0);
+        if (currentInput > 0 && finalScale !== 1) {
+          const maxPct = getGuidelineMaxPct(row);
+          let scaled = currentInput * finalScale;
+          if (maxPct !== null && scaled > maxPct) scaled = maxPct; // never exceed guideline max even if scaling
+
+          const merged = { ...(row.after_json || {}), input_merit_pct: scaled };
+          newResults[i] = { ...row, after_json: merged };
+          updates.push({ id: row.id, after_json: merged });
+          changes++;
+        }
+      }
+
+      if (changes > 0) {
+        setResults(newResults);
+        await updateEmployeeResultsBulk(updates);
+      }
+
+      setScaleResult({ factor: finalScale, remaining: availableForUnlocked - (totalIncrement * finalScale) });
+
+    } catch (err) {
+      console.error('Error scaling to budget:', err);
+    } finally {
+      setIsApplyingBulk(false);
+    }
+  };
+
+  const handleToggleLock = async (resultId: string) => {
+    const row = results.find(r => r.id === resultId);
+    if (!row) return;
+
+    const currentLocked = row.after_json?.locked_merit === true;
+    const merged = { ...(row.after_json || {}), locked_merit: !currentLocked };
+
+    setResults(prev => prev.map(r => r.id === resultId ? { ...r, after_json: merged } : r));
+    await supabase.from('scenario_employee_results').update({ after_json: merged }).eq('id', resultId);
+  };
+
+  const getInputWarning = (row: EmployeeResult, key: string, value: number): string | null => {
     const rule = INPUT_VALIDATION_RULES[key];
-    if (!rule) return null;
-    if (value < rule.min || value > rule.max) return `Out of range (expected ${rule.label})`;
+    if (rule && (value < rule.min || value > rule.max)) return `Out of range (expected ${rule.label})`;
+    
+    // Phase 7A.1 Warning
+    if (key === 'input_merit_pct') {
+      const maxPct = getGuidelineMaxPct(row);
+      if (maxPct !== null && value > maxPct) {
+        const rules = (latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {};
+        const mode = rules.guidelines?.enforcement_mode || 'warn';
+        if (mode === 'warn') {
+           return `Exceeds guideline max (${(maxPct * 100).toFixed(2)}%)`;
+        }
+      }
+    }
+    
     return null;
   };
 
@@ -370,13 +599,95 @@ const ScenarioResultsPage = () => {
     { key: 'total_guaranteed_local', label: 'Total Guaranteed (Local)' },
   ];
 
+  // --- Phase 7B.1: Column Layout Metadata ---
+  const COLUMN_LAYOUT: Record<string, { minWidth: number; maxWidth?: number; truncate?: boolean }> = {
+    full_name: { minWidth: 220, maxWidth: 320, truncate: true },
+    manager_name: { minWidth: 200, maxWidth: 300, truncate: true },
+    job_title: { minWidth: 260, maxWidth: 420, truncate: true },
+    country_code: { minWidth: 90 },
+    org_unit_name: { minWidth: 140, truncate: true },
+    pay_grade_internal: { minWidth: 90 },
+    career_level: { minWidth: 140 },
+    job_family: { minWidth: 160, truncate: true },
+    employee_status: { minWidth: 100 },
+    employment_type: { minWidth: 120 },
+    // Numeric currency columns
+    base_salary_local: { minWidth: 140 },
+    target_cash_local: { minWidth: 140 },
+    total_guaranteed_local: { minWidth: 140 },
+    annual_variable_target_local: { minWidth: 140 },
+    annual_guaranteed_cash_target_local: { minWidth: 140 },
+    calc_new_base_salary_local: { minWidth: 140 },
+    // Percent columns
+    compa_ratio: { minWidth: 110 },
+    compa_after: { minWidth: 110 },
+    guideline_max_pct: { minWidth: 110 },
+    input_merit_pct: { minWidth: 110 },
+    input_promotion_pct: { minWidth: 110 },
+    input_lump_sum_local: { minWidth: 140 }, // numeric
+    performance_rating: { minWidth: 100 },
+    compa_band: { minWidth: 140 },
+    lock: { minWidth: 60 },
+    flags: { minWidth: 120 }
+  };
+
+  const getColumnStyles = (key: string) => {
+    const layout = COLUMN_LAYOUT[key];
+    if (!layout) return {};
+    const width = layout.maxWidth || layout.minWidth;
+    return {
+      minWidth: `${layout.minWidth}px`,
+      width: `${width}px`,
+      maxWidth: layout.maxWidth ? `${layout.maxWidth}px` : undefined
+    };
+  };
+
+  const renderCell = (content: any, columnKey: string) => {
+    const layout = COLUMN_LAYOUT[columnKey];
+    if (layout?.truncate) {
+      return (
+        <div className="truncate" title={String(content || '')}>
+          {content ?? <span className="text-slate-300">—</span>}
+        </div>
+      );
+    }
+    return content ?? <span className="text-slate-300">—</span>;
+  };
+
   const visibleBaseCols = useMemo(() => {
-    return OPTIONAL_BASE_COLS.filter(bc =>
-      results.some(r => {
-        const snap = (r as any).snapshot_employee_data;
-        return snap && snap[bc.key] !== undefined && snap[bc.key] !== null;
-      })
-    );
+    if (results.length === 0) return [];
+    
+    // Check first 50 rows (or fewer if dataset is smaller) for base fields
+    const sampleSize = Math.min(50, results.length);
+    const sample = results.slice(0, sampleSize);
+    
+    return OPTIONAL_BASE_COLS.filter(bc => {
+      let missingCount = 0;
+      
+      for (const r of sample) {
+        // 1. Check dedicated column if it matches a top-level DB column name
+        const dbColMap: Record<string, keyof EmployeeResult> = {
+          'base_salary_local': 'salary_base_before', // Closest match, but ideally read exact if exists
+          'target_cash_local': 'total_cash_before'
+        };
+        const dbCol = dbColMap[bc.key];
+        
+        let hasValue = false;
+        
+        if (dbCol && r[dbCol] !== undefined && r[dbCol] !== null) {
+          hasValue = true;
+        } else if (r.before_json && r.before_json[bc.key] !== undefined && r.before_json[bc.key] !== null) {
+          // 2. Check before_json
+          hasValue = true;
+        }
+        
+        if (!hasValue) missingCount++;
+      }
+      
+      // Keep field visible ONLY if > 90% of the sample HAS the value (missing <= 10%)
+      const missingPct = missingCount / sampleSize;
+      return missingPct <= 0.1;
+    });
   }, [results]);
 
   // Active calc columns (non-input, with formula)
@@ -389,73 +700,168 @@ const ScenarioResultsPage = () => {
     return map;
   }, [columns]);
 
+  // --- Phase 7A.2: Column Groups & Visibility ---
+  const presetIncludes = (preset: ViewPreset, group: string) => {
+    if (group === 'A') return true; // Identity always visible
+    if (preset === 'default') return ['E', 'F'].includes(group); // Default: Identity + Guideline + Inputs
+    if (preset === 'hr_base') return ['B'].includes(group);
+    if (preset === 'comp_base') return ['C'].includes(group);
+    if (preset === 'compa') return ['D'].includes(group);
+    if (preset === 'inputs') return ['F'].includes(group);
+    if (preset === 'outputs') return ['G'].includes(group);
+    return false;
+  };
+
+  // Safe getter for any base/json attribute without breaking type safety
+  const getAnyAttr = useCallback((row: EmployeeResult, key: string): any => {
+    // 1. Direct DB column on EmployeeResult
+    const dbColMap: Record<string, keyof EmployeeResult> = {
+      'base_salary_local': 'salary_base_before',
+      'target_cash_local': 'total_cash_before'
+    };
+    const mapped = dbColMap[key];
+    if (mapped && row[mapped] !== undefined && row[mapped] !== null) return row[mapped];
+    if ((row as any)[key] !== undefined && (row as any)[key] !== null) return (row as any)[key];
+    
+    // 2. before_json
+    if (row.before_json && row.before_json[key] !== undefined && row.before_json[key] !== null) return row.before_json[key];
+    
+    // 3. after_json
+    if (row.after_json && row.after_json[key] !== undefined && row.after_json[key] !== null) return row.after_json[key];
+
+    // 4. snapshot fallback (avoid if possible, but safe)
+    const snap = (row as any).snapshot_employee_data;
+    if (snap && snap[key] !== undefined && snap[key] !== null) return snap[key];
+
+    return null;
+  }, []);
+
+  const filteredResults = useMemo(() => {
+    if (!searchTerm) return results;
+    return results.filter(r => 
+      (r.after_json?.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (r.employee_external_id || r.employee_id || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [results, searchTerm]);
+
+  const { pagedResults, total, totalPages, start, end } = useMemo(() => {
+    const total = filteredResults.length;
+    const totalPages = Math.ceil(total / pageSize);
+    const start = pageIndex * pageSize;
+    const end = Math.min(start + pageSize, total);
+    const pagedResults = filteredResults.slice(start, end);
+    return { pagedResults, total, totalPages, start, end };
+  }, [filteredResults, pageIndex, pageSize]);
+
   // --- CSV Export ---
-  const handleExportCsv = useCallback(() => {
+  const handleExportCsv = useCallback((mode: 'current' | 'full' = 'current') => {
     if (!latestRun || results.length === 0) return;
     setIsExporting(true);
+    setIsExportDropdownOpen(false);
 
     try {
-      // Build column manifest in specified order
-      // 1. Identifiers
-      const idCols = [
-        { key: 'employee_id', label: 'Employee ID', type: 'text' },
-        { key: 'full_name', label: 'Full Name', type: 'text' },
-      ];
+      const scenarioRules = (latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {};
 
-      // 2. Snapshot base cols (only those visible in the grid)
-      const baseCols = visibleBaseCols.map(bc => ({
-        key: bc.key, label: bc.label, type: 'currency' as string,
-      }));
+      // 1. Define Column Groups A-G as specified in "Tabla Ideal"
+      const columnsManifest: { group: string; key: string; label: string; type: 'text' | 'number' | 'currency' | 'pct' }[] = [
+        // A: Identity
+        { group: 'A', key: 'employee_external_id', label: 'Employee ID', type: 'text' },
+        { group: 'A', key: 'full_name', label: 'Full Name', type: 'text' },
+        { group: 'A', key: 'employee_status', label: 'Status', type: 'text' },
+        { group: 'A', key: 'country_code', label: 'Country', type: 'text' },
+        { group: 'A', key: 'org_unit_name', label: 'Org Unit', type: 'text' },
+        { group: 'A', key: 'manager_name', label: 'Manager', type: 'text' },
 
-      // 3. Performance rating
-      const ratingCol = [{ key: 'performance_rating', label: 'Performance Rating', type: 'text' }];
+        // B: HR Base
+        { group: 'B', key: 'job_title', label: 'Job Title', type: 'text' },
+        { group: 'B', key: 'position_code', label: 'Position Code', type: 'text' },
+        { group: 'B', key: 'pay_grade_internal', label: 'Pay Grade', type: 'text' },
+        { group: 'B', key: 'career_level', label: 'Career Level', type: 'text' },
+        { group: 'B', key: 'job_family', label: 'Job Family', type: 'text' },
+        { group: 'B', key: 'employment_type', label: 'Emp Type', type: 'text' },
 
-      // 4. Active input columns
-      const inputCols = EDITABLE_INPUTS
-        .filter(ik => inputColDefs.has(ik) || results.some(r => r.after_json?.[ik] !== undefined))
-        .map(ik => {
+        // C: Comp Base
+        { group: 'C', key: 'base_salary_local', label: 'Base Salary (Local)', type: 'currency' },
+        { group: 'C', key: 'annual_variable_target_local', label: 'Annual Var Target (Local)', type: 'currency' },
+        { group: 'C', key: 'annual_guaranteed_cash_target_local', label: 'Annual Guar Target (Local)', type: 'currency' },
+        { group: 'C', key: 'target_cash_local', label: 'Target Cash (Local)', type: 'currency' },
+        { group: 'C', key: 'total_guaranteed_local', label: 'Total Guar (Local)', type: 'currency' },
+        { group: 'C', key: 'market_reference_value_local', label: 'Market Ref (Local)', type: 'currency' },
+
+        // D: Competitiveness
+        { group: 'D', key: 'compa_ratio_before', label: 'Compa Before', type: 'pct' },
+        { group: 'D', key: 'compa_band', label: 'Compa Band', type: 'text' },
+        { group: 'D', key: 'compa_ratio_after', label: 'Compa After', type: 'pct' },
+
+        // E: Guidelines
+        { group: 'E', key: 'performance_rating', label: 'Rating', type: 'text' },
+        { group: 'E', key: 'guideline_max_pct', label: 'Guideline Max %', type: 'pct' },
+        { group: 'E', key: 'enforcement_mode', label: 'Enforcement', type: 'text' },
+
+        // F: Inputs (Dynamic)
+        ...EDITABLE_INPUTS.map(ik => {
           const def = inputColDefs.get(ik);
-          return { key: ik, label: def?.label || ik, type: def?.data_type || 'number' };
-        });
+          return { group: 'F', key: ik, label: def?.label || ik, type: 'number' as const };
+        }),
 
-      // 5. Active calc columns
-      const outputCols = calcColumns.map(c => ({
-        key: c.column_key, label: c.label, type: c.data_type || 'number',
-      }));
-
-      // 6. Salary before/after (always present)
-      const salaryCols = [
-        { key: 'salary_base_before', label: 'Salary Base Before', type: 'currency' },
-        { key: 'salary_base_after', label: 'Salary Base After', type: 'currency' },
+        // G: Outputs (Dynamic)
+        ...calcColumns.map(c => ({
+          group: 'G', key: c.column_key, label: c.label, type: 'number' as const
+        }))
       ];
 
-      const allCols = [...idCols, ...ratingCol, ...baseCols, ...salaryCols, ...inputCols, ...outputCols];
+      // 2. Filter columns according to mode
+      let activeCols = columnsManifest;
+      if (mode === 'current') {
+        activeCols = columnsManifest.filter(c => presetIncludes(activePreset, c.group));
+      }
 
-      // Build headers
-      const headers = allCols.map(c => c.label);
+      // 3. Build rows using filteredResults (all pages, matching search)
+      const headers = activeCols.map(c => c.label);
+      const rows = filteredResults.map(res => {
+        return activeCols.map(col => {
+          let raw: any;
 
-      // Build rows
-      const rows = results.map(res => {
-        const snap = (res as any).snapshot_employee_data || {};
-        return allCols.map(col => {
-          let raw: unknown;
-          if (col.key === 'employee_id') raw = res.employee_id;
-          else if (col.key === 'full_name') raw = res.after_json?.full_name;
-          else if (col.key === 'performance_rating') raw = res.before_json?.performance_rating;
-          else if (col.key === 'salary_base_before') raw = res.salary_base_before;
-          else if (col.key === 'salary_base_after') raw = res.salary_base_after;
-          else if (col.key.startsWith('input_') || col.key.startsWith('calc_')) raw = res.after_json?.[col.key];
-          else raw = snap[col.key] ?? res.after_json?.[col.key];
+          // Special sourcing for derived/mapped fields
+          if (col.key === 'compa_band') {
+            const cr = Number(getAnyAttr(res, 'compa_ratio') ?? 0);
+            if (cr <= 0) return '—';
+            if (scenarioRules.compa_bands?.[0]) {
+              const b = scenarioRules.compa_bands.find((b: any) => cr >= (b.min ?? -Infinity) && cr < (b.max ?? Infinity));
+              raw = b?.label || b?.key || '—';
+            } else {
+              const t1 = scenarioRules.threshold_1 ?? 0.8;
+              const t2 = scenarioRules.threshold_2 ?? 1.0;
+              const t3 = scenarioRules.threshold_3 ?? 1.2;
+              if (cr < t1) raw = 'Below Min';
+              else if (cr < t2) raw = 'Below Mid';
+              else if (cr < t3) raw = 'Above Mid';
+              else raw = 'Above Max';
+            }
+          } else if (col.key === 'compa_ratio_after') {
+            const bAfter = Number(getAnyAttr(res, 'calc_new_base_salary_local'));
+            const mRef = Number(getAnyAttr(res, 'market_reference_value_local') ?? getAnyAttr(res, 'market_reference_amount_local'));
+            raw = (bAfter > 0 && mRef > 0) ? (bAfter / mRef) : null;
+          } else if (col.key === 'compa_ratio_before') {
+            raw = getAnyAttr(res, 'compa_ratio');
+          } else if (col.key === 'enforcement_mode') {
+            raw = scenarioRules.guidelines?.enforcement_mode || 'warn';
+          } else if (col.key === 'guideline_max_pct') {
+            raw = getGuidelineMaxPct(res);
+          } else {
+            raw = getAnyAttr(res, col.key);
+          }
 
           if (col.type === 'text') return raw != null ? String(raw) : '';
           return formatCsvValue(raw, col.type);
         });
       });
 
-      // Filename: evocomp_scenario_<id>_run_<runId>_<YYYYMMDD-HHMM>.csv
+      // 4. Filename & Download
       const now = new Date();
       const ts = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-      const filename = `evocomp_scenario_${id}_run_${latestRun.id.substring(0, 8)}_${ts}.csv`;
+      const modeSuffix = mode === 'full' ? 'FULL' : activePreset.toUpperCase();
+      const filename = `evocomp_scenario_${id}_run_${latestRun.id.substring(0, 8)}_${modeSuffix}_${ts}.csv`;
 
       const csv = buildCsv(headers, rows);
       downloadCsv(csv, filename);
@@ -464,20 +870,71 @@ const ScenarioResultsPage = () => {
     } finally {
       setIsExporting(false);
     }
-  }, [results, latestRun, id, visibleBaseCols, inputColDefs, calcColumns]);
+  }, [results, filteredResults, latestRun, id, activePreset, inputColDefs, calcColumns, getGuidelineMaxPct, getAnyAttr]);
+
+  const handleExportXlsx = useCallback(async (mode: 'current' | 'full' = 'current') => {
+    if (!latestRun || results.length === 0) return;
+    setIsExporting(true);
+    setIsExportDropdownOpen(false);
+
+    try {
+      // 1. Identify visible columns if mode is 'current'
+      let visible_keys: string[] = [];
+      if (mode === 'current') {
+        const columnsManifest = [
+          // A: Identity
+          'employee_external_id', 'full_name', 'employee_status', 'country_code', 'org_unit_name', 'manager_name',
+          // B: HR Base
+          'job_title', 'position_code', 'pay_grade_internal', 'career_level', 'job_family', 'employment_type',
+          // C: Comp Base
+          'base_salary_local', 'annual_variable_target_local', 'annual_guaranteed_cash_target_local', 'target_cash_local', 'total_guaranteed_local', 'market_reference_value_local',
+          // D: Competitiveness
+          'compa_ratio_before', 'compa_band', 'compa_ratio_after',
+          // E: Guidelines
+          'performance_rating', 'guideline_max_pct', 'enforcement_mode',
+          // F: Inputs
+          ...EDITABLE_INPUTS,
+          // G: Outputs
+          ...calcColumns.map(c => c.column_key)
+        ];
+
+        // Mapping groups for presetIncludes
+        const groupMap: Record<string, string> = {
+          'employee_external_id': 'A', 'full_name': 'A', 'employee_status': 'A', 'country_code': 'A', 'org_unit_name': 'A', 'manager_name': 'A',
+          'job_title': 'B', 'position_code': 'B', 'pay_grade_internal': 'B', 'career_level': 'B', 'job_family': 'B', 'employment_type': 'B',
+          'base_salary_local': 'C', 'annual_variable_target_local': 'C', 'annual_guaranteed_cash_target_local': 'C', 'target_cash_local': 'C', 'total_guaranteed_local': 'C', 'market_reference_value_local': 'C',
+          'compa_ratio_before': 'D', 'compa_band': 'D', 'compa_ratio_after': 'D',
+          'performance_rating': 'E', 'guideline_max_pct': 'E', 'enforcement_mode': 'E',
+          'input_merit_pct': 'F', 'input_lump_sum_local': 'F', 'input_promotion_pct': 'F'
+        };
+
+        visible_keys = columnsManifest.filter(k => {
+          const group = groupMap[k] || (calcColumns.some(c => c.column_key === k) ? 'G' : 'A');
+          return presetIncludes(activePreset, group);
+        });
+      }
+
+      // 2. Invoke Edge Function
+      await triggerXlsxExport('export-scenario-xlsx', {
+        scenario_run_id: latestRun.id,
+        mode,
+        preset: activePreset,
+        visible_column_keys: visible_keys
+      }, supabase);
+
+    } catch (err: any) {
+      console.error('XLSX export failed:', err);
+      alert('Error exporting XLSX: ' + err.message);
+    } finally {
+      setIsExporting(false);
+    }
+  }, [latestRun, results, activePreset, calcColumns, id]);
 
 
-
-  const filteredResults = useMemo(() => {
-    if (!searchTerm) return results;
-    return results.filter(r => 
-      (r.after_json?.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.employee_id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [results, searchTerm]);
 
   const qualityStats = latestRun?.quality_report || { missing_fx: 0, missing_pay_band: 0, missing_rating: 0 };
   const hasIssues = qualityStats.missing_fx > 0 || qualityStats.missing_pay_band > 0 || qualityStats.missing_rating > 0;
+
 
   // --- Phase 6C: Budget Computation (reactive) ---
   const budgetSummary: BudgetSummary = useMemo(() => {
@@ -769,6 +1226,24 @@ const ScenarioResultsPage = () => {
             <Settings className="w-4 h-4" />
             Config Columns
           </button>
+          <button 
+            type="button" 
+            onClick={handleApplyGuidelines}
+            disabled={isApplyingBulk || results.length === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-sm font-bold hover:bg-indigo-100 transition-all shadow-sm disabled:opacity-50"
+          >
+            {isApplyingBulk ? <RefreshCw className="w-4 h-4 animate-spin" /> : <TrendingUp className="w-4 h-4" />}
+            Apply Guidelines
+          </button>
+          <button 
+            type="button" 
+            onClick={handleScaleToBudget}
+            disabled={isApplyingBulk || results.length === 0 || budgetSummary.cap <= 0}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm font-bold hover:bg-emerald-100 transition-all shadow-sm disabled:opacity-50"
+          >
+            {isApplyingBulk ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Calculator className="w-4 h-4" />}
+            Scale to Budget
+          </button>
           <div className="flex flex-col items-end">
             <button 
               type="button" 
@@ -783,15 +1258,69 @@ const ScenarioResultsPage = () => {
               Rows: {results.length} · Mode: {getCalculationMode(results.length)}{results.length > SYNC_ROW_LIMIT ? ' ⚠' : ''}
             </p>
           </div>
-          <button 
-            type="button" 
-            onClick={handleExportCsv}
-            disabled={isExporting || results.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50"
-          >
-            <Download className={`w-4 h-4 ${isExporting ? 'animate-pulse' : ''}`} />
-            {isExporting ? 'Exporting…' : t('common.export')}
-          </button>
+          <div className="relative" ref={exportRef}>
+            <button 
+              type="button" 
+              onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
+              disabled={isExporting || results.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm disabled:opacity-50"
+            >
+              <Download className={`w-4 h-4 ${isExporting ? 'animate-pulse' : ''}`} />
+              {isExporting ? 'Exporting…' : t('common.export')}
+              <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isExportDropdownOpen ? 'rotate-90' : ''}`} />
+            </button>
+
+            {isExportDropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl z-[60] py-2 animate-in slide-in-from-top-2 duration-200">
+                <button
+                  type="button"
+                  onClick={() => handleExportCsv('current')}
+                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group"
+                >
+                  <div>
+                    <p className="font-bold text-slate-800">Current View</p>
+                    <p className="text-[10px] text-slate-400 capitalize">{activePreset} preset columns</p>
+                  </div>
+                  <Download className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-500" />
+                </button>
+                <div className="h-px bg-slate-100 my-1 mx-2" />
+                <button
+                  type="button"
+                  onClick={() => handleExportCsv('full')}
+                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group"
+                >
+                  <div>
+                    <p className="font-bold text-slate-800">Export Full CSV</p>
+                    <p className="text-[10px] text-slate-400">All data groups (A–G)</p>
+                  </div>
+                  <Download className="w-3.5 h-3.5 text-slate-300 group-hover:text-amber-500" />
+                </button>
+                <div className="h-px bg-slate-100 my-1 mx-2" />
+                <button
+                  type="button"
+                  onClick={() => handleExportXlsx('current')}
+                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group"
+                >
+                  <div>
+                    <p className="font-bold text-slate-800">Export XLSX (Current)</p>
+                    <p className="text-[10px] text-slate-400">Formatted Excel - {activePreset}</p>
+                  </div>
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-500" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExportXlsx('full')}
+                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group"
+                >
+                  <div>
+                    <p className="font-bold text-slate-800">Export XLSX (Full)</p>
+                    <p className="text-[10px] text-slate-400">Formatted Excel - All data</p>
+                  </div>
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-500" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -863,6 +1392,20 @@ const ScenarioResultsPage = () => {
         <div className="mb-4 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-blue-500 shrink-0" />
           Large dataset ({results.length.toLocaleString()} rows): calculation will run asynchronously.
+        </div>
+      )}
+
+      {/* Phase 7B: Scale Result Banner */}
+      {scaleResult && (
+        <div className="mb-4 px-4 py-3 bg-indigo-50 border border-indigo-200 rounded-xl text-sm text-indigo-800 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Calculator className="w-4 h-4 text-indigo-500 shrink-0" />
+            <span>
+              <strong>Scaled to Budget:</strong> Applied a factor of {(scaleResult.factor * 100).toFixed(2)}% to unlocked rows. 
+              {scaleResult.factor === 1 ? ' Current allocations already fit within budget.' : ' Allocations were proportionally reduced to fit cap.'}
+            </span>
+          </div>
+          <button onClick={() => setScaleResult(null)} className="text-indigo-400 hover:text-indigo-600 font-bold px-2 py-1 text-xs transition-colors">Dismiss</button>
         </div>
       )}
 
@@ -942,7 +1485,7 @@ const ScenarioResultsPage = () => {
             </div>
             <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">{t('pages.scenarios.headcount')}</p>
           </div>
-          <p className="text-3xl font-bold text-slate-900">{latestRun?.total_headcount}</p>
+          <p className="text-3xl font-bold text-slate-900">{results.length}</p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -960,131 +1503,419 @@ const ScenarioResultsPage = () => {
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-          <h2 className="font-bold text-slate-900">{t('pages.scenarios.employee_details')}</h2>
-          <div className="flex gap-2">
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input 
-                type="text" 
-                placeholder={t('common.search')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-1.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all w-64"
-              />
+      {!dataset ? (
+        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-12 text-center flex flex-col items-center justify-center min-h-[50vh] animate-in fade-in duration-500">
+          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-blue-100 shadow-sm">
+            <Settings className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">
+            Column Configuration Not Initialized
+          </h2>
+          <p className="text-slate-500 max-w-md mx-auto mb-8 font-medium">
+            This scenario or run has not been configured yet. Initialize the column configuration to generate preset formulas, map data, and begin modeling your compensation adjustments.
+          </p>
+          <button
+            type="button"
+            onClick={() => setIsConfigModalOpen(true)}
+            className="flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-lg shadow-blue-500/20 active:scale-95 font-bold rounded-xl text-sm tracking-wide"
+          >
+            <Settings className="w-5 h-5 flex-shrink-0" />
+            Config Columns &rarr; Initialize
+          </button>
+        </div>
+      ) : (
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
+          <div className="flex justify-between items-center">
+            <h2 className="font-bold text-slate-900">{t('pages.scenarios.employee_details', 'Employee Details')}</h2>
+            <div className="flex gap-2">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input 
+                  type="text" 
+                  placeholder={t('common.search')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 pr-4 py-1.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all w-64"
+                />
+              </div>
+              <button type="button" className="p-2 border border-slate-200 rounded-lg hover:bg-white text-slate-400">
+                <Filter className="w-4 h-4" />
+              </button>
             </div>
-            <button type="button" className="p-2 border border-slate-200 rounded-lg hover:bg-white text-slate-400">
-              <Filter className="w-4 h-4" />
-            </button>
+          </div>
+          
+          {/* Phase 7A.2 Presets Selector */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-2">View:</span>
+            {[
+              { id: 'default', label: 'Default' },
+              { id: 'hr_base', label: 'HR Base' },
+              { id: 'comp_base', label: 'Comp Base' },
+              { id: 'compa', label: 'Competitiveness' },
+              { id: 'inputs', label: 'Inputs' },
+              { id: 'outputs', label: 'Outputs' },
+            ].map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => setActivePreset(preset.id as ViewPreset)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${
+                  activePreset === preset.id
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                }`}
+              >
+                {preset.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="overflow-x-auto overflow-y-auto max-h-[60vh]">
+          <table className="w-full text-left" style={{ tableLayout: 'fixed' }}>
             <thead>
-              <tr className="bg-slate-50/50 border-b border-slate-100">
-                <th className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest">{t('common.employee')}</th>
-                <th className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest">{t('pages.scenarios.rating')}</th>
-                {/* Snapshot base columns */}
-                {visibleBaseCols.map(bc => (
-                  <th key={bc.key} className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right">{bc.label}</th>
-                ))}
-                {/* Editable inputs */}
-                {EDITABLE_INPUTS.map(ik => {
-                  const def = inputColDefs.get(ik);
-                  return (
-                    <th key={ik} className="px-4 py-4 text-[10px] uppercase font-bold text-emerald-600 tracking-widest text-right">
-                      {def?.label || ik}
-                    </th>
-                  );
-                })}
-                {/* Calculated outputs */}
-                {calcColumns.map(col => (
-                  <th key={col.id} className="px-4 py-4 text-[10px] uppercase font-bold text-blue-500 tracking-widest text-right">
-                    {col.label}
+              <tr className="bg-slate-50 border-b border-slate-100 sticky top-0 z-20 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+                {/* GROUP A: Identity (Sticky) */}
+                <th 
+                  className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest sticky left-0 z-40 bg-slate-50 whitespace-nowrap shadow-[1px_0_0_rgba(226,232,240,1)]"
+                  style={getColumnStyles('full_name')}
+                >
+                  {t('common.employee')}
+                </th>
+                
+                {presetIncludes(activePreset, 'A') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('employee_status')}>Status</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('country_code')}>Country</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('org_unit_name')}>Org Unit</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('manager_name')}>Manager</th>
+                  </>
+                )}
+
+                {/* GROUP B: HR Base */}
+                {presetIncludes(activePreset, 'B') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('job_title')}>Job Title</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('pay_grade_internal')}>Pay Grade</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('career_level')}>Career Level</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('job_family')}>Job Family</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('employment_type')}>Emp Type</th>
+                  </>
+                )}
+
+                {/* GROUP C: Comp Base */}
+                {presetIncludes(activePreset, 'C') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('base_salary_local')}>Base Local</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('target_cash_local')}>Target Cash</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('total_guaranteed_local')}>Total Guar.</th>
+                  </>
+                )}
+
+                {/* GROUP D: Compa */}
+                {(presetIncludes(activePreset, 'D') || activePreset === 'default') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('compa_ratio')}>Compa Before</th>
+                  </>
+                )}
+                {presetIncludes(activePreset, 'D') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('compa_band')}>Compa Band</th>
+                  </>
+                )}
+
+                {/* GROUP E: Guideline (Rules) */}
+                {(presetIncludes(activePreset, 'E') || activePreset === 'default') && (
+                  <>
+                    <th className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest whitespace-nowrap bg-slate-50" style={getColumnStyles('performance_rating')}>{t('pages.scenarios.rating')}</th>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('guideline_max_pct')}>Max Allowed %</th>
+                  </>
+                )}
+
+                {/* GROUP F: Inputs */}
+                {presetIncludes(activePreset, 'F') && (
+                  <>
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest text-center whitespace-nowrap bg-slate-50" style={getColumnStyles('lock')}>Lock</th>
+                    {EDITABLE_INPUTS.map(ik => {
+                      const def = inputColDefs.get(ik);
+                      return (
+                        <th key={ik} className="px-4 py-4 text-[10px] uppercase font-bold text-emerald-600 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles(ik)}>
+                          {def?.label || ik}
+                        </th>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* GROUP G: Outputs */}
+                {(presetIncludes(activePreset, 'G') || activePreset === 'default') && (
+                  <th className="px-4 py-4 text-[10px] uppercase font-bold text-blue-500 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('calc_new_base_salary_local')}>
+                    New Base Local
                   </th>
-                ))}
-                <th className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest">{t('pages.scenarios.flags')}</th>
+                )}
+                {presetIncludes(activePreset, 'G') && (
+                  <>
+                    {calcColumns.filter(c => c.column_key !== 'calc_new_base_salary_local').map(col => (
+                      <th key={col.id} className="px-4 py-4 text-[10px] uppercase font-bold text-blue-500 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles(col.column_key)}>
+                        {col.label}
+                      </th>
+                    ))}
+                    <th className="px-4 py-4 text-[10px] uppercase font-bold text-purple-600 tracking-widest text-right whitespace-nowrap bg-slate-50" style={getColumnStyles('compa_after')}>
+                      Compa After
+                    </th>
+                  </>
+                )}
+
+                <th className="px-6 py-4 text-[10px] uppercase font-bold text-slate-400 tracking-widest sticky right-0 bg-slate-50 shadow-[-1px_0_0_rgba(226,232,240,1)] z-20" style={getColumnStyles('flags')}>{t('pages.scenarios.flags')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {filteredResults.map((res) => {
-                const snap = (res as any).snapshot_employee_data || {};
+              {pagedResults.map((res) => {
+                const rating = getAnyAttr(res, 'performance_rating') || '?';
+                const compaBeforeNum = Number(getAnyAttr(res, 'compa_ratio') ?? 0);
+                
+                // Helper to render simple text column
+                const renderCol = (key: string) => (
+                  <td 
+                    className="px-4 py-4 text-sm text-slate-600" 
+                    style={getColumnStyles(key)}
+                  >
+                    {renderCell(getAnyAttr(res, key), key)}
+                  </td>
+                );
+                
+                // Helper to render currency column
+                const renderMoneyCol = (key: string, isCalc = false) => {
+                  const val = getAnyAttr(res, key);
+                  return (
+                    <td 
+                      className={`px-4 py-4 text-sm text-right font-mono ${isCalc ? 'font-bold text-blue-600' : 'text-slate-600'}`}
+                      style={getColumnStyles(key)}
+                    >
+                      {val != null ? `$${Number(val).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : <span className="text-slate-300">—</span>}
+                    </td>
+                  );
+                };
+
                 return (
-                <tr key={res.id} className={`hover:bg-slate-50/50 transition-colors ${
-                  overBudgetHighlightIds.has(res.id) ? 'ring-2 ring-inset ring-red-200 bg-red-50/30' : ''
-                }`}>
-                  <td className="px-6 py-4">
+                <tr 
+                  key={res.id} 
+                  onClick={() => {
+                    setSelectedDrawerEmployee(res);
+                    setIsDrawerOpen(true);
+                  }}
+                  className={`hover:bg-slate-50/50 transition-colors cursor-pointer ${
+                    overBudgetHighlightIds.has(res.id) ? 'ring-2 ring-inset ring-red-200 bg-red-50/30' : ''
+                  }`}
+                >
+                  {/* GROUP A: Identity (Sticky) */}
+                  <td 
+                    className="px-6 py-4 sticky left-0 z-30 bg-white shadow-[1px_0_0_rgba(241,245,249,1)]"
+                    style={getColumnStyles('full_name')}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">
-                        {String(res.after_json?.full_name || res.employee_id).substring(0, 2).toUpperCase()}
+                      <div className="w-8 h-8 shrink-0 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">
+                        {String(getAnyAttr(res, 'full_name') || getAnyAttr(res, 'employee_external_id') || res.employee_id || 'N/A').substring(0, 2).toUpperCase()}
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-bold text-slate-900">{res.after_json?.full_name || 'N/A'}</p>
-                          {res.flags_json?.includes('MISSING_FX') && <AlertTriangle className="w-3 h-3 text-amber-500" />}
-                          {res.flags_json?.includes('NO_PAY_BAND') && <AlertCircle className="w-3 h-3 text-red-500" />}
+                          <p className="text-sm font-bold text-slate-900 truncate" title={getAnyAttr(res, 'full_name')}>
+                            {getAnyAttr(res, 'full_name') || 'N/A'}
+                          </p>
+                          {res.flags_json?.includes('MISSING_FX') && <AlertTriangle className="w-3 h-3 shrink-0 text-amber-500" />}
+                          {res.flags_json?.includes('NO_PAY_BAND') && <AlertCircle className="w-3 h-3 shrink-0 text-red-500" />}
                         </div>
-                        <p className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase">{res.employee_id.substring(0, 8)}</p>
+                        <p className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase truncate">
+                          {(getAnyAttr(res, 'employee_external_id') || res.employee_id || 'UNKNOWN').substring(0, 8)}
+                        </p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 font-bold">
-                    {res.before_json?.performance_rating || 'N/A'}
-                  </td>
-                  {/* Snapshot base columns */}
-                  {visibleBaseCols.map(bc => (
-                    <td key={bc.key} className="px-4 py-4 text-sm text-slate-600 text-right font-mono">
-                      {snap[bc.key] != null ? `$${Number(snap[bc.key]).toLocaleString()}` : <span className="text-slate-300">—</span>}
+
+                  {presetIncludes(activePreset, 'A') && (
+                    <>
+                      <td className="px-4 py-4" style={getColumnStyles('employee_status')}>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600">
+                           {getAnyAttr(res, 'employee_status') || 'ACTIVE'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-600 font-mono uppercase" style={getColumnStyles('country_code')}>
+                        {getAnyAttr(res, 'country_code') ?? '—'}
+                      </td>
+                      {renderCol('org_unit_name')}
+                      {renderCol('manager_name')}
+                    </>
+                  )}
+
+                  {/* GROUP B: HR Base */}
+                  {presetIncludes(activePreset, 'B') && (
+                    <>
+                      {renderCol('job_title')}
+                      {renderCol('pay_grade_internal')}
+                      {renderCol('career_level')}
+                      {renderCol('job_family')}
+                      {renderCol('employment_type')}
+                    </>
+                  )}
+
+                  {/* GROUP C: Comp Base */}
+                  {presetIncludes(activePreset, 'C') && (
+                    <>
+                      {renderMoneyCol('base_salary_local')}
+                      {renderMoneyCol('target_cash_local')}
+                      {renderMoneyCol('total_guaranteed_local')}
+                    </>
+                  )}
+
+                  {/* GROUP D: Compa */}
+                  {(presetIncludes(activePreset, 'D') || activePreset === 'default') && (
+                    <td className="px-4 py-4 text-sm text-slate-600 text-right font-mono" style={getColumnStyles('compa_ratio')}>
+                      {compaBeforeNum ? `${(compaBeforeNum * 100).toFixed(1)}%` : <span className="text-slate-300">—</span>}
                     </td>
-                  ))}
-                  {/* Editable inputs with validation */}
-                  {EDITABLE_INPUTS.map(ik => {
-                    const val = Number(res.after_json?.[ik] ?? 0);
-                    const warning = getInputWarning(ik, val);
-                    return (
-                      <td key={ik} className="px-4 py-4 text-right">
-                        <div className="inline-flex flex-col items-end">
-                          <input 
-                            type="number" 
-                            step={ik.includes('pct') ? '0.01' : '1'}
-                            className={`w-24 px-2 py-1 text-right border rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none ${
-                              warning ? 'border-amber-400 bg-amber-50' : 'border-slate-200'
-                            }`}
-                            defaultValue={val}
-                            onBlur={(e) => handleUpdateInput(res.id, ik, e.target.value)}
-                            title={warning || undefined}
-                          />
-                          {warning && (
-                            <span className="text-[9px] text-amber-600 mt-0.5 max-w-[6rem] truncate" title={warning}>{warning}</span>
-                          )}
-                        </div>
+                  )}
+                  {presetIncludes(activePreset, 'D') && (
+                    <td className="px-4 py-4 text-sm text-slate-600" style={getColumnStyles('compa_band')}>
+                      {(() => {
+                        const rules = (latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {};
+                        let zoneLabel = '—';
+                        if (compaBeforeNum > 0) {
+                          if (rules.compa_bands && Array.isArray(rules.compa_bands)) {
+                            const band = rules.compa_bands.find((b: any) => compaBeforeNum >= (b.min ?? -Infinity) && compaBeforeNum < (b.max ?? Infinity));
+                            if (band) zoneLabel = band.label || band.key;
+                          } else {
+                            const t1 = rules.threshold_1 ?? 0.8;
+                            const t2 = rules.threshold_2 ?? 1.0;
+                            const t3 = rules.threshold_3 ?? 1.2;
+                            if (compaBeforeNum < t1) zoneLabel = 'Below Min';
+                            else if (compaBeforeNum < t2) zoneLabel = 'Below Mid';
+                            else if (compaBeforeNum < t3) zoneLabel = 'Above Mid';
+                            else zoneLabel = 'Above Max';
+                          }
+                        }
+                        return <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700">{renderCell(zoneLabel, 'compa_band')}</span>;
+                      })()}
+                    </td>
+                  )}
+
+                  {/* GROUP E: Guideline */}
+                  {(presetIncludes(activePreset, 'E') || activePreset === 'default') && (
+                     <>
+                        <td className="px-6 py-4 text-sm text-slate-600 font-bold whitespace-nowrap" style={getColumnStyles('performance_rating')}>
+                          {renderCell(rating, 'performance_rating')}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-slate-600 text-right font-mono" style={getColumnStyles('guideline_max_pct')}>
+                          {(() => {
+                            const maxPct = getGuidelineMaxPct(res);
+                            if (maxPct === null) return <span className="text-slate-300" title="No guideline available">—</span>;
+                            
+                            const rules = (latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {};
+                            const mode = rules.guidelines?.enforcement_mode || 'warn';
+                            const isExceeded = Number(res.after_json?.input_merit_pct ?? 0) > maxPct;
+                            
+                            return (
+                              <span 
+                                title={`Rating ${rating} => Max ${(maxPct * 100).toFixed(2)}%`}
+                                className={`inline-block px-1.5 py-0.5 rounded ${isExceeded && mode === 'warn' ? 'bg-amber-100 text-amber-700 font-bold' : ''}`}
+                              >
+                                {(maxPct * 100).toFixed(2)}%
+                              </span>
+                            );
+                          })()}
+                        </td>
+                     </>
+                  )}
+
+                  {/* GROUP F: Inputs */}
+                  {presetIncludes(activePreset, 'F') && (
+                    <>
+                      <td className="px-4 py-4 text-center" style={getColumnStyles('lock')}>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleToggleLock(res.id); }}
+                          className={`p-1.5 rounded transition-colors ${res.after_json?.locked_merit ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'text-slate-300 hover:bg-slate-100 hover:text-slate-500'}`}
+                          title={res.after_json?.locked_merit ? "Unlock Row" : "Lock Row"}
+                        >
+                          {res.after_json?.locked_merit ? <Lock className="w-4 h-4 shrink-0" /> : <Unlock className="w-4 h-4 shrink-0" />}
+                        </button>
                       </td>
-                    );
-                  })}
-                  {/* Calculated outputs */}
-                  {calcColumns.map(col => {
-                    const v = res.after_json?.[col.column_key];
-                    const isNull = v === null || v === undefined;
-                    return (
-                      <td key={col.id} className={`px-4 py-4 text-sm font-bold text-right font-mono ${isNull ? 'text-slate-300 italic' : 'text-blue-600'}`}>
-                        {isNull ? '—'
-                          : col.data_type === 'currency' ? `$${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                          : col.data_type === 'percent' ? `${(Number(v) * 100).toFixed(2)}%`
-                          : Number(v).toLocaleString()}
+                      {EDITABLE_INPUTS.map(ik => {
+                        const val = Number(res.after_json?.[ik] ?? 0);
+                        const warning = getInputWarning(res, ik, val);
+                        return (
+                          <td key={ik} className="px-4 py-4 text-right" style={getColumnStyles(ik)}>
+                            <div className="inline-flex flex-col items-end">
+                              <input 
+                                key={`${res.id}-${ik}-${val}`}
+                                type="number" 
+                                step={ik.includes('pct') ? '0.01' : '1'}
+                                onClick={(e) => e.stopPropagation()} // Prevent opening drawer when interacting with input
+                                className={`w-24 px-2 py-1 text-right border rounded text-sm font-mono bg-white focus:ring-2 focus:ring-blue-500 outline-none ${
+                                  warning ? 'border-amber-400 bg-amber-50' : 'border-emerald-200'
+                                }`}
+                                defaultValue={val}
+                                onBlur={(e) => handleUpdateInput(res.id, ik, e.target.value)}
+                                title={warning || undefined}
+                              />
+                              {warning && (
+                                <span className="text-[9px] text-amber-600 mt-0.5 max-w-[6rem] truncate" title={warning}>{warning}</span>
+                              )}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </>
+                  )}
+
+                  {/* GROUP G: Outputs */}
+                  {(presetIncludes(activePreset, 'G') || activePreset === 'default') && (
+                    renderMoneyCol('calc_new_base_salary_local', true)
+                  )}
+                  {presetIncludes(activePreset, 'G') && (
+                    <>
+                      {calcColumns.filter(c => c.column_key !== 'calc_new_base_salary_local').map(col => {
+                        const v = res.after_json?.[col.column_key];
+                        const isNull = v === null || v === undefined;
+                        return (
+                          <td 
+                            key={col.id} 
+                            className={`px-4 py-4 text-sm font-bold text-right font-mono ${isNull ? 'text-slate-300 italic' : 'text-blue-600'}`}
+                            style={getColumnStyles(col.column_key)}
+                          >
+                            {isNull ? '—'
+                              : col.data_type === 'currency' ? `$${Number(v).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                              : col.data_type === 'percent' ? `${(Number(v) * 100).toFixed(2)}%`
+                              : Number(v).toLocaleString()}
+                          </td>
+                        );
+                      })}
+                      
+                      {/* Derived: Compa After */}
+                      <td 
+                        className="px-4 py-4 text-sm font-bold text-purple-600 text-right font-mono"
+                        style={getColumnStyles('compa_after')}
+                      >
+                        {(() => {
+                          const baseAfter = Number(getAnyAttr(res, 'calc_new_base_salary_local'));
+                          const marketRef = Number(getAnyAttr(res, 'market_reference_value_local') ?? getAnyAttr(res, 'market_reference_amount_local'));
+                          
+                          if (baseAfter > 0 && marketRef > 0) {
+                             const compaAfter = baseAfter / marketRef;
+                             return `${(compaAfter * 100).toFixed(1)}%`;
+                          }
+                          return <span className="text-slate-300 font-normal" title="Market reference denominator not found">—</span>;
+                        })()}
                       </td>
-                    );
-                  })}
-                  <td className="px-6 py-4">
-                    <div className="flex gap-1 flex-wrap">
+                    </>
+                  )}
+
+                  <td className="px-6 py-4 sticky right-0 bg-white shadow-[-1px_0_0_rgba(241,245,249,1)] z-30" style={getColumnStyles('flags')}>
+                    <div className="flex gap-1 flex-wrap justify-end">
                       {res.flags_json?.map((flag: string) => (
                         <span key={flag} className={`px-1.5 py-0.5 rounded text-[9px] font-bold border uppercase tracking-tighter ${
                           flag === 'INVALID_RATING' || flag === 'MISSING_FX' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                           flag === 'NO_PAY_BAND' ? 'bg-red-50 text-red-600 border-red-100' :
                           'bg-blue-50 text-blue-600 border-blue-100'
                         }`}>
-                          {flag}
+                          {flag.replace(/_/g, ' ')}
                         </span>
                       ))}
                     </div>
@@ -1092,44 +1923,94 @@ const ScenarioResultsPage = () => {
                 </tr>
                 );
               })}
-              {filteredResults.length === 0 && (
+              {total === 0 && (
                 <tr>
-                  <td colSpan={99} className="px-6 py-12 text-center text-slate-400">No se encontraron empleados.</td>
+                  <td colSpan={99} className="px-6 py-12 text-center text-slate-400">No empleados encontrados en esta configuración.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between">
+          <div className="flex items-center gap-4 text-sm text-slate-500 font-medium font-inter">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 font-sans">Rows per page:</span>
+              <select
+                className="bg-white border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-slate-700 cursor-pointer text-xs"
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+            <div className="h-4 w-px bg-slate-200 hidden sm:block"></div>
+            <span className="text-[11px] text-slate-500 font-sans">
+              Showing <span className="text-slate-900 font-bold">{total > 0 ? start + 1 : 0}</span>–
+              <span className="text-slate-900 font-bold">{end}</span> of{" "}
+              <span className="text-slate-900 font-bold">{total}</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={pageIndex === 0}
+              onClick={() => setPageIndex(prev => prev - 1)}
+              className="p-2 border border-slate-200 rounded-xl hover:bg-white text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm group active:scale-95"
+              title="Previous Page"
+            >
+              <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
+            </button>
+            <div className="flex items-center gap-1.5 px-3 min-w-[100px] justify-center">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter font-sans">Page</span>
+              <span className="text-sm font-black text-slate-900 font-sans">{pageIndex + 1}</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter text-center font-sans">of {totalPages || 1}</span>
+            </div>
+            <button
+              type="button"
+              disabled={pageIndex >= totalPages - 1}
+              onClick={() => setPageIndex(prev => prev + 1)}
+              className="p-2 border border-slate-200 rounded-xl hover:bg-white text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm group active:scale-95"
+              title="Next Page"
+            >
+              <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </div>
+        </div>
       </div>
-
-      {dataset && latestRun && (
-        <ColumnConfigModal 
-          isOpen={isConfigModalOpen} 
-          onClose={() => setIsConfigModalOpen(false)} 
-          datasetId={dataset.id}
-          scenarioRunId={latestRun.id}
-          tenantId={dataset.tenant_id}
-          onSuccess={fetchResults}
-        />
       )}
 
-      {dataset && (
-        <ManageColumnsModal
-          isOpen={isManageColumnsOpen}
-          onClose={() => setIsManageColumnsOpen(false)}
-          datasetId={dataset.id}
-          onColumnsChanged={fetchResults}
-        />
-      )}
+      <ColumnConfigModal 
+        isOpen={isConfigModalOpen} 
+        onClose={() => setIsConfigModalOpen(false)} 
+        datasetId={dataset?.id || ''}
+        scenarioRunId={latestRun?.id || ''}
+        tenantId={dataset?.tenant_id || ''}
+        scenarioId={id!}
+        onSuccess={fetchResults}
+        onDatasetInitialized={(newDatasetId, newTenantId) => {
+          // Refresh results so dataset state is picked up from DB
+          fetchResults();
+        }}
+      />
 
-      {dataset && latestRun && (
-        <JobHistoryModal
-          isOpen={isJobHistoryOpen}
-          onClose={() => setIsJobHistoryOpen(false)}
-          datasetId={dataset.id}
-          scenarioRunId={latestRun.id}
-        />
-      )}
+      <ManageColumnsModal
+        isOpen={isManageColumnsOpen}
+        onClose={() => setIsManageColumnsOpen(false)}
+        datasetId={dataset?.id || ''}
+        onColumnsChanged={fetchResults}
+      />
+
+      <JobHistoryModal
+        isOpen={isJobHistoryOpen}
+        onClose={() => setIsJobHistoryOpen(false)}
+        datasetId={dataset?.id || ''}
+        scenarioRunId={latestRun?.id || ''}
+      />
 
       {snapshotId && (
         <DataQualityReportModal
@@ -1166,6 +2047,16 @@ const ScenarioResultsPage = () => {
         config={budgetConfig}
         onSave={handleSaveBudgetConfig}
         isSaving={isSavingBudget}
+      />
+
+      {/* Phase 7A.3 Employee Details Drawer */}
+      <EmployeeDetailsDrawer 
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        employee={selectedDrawerEmployee}
+        getAnyAttr={getAnyAttr}
+        guidelineMaxPct={selectedDrawerEmployee ? getGuidelineMaxPct(selectedDrawerEmployee) : null}
+        scenarioRules={(latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {}}
       />
     </div>
   );

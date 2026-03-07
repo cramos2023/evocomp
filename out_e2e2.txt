@@ -1,0 +1,8 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+--- EvoComp Golden Example E2E Paybands Builder UI/Engine ---
+[1] Login successful. User: carlosiramosp20@gmail.com
+
+[2] Executing validate_market_import...
+Error: Import failed: {"error":"Unauthorized"}
+    at runE2E (C:\Users\carlo\Documents\evocomp\E2E_PAYBANDS.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

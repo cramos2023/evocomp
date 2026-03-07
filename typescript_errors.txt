@@ -1,0 +1,25 @@
+src/modules/job-evaluation/components/calculator/PositionRow.tsx(167,11): error TS2322: Type '(updatedData: Position) => void' is not assignable to type '(updatedData: OrganizationFieldsData) => void'.
+  Types of parameters 'updatedData' and 'updatedData' are incompatible.
+    Type 'OrganizationFieldsData' is missing the following properties from type 'Position': jobTitle, dimensions
+src/modules/job-evaluation/components/calculator/table/DimensionRow.tsx(114,22): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Position'.
+  No index signature with a parameter of type 'string' was found on type 'Position'.
+src/modules/job-evaluation/components/ui/aspect-ratio.tsx(1,39): error TS2307: Cannot find module '@radix-ui/react-aspect-ratio' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/avatar.tsx(2,34): error TS2307: Cannot find module '@radix-ui/react-avatar' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/calendar.tsx(3,27): error TS2307: Cannot find module 'react-day-picker' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/carousel.tsx(4,8): error TS2307: Cannot find module 'embla-carousel-react' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/chart.tsx(2,36): error TS2307: Cannot find module 'recharts' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/chart.tsx(186,25): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/modules/job-evaluation/components/ui/chart.tsx(186,31): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/modules/job-evaluation/components/ui/chart.tsx(286,23): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/modules/job-evaluation/components/ui/command.tsx(3,45): error TS2307: Cannot find module 'cmdk' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/context-menu.tsx(2,39): error TS2307: Cannot find module '@radix-ui/react-context-menu' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/drawer.tsx(2,43): error TS2307: Cannot find module 'vaul' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/form.tsx(11,8): error TS2307: Cannot find module 'react-hook-form' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/input-otp.tsx(2,43): error TS2307: Cannot find module 'input-otp' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/input-otp.tsx(36,44): error TS18046: 'inputOTPContext' is of type 'unknown'.
+src/modules/job-evaluation/components/ui/menubar.tsx(2,35): error TS2307: Cannot find module '@radix-ui/react-menubar' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/navigation-menu.tsx(2,42): error TS2307: Cannot find module '@radix-ui/react-navigation-menu' or its corresponding type declarations.
+src/modules/job-evaluation/components/ui/resizable.tsx(2,37): error TS2307: Cannot find module 'react-resizable-panels' or its corresponding type declarations.
+src/modules/job-evaluation/hooks/usePositionManager.ts(29,3): error TS2322: Type 'null' is not assignable to type 'EvaluationResult | undefined'.
+src/modules/job-evaluation/utils/exportUtils.ts(4,18): error TS2307: Cannot find module 'papaparse' or its corresponding type declarations.
+src/modules/job-evaluation/utils/exportUtils.ts(5,26): error TS2307: Cannot find module '@/types/position' or its corresponding type declarations.

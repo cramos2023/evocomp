@@ -1,0 +1,28 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+--- EvoComp Golden Example E2E Paybands Builder UI/Engine ---
+[1] Login successful. User: carlosiramosp20@gmail.com
+
+[2] Executing validate_market_import...
+Γ£à Import Success: import_id=1daa840c-4501-46b5-aa48-8db90faf37bf, valid_rows=3, status=COMPLETED
+
+[3] Setting up vendor_grade_mappings...
+Mapping M3 -> G3 already exists.
+Mapping M4 -> G4 already exists.
+Mapping M5 -> G5 already exists.
+
+[4] Validating global weights...
+Γ£à Weight Validation: isValid=true, errors=0
+
+[5] Creating scenario record...
+Γ£à Scenario Created: id=f75c9339-9a8a-4f1a-be6c-196a50204091, status=RUNNABLE
+
+[6] Running payband_scenario engine...
+Γ£à Run 1 Success: run_id=778c11d1-42e9-4748-b771-7f6fe9dcd6ff
+Outputs: G3 Min:50247385.191073045 Mid:62809231.4888413 Max:75371077.78660956
+  G4 Min:66996513.588097386 Mid:83745641.98512173 Max:100494770.38214608
+  G5 Min:92120206.18363392 Mid:115150257.72954239 Max:138180309.27545086
+
+[7] Determinism Test: Running exact same scenario again...
+Error: DB query for runs failed: {"code":"42703","details":null,"hint":null,"message":"column payband_build_runs.created_at does not exist"}
+    at runE2E (C:\Users\carlo\Documents\evocomp\E2E_PAYBANDS.ts:132:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

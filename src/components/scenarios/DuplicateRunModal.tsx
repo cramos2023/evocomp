@@ -26,10 +26,28 @@ export function DuplicateRunModal({ isOpen, onClose, scenarioId, sourceRunId, on
         body: { scenario_id: scenarioId, source_run_id: sourceRunId },
       });
 
-      if (fnError) throw fnError;
-      if (data?.error) throw new Error(data.error);
+      if (fnError) {
+        // Extract detailed error info from FunctionsHttpError
+        const status = (fnError as any).status ?? (fnError as any).context?.status ?? 'unknown';
+        let bodyMsg = fnError.message || 'Unknown error';
+        try {
+          const ctx = (fnError as any).context;
+          if (ctx) {
+            const bodyText = await ctx.text?.();
+            if (bodyText) {
+              const parsed = JSON.parse(bodyText);
+              bodyMsg = parsed?.message || parsed?.error || bodyText;
+            }
+          }
+        } catch (_) { /* use message as-is */ }
+        console.error(`[DuplicateRunModal] fn error status=${status}:`, fnError);
+        throw new Error(`[HTTP ${status}] ${bodyMsg}`);
+      }
+      // Edge fn returns { ok, new_run_id } on success or { ok: false, message } on error
+      if (!data?.ok) throw new Error(data?.message || 'Duplicate failed: edge function returned ok=false');
 
-      if (data?.success && data?.new_run_id) {
+      if (data?.new_run_id) {
+
         onSuccess(data.new_run_id);
       } else {
         throw new Error('Invalid response from duplication service');

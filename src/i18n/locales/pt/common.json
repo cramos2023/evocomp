@@ -63,6 +63,18 @@
       "no_limit": "Sem limite",
       "delete_confirm_title": "Tem certeza de que deseja excluir este cenário?",
       "delete_confirm_subtitle": "Esta ação não pode ser desfeita e todos os dados modelados serão perdidos.",
+      "ready_to_run": "Pronto para Executar",
+      "empty_run_desc": "Este cenário ainda não tem execuções. Clique abaixo para gerar a primeira execução e iniciar sua análise.",
+      "run_scenario": "Executar Cenário",
+      "run_failed": "A execução falhou no servidor. Por favor, verifique os logs.",
+      "run_timeout": "Tempo de espera excedido (60s). Por favor, recarregue ou tente novamente.",
+      "results_for_run": "Resultados para a execução:",
+      "total_increase": "Aumento Total",
+      "headcount": "Efetivo",
+      "avg_increase": "Aumento Médio",
+      "employee_details": "Detalhes do Funcionário",
+      "rating": "Avaliação",
+      "flags": "Sinalizadores",
       "delete_confirm_button": "Excluir permanentemente"
     },
     "reports": {
@@ -323,7 +335,13 @@
     "next_steps": "Próximos passos",
     "configure": "Configurar",
     "details": "Detalhes",
-    "records": "Registros"
+    "records": "Registros",
+    "back": "Back",
+    "back_to_scenarios": "Back to Scenarios",
+    "running": "Running...",
+    "employee": "Employee",
+    "search": "Search",
+    "export": "Export"
   },
   "plan_status": {
     "draft": "Rascunho",
@@ -378,7 +396,10 @@
     "col_basis": "Tipo de Base",
     "col_country": "País",
     "col_currency": "Moeda",
-    "create_title": "Nova Banda Salarial"
+    "create_title": "Nova Banda Salarial",
+    "all_years": "Todos os anos",
+    "all_months": "Todos os meses",
+    "current_period": "Período atual"
   },
   "merit_admin": {
     "create_cycle": {
@@ -679,5 +700,105 @@
     "validation_error_over_guideline": "Excede diretriz",
     "validation_error_required": "Obrigatório",
     "col_name": "Nome"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Painel de Bandas",
+      "subtitle": "Estruturas de Remuneração Ativas",
+      "active_structures": "Estruturas Ativas",
+      "recent_activity": "Atividade Recente",
+      "no_structures": "Nenhuma estrutura publicada ainda.",
+      "start_modeling": "Criar Cenário",
+      "manage_imports": "Gerenciar Dados",
+      "market_coverage": "Cobertura de Mercado"
+    },
+    "imports": {
+      "title": "Carga de Dados de Mercado",
+      "subtitle": "Importar benchmarks globais.",
+      "dragDropHint": "Arraste seu CSV aqui.",
+      "uploading": "Processando...",
+      "success": "Dados importados com sucesso.",
+      "error": "Erro no formato CSV.",
+      "history": "Histórico",
+      "empty": "Nenhum dado importado.",
+      "btn_upload": "Carregar Arquivo"
+    },
+    "mappings": {
+      "title": "Mapeamento",
+      "desc": "Vincular níveis externos a internos.",
+      "add": "Adicionar",
+      "btn_save": "Salvar",
+      "empty_msg": "Sem regras."
+    },
+    "wizard": {
+      "step1": {
+        "title": "Parâmetros Globais",
+        "desc": "Defina escopo e moeda.",
+        "scenario_name": "Nome",
+        "country": "País",
+        "basis_type": "Tipo de Base",
+        "pricing_date": "Data de Precificação",
+        "effective_dates": "Datas Efetivas"
+      },
+      "step2": {
+        "title": "Pesos e Projeção",
+        "desc": "Associe pesos e aging.",
+        "weights": "Pesos (%)",
+        "aging_policy": "Política (Aging)",
+        "quality_policy": "Qualidade",
+        "range_policy": "Rango (Range)"
+      },
+      "step3": {
+        "title": "Simulação",
+        "desc": "Revise antes de executar.",
+        "run": "Executar Motor"
+      },
+      "common": {
+        "next": "Continuar",
+        "back": "Voltar",
+        "save": "Salvar"
+      }
+    },
+    "workbench": {
+      "title": "Execução",
+      "run_failed": "Falha na simulação.",
+      "run_success": "Simulação completa.",
+      "btn_publish": "Publicar Final",
+      "btn_rerun": "Re-executar",
+      "min": "Mín",
+      "mid": "Médio",
+      "max": "Máx"
+    },
+    "validation": {
+      "weightsMustSumOne": "Pesos devem somar 100%.",
+      "requiredField": "Campo obrigatório.",
+      "invalidDate": "Data final inválida."
+    },
+    "errors": {
+      "unauthorized": "Erro: Token inválido. Acesso não verificado proibido."
+    },
+    "actions": {
+      "publish": "Publicar",
+      "run": "Executar",
+      "delete": "Excluir",
+      "import": "Importar"
+    },
+    "status": {
+      "draft": "Rascunho",
+      "runnable": "Pronto",
+      "published": "Publicado",
+      "archived": "Arquivado",
+      "completed": "Completo"
+    },
+    "basisType": {
+      "baseSalary": "Salário Base",
+      "annualTargetCash": "Target Cash",
+      "totalGuaranteed": "Total Garantido"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "TERCEIROS"
+    }
   }
 }

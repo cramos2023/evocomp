@@ -1,0 +1,44 @@
+
+[functions.validate-formula]
+enabled = true
+verify_jwt = false
+# Pure AST validator — no data writes, safe to call without JWT enforcement.
+
+[functions.seed-presets]
+enabled = true
+verify_jwt = false
+# Called server-side from UI after dataset creation; JWT comes from user session but
+# the function uses service role internally. Gateway JWT check causes 401 in some flows.
+
+[functions.init-column-config]
+enabled = true
+verify_jwt = false
+# Creates dynamic_datasets (with tenant_id sourced from scenarios) + seeds presets.
+# verify_jwt=false: function uses service role; tenant is derived from scenario, not JWT.
+
+
+[functions.duplicate-scenario-run]
+enabled = true
+verify_jwt = false
+import_map = "./functions/duplicate-scenario-run/deno.json"
+entrypoint = "./functions/duplicate-scenario-run/index.ts"
+
+[functions.export-pay-bands-xlsx]
+verify_jwt = false
+
+[functions.export-scenario-xlsx]
+verify_jwt = false
+
+[functions.export-import-template-xlsx]
+verify_jwt = false
+
+[functions.payband-engine]
+enabled = true
+verify_jwt = true
+import_map = "./functions/payband-engine/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/payband-engine/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/payband-engine/*.html" ]

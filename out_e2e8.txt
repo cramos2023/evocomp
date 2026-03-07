@@ -1,0 +1,38 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+--- EvoComp Golden Example E2E Paybands Builder UI/Engine ---
+[1] Login successful. User: carlosiramosp20@gmail.com
+
+[2] Executing validate_market_import...
+Γ£à Import Success: import_id=6a3ab38f-0aa9-46b5-a9e5-fa0a93302d4b, valid_rows=3, status=COMPLETED
+
+[3] Setting up vendor_grade_mappings...
+Mapping M3 -> G3 already exists.
+Mapping M4 -> G4 already exists.
+Mapping M5 -> G5 already exists.
+
+[4] Validating global weights...
+Γ£à Weight Validation: isValid=true, errors=0
+
+[5] Creating scenario record...
+Γ£à Scenario Created: id=1d459c37-bdd0-448e-8552-d14072f6f1d5, status=RUNNABLE
+
+[6] Running payband_scenario engine...
+Γ£à Run 1 Success: run_id=b70ff572-9582-4b8c-9872-a5b2fcac24da
+Outputs: G3 Min:50247385.191073045 Mid:62809231.4888413 Max:75371077.78660956
+  G4 Min:66996513.588097386 Mid:83745641.98512173 Max:100494770.38214608
+  G5 Min:92120206.18363392 Mid:115150257.72954239 Max:138180309.27545086
+
+[7] Determinism Test: Running exact same scenario again...
+Γ£à Determinism Pass: Hashes Match!
+  config_hash = 9da91ea6c1e54164a8ff32489ba7061625a443cf82fec7869fb928cdabb05351
+  input_hash = c4d3cc70ad91a4a1c662ed40fb5842e549b02838369e01a0c4da73440c9f6e0a
+
+[8] Publishing Version (clicking "Publish")...
+Γ£à Publish Success: version_id=50a99095-4f5a-4914-ada1-2386655bec3a
+
+[9] Marking Version as Primary...
+
+[10] Validating Home Dashboard resolution (resolve_active_paybands)...
+Γ£à Resolves correctly: Active Version ID = 50a99095-4f5a-4914-ada1-2386655bec3a
+
+--- Script Completed Successfully ---

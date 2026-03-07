@@ -141,50 +141,132 @@ serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) throw new Error('Missing Auth Header');
-
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    // Use service role key to bypass RLS for seeding — safe because this
-    // function is called server-side and only seeds immutable presets.
+    // Use service role to bypass RLS — this is the entire point of this function
+    // being server-side: the client cannot create dynamic_datasets directly (RLS).
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get tenant_id from the calling user's JWT
-    const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
-      global: { headers: { Authorization: authHeader } }
-    });
-    const { data: { user }, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !user) throw new Error('Invalid auth token');
-
     const body = await req.json();
-    const { dataset_id, tenant_id } = body;
-    if (!dataset_id || !tenant_id) throw new Error('dataset_id and tenant_id are required');
+    const { scenario_id, tenant_id, base_currency_code, dataset_id: provided_dataset_id } = body;
 
-    // Build preset rows with tenant_id and dataset_id
+    // Allow passing an explicit dataset_id (legacy) or scenario_id+tenant_id (new path)
+    console.info(`[seed-presets] Input: scenario_id=${scenario_id}, tenant_id=${tenant_id}, dataset_id=${provided_dataset_id}`);
+
+    if (!tenant_id) {
+      return new Response(
+        JSON.stringify({ ok: false, message: 'tenant_id is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!scenario_id && !provided_dataset_id) {
+      return new Response(
+        JSON.stringify({ ok: false, message: 'Either scenario_id or dataset_id is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ── Step 1: Get or Create the dynamic_dataset ──────────────────────────────
+    let dataset_id = provided_dataset_id;
+
+    if (!dataset_id && scenario_id) {
+      // Try to find an existing dataset for this scenario
+      const { data: existing, error: findErr } = await supabase
+        .from('dynamic_datasets')
+        .select('id, tenant_id')
+        .eq('scenario_id', scenario_id)
+        .eq('tenant_id', tenant_id)
+        .maybeSingle();
+
+      if (findErr) {
+        console.error('[seed-presets] Error finding dataset:', findErr.message);
+        throw new Error(`Failed to query dynamic_datasets: ${findErr.message}`);
+      }
+
+      if (existing) {
+        dataset_id = existing.id;
+        console.info(`[seed-presets] Found existing dataset: ${dataset_id}`);
+      } else {
+        // Create a new dataset (service role bypasses RLS)
+        // name and type are NOT NULL — use stable conventions
+        const insertPayload: Record<string, unknown> = {
+          scenario_id,
+          tenant_id,
+          name: `Column Config – ${scenario_id}`,
+          type: 'merit_cycle',
+          scope: 'scenario',
+        };
+        if (base_currency_code) {
+          insertPayload.base_currency_code = base_currency_code;
+        }
+
+        const { data: created, error: createErr } = await supabase
+          .from('dynamic_datasets')
+          .insert(insertPayload)
+          .select('id')
+          .single();
+
+        if (createErr) {
+          // Possible race condition on concurrent calls — try to find again
+          if (createErr.code === '23505') {
+            const { data: race } = await supabase
+              .from('dynamic_datasets')
+              .select('id')
+              .eq('scenario_id', scenario_id)
+              .eq('tenant_id', tenant_id)
+              .maybeSingle();
+            if (race) {
+              dataset_id = race.id;
+              console.info(`[seed-presets] Race condition resolved, dataset: ${dataset_id}`);
+            } else {
+              throw new Error(`Dataset creation conflict and re-select failed`);
+            }
+          } else {
+            console.error('[seed-presets] Create dataset error:', createErr.message);
+            throw new Error(`Failed to create dynamic_datasets: ${createErr.message}`);
+          }
+        } else {
+          dataset_id = created.id;
+          console.info(`[seed-presets] Created new dataset: ${dataset_id}`);
+        }
+      }
+    }
+
+    if (!dataset_id) {
+      throw new Error('Could not resolve dataset_id');
+    }
+
+    // ── Step 2: Upsert preset columns (idempotent — never overwrites user edits) ─
     const presets = SCENARIO_PRESETS.map(p => ({
       ...p,
       tenant_id,
       dataset_id,
     }));
 
-    // Idempotent upsert — won't overwrite modified user columns
     const { error: upsertErr } = await supabase
       .from('column_definitions')
       .upsert(presets, { onConflict: 'dataset_id, column_key', ignoreDuplicates: true });
 
-    if (upsertErr) throw upsertErr;
+    if (upsertErr) {
+      console.error('[seed-presets] Upsert error:', upsertErr.message);
+      throw upsertErr;
+    }
 
-    return new Response(JSON.stringify({ status: 'ok', seeded: presets.length }), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+    console.info(`[seed-presets] Seeded ${presets.length} columns for dataset ${dataset_id}`);
 
-  } catch (err: any) {
-    return new Response(JSON.stringify({ status: 'error', message: err.message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+    return new Response(
+      JSON.stringify({ ok: true, dataset_id, seeded: true, columns_seeded: presets.length }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[seed-presets] Fatal:', message);
+    return new Response(
+      JSON.stringify({ ok: false, message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 });

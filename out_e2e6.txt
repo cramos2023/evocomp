@@ -1,0 +1,28 @@
+[dotenv@17.3.1] injecting env (2) from .env.local -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+--- EvoComp Golden Example E2E Paybands Builder UI/Engine ---
+[1] Login successful. User: carlosiramosp20@gmail.com
+
+[2] Executing validate_market_import...
+Γ£à Import Success: import_id=59b77cbd-18da-42cb-9ee6-d2d83e0dea50, valid_rows=3, status=COMPLETED
+
+[3] Setting up vendor_grade_mappings...
+Mapping M3 -> G3 already exists.
+Mapping M4 -> G4 already exists.
+Mapping M5 -> G5 already exists.
+
+[4] Validating global weights...
+Γ£à Weight Validation: isValid=true, errors=0
+
+[5] Creating scenario record...
+Γ£à Scenario Created: id=5a2d2aa5-a240-481a-980a-873e880125c6, status=RUNNABLE
+
+[6] Running payband_scenario engine...
+Γ£à Run 1 Success: run_id=73f9d862-2524-4d49-b498-83f8a823f0cc
+Outputs: G3 Min:50247385.191073045 Mid:62809231.4888413 Max:75371077.78660956
+  G4 Min:66996513.588097386 Mid:83745641.98512173 Max:100494770.38214608
+  G5 Min:92120206.18363392 Mid:115150257.72954239 Max:138180309.27545086
+
+[7] Determinism Test: Running exact same scenario again...
+TypeError: Cannot read properties of null (reading '0')
+    at runE2E (C:\Users\carlo\Documents\evocomp\E2E_PAYBANDS.ts:132:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

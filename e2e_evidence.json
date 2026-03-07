@@ -1,0 +1,148 @@
+{
+  "import_success": {
+    "success": true,
+    "import_id": "6a3ab38f-0aa9-46b5-a9e5-fa0a93302d4b",
+    "valid": 3,
+    "invalid": 0,
+    "errors": [],
+    "status": "COMPLETED"
+  },
+  "weight_validation": {
+    "isValid": true,
+    "errors": []
+  },
+  "scenario_id": "1d459c37-bdd0-448e-8552-d14072f6f1d5",
+  "run1": {
+    "success": true,
+    "run_id": "b70ff572-9582-4b8c-9872-a5b2fcac24da",
+    "outputs": [
+      {
+        "grade": "G3",
+        "aged_market_mid": 62809231.4888413,
+        "proposed_mid": 62809231.4888413,
+        "proposed_min": 50247385.191073045,
+        "proposed_max": 75371077.78660956,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      },
+      {
+        "grade": "G4",
+        "aged_market_mid": 83745641.98512173,
+        "proposed_mid": 83745641.98512173,
+        "proposed_min": 66996513.588097386,
+        "proposed_max": 100494770.38214608,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      },
+      {
+        "grade": "G5",
+        "aged_market_mid": 115150257.72954239,
+        "proposed_mid": 115150257.72954239,
+        "proposed_min": 92120206.18363392,
+        "proposed_max": 138180309.27545086,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      }
+    ],
+    "quality_report": {
+      "warnings": [],
+      "exclusions": [],
+      "missing_basis_field": false
+    }
+  },
+  "run2": {
+    "success": true,
+    "run_id": "1b982f20-5801-496f-af69-7e175dbac74f",
+    "outputs": [
+      {
+        "grade": "G3",
+        "aged_market_mid": 62809231.4888413,
+        "proposed_mid": 62809231.4888413,
+        "proposed_min": 50247385.191073045,
+        "proposed_max": 75371077.78660956,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      },
+      {
+        "grade": "G4",
+        "aged_market_mid": 83745641.98512173,
+        "proposed_mid": 83745641.98512173,
+        "proposed_min": 66996513.588097386,
+        "proposed_max": 100494770.38214608,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      },
+      {
+        "grade": "G5",
+        "aged_market_mid": 115150257.72954239,
+        "proposed_mid": 115150257.72954239,
+        "proposed_min": 92120206.18363392,
+        "proposed_max": 138180309.27545086,
+        "range_spread": 50,
+        "currency": "CLP",
+        "explainability_json": {
+          "applied_guideline": "MARKET_P50",
+          "previous_midpoint": 0
+        }
+      }
+    ],
+    "quality_report": {
+      "warnings": [],
+      "exclusions": [],
+      "missing_basis_field": false
+    }
+  },
+  "version_id": "50a99095-4f5a-4914-ada1-2386655bec3a",
+  "resolution": {
+    "id": "50a99095-4f5a-4914-ada1-2386655bec3a",
+    "version_number": 1,
+    "published_at": "2026-03-07T22:44:22.056029+00:00",
+    "is_primary": true,
+    "pay_bands": [
+      {
+        "id": "f9d29ed1-b531-40fd-8daa-c400ecdaa9b0",
+        "grade": "G3",
+        "spread": 50,
+        "midpoint": 62809231.49,
+        "max_salary": 75371077.79,
+        "min_salary": 50247385.19
+      },
+      {
+        "id": "60f07685-b56b-4768-98ff-ddce06360f1f",
+        "grade": "G4",
+        "spread": 50,
+        "midpoint": 83745641.99,
+        "max_salary": 100494770.38,
+        "min_salary": 66996513.59
+      },
+      {
+        "id": "0ccf2594-85a8-49d0-824c-92156a94eba1",
+        "grade": "G5",
+        "spread": 50,
+        "midpoint": 115150257.73,
+        "max_salary": 138180309.28,
+        "min_salary": 92120206.18
+      }
+    ]
+  }
+}

@@ -75,7 +75,13 @@
       "run_scenario": "Ejecutar Escenario",
       "run_failed": "La ejecución falló en el servidor. Revisa los logs.",
       "run_timeout": "Tiempo de espera agotado (60s). Por favor, recarga o intenta de nuevo.",
-      "results_for_run": "Resultados de la ejecución:"
+      "results_for_run": "Resultados de la ejecución:",
+      "total_increase": "Incremento Total",
+      "headcount": "Headcount",
+      "avg_increase": "Incremento Promedio",
+      "employee_details": "Detalles del Empleado",
+      "rating": "Rating",
+      "flags": "Alertas"
     },
     "reports": {
       "title": "Inteligencia e Insights",
@@ -338,7 +344,10 @@
     "records": "Registros",
     "back": "Volver",
     "back_to_scenarios": "Volver a Escenarios",
-    "running": "Ejecutando..."
+    "running": "Ejecutando...",
+    "employee": "Empleado",
+    "search": "Buscar...",
+    "export": "Exportar"
   },
   "plan_status": {
     "draft": "Borrador",
@@ -393,7 +402,10 @@
     "col_basis": "Tipo de Base",
     "col_country": "País",
     "col_currency": "Moneda",
-    "create_title": "Nueva Banda Salarial"
+    "create_title": "Nueva Banda Salarial",
+    "all_years": "Todos los años",
+    "all_months": "Todos los meses",
+    "current_period": "Período actual"
   },
   "merit_admin": {
     "create_cycle": {
@@ -694,5 +706,105 @@
     "validation_error_over_guideline": "Excede guía",
     "validation_error_required": "Requerido",
     "col_name": "Nombre"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Panel de Tabuladores",
+      "subtitle": "Estructuras de Compensación Activas e Importaciones de Mercado",
+      "active_structures": "Estructuras Activas",
+      "recent_activity": "Actividad Reciente",
+      "no_structures": "Aún no hay estructuras publicadas.",
+      "start_modeling": "Crear Escenario",
+      "manage_imports": "Gestionar Datos",
+      "market_coverage": "Cobertura de Mercado"
+    },
+    "imports": {
+      "title": "Carga de Datos de Mercado",
+      "subtitle": "Importa benchmarks externos y alinea grados.",
+      "dragDropHint": "Arrastra tu CSV aquí o haz clic para buscar.",
+      "uploading": "Procesando datos de mercado de forma segura...",
+      "success": "Datos de mercado importados con éxito.",
+      "error": "Error al leer datos. Revisa el formato CSV.",
+      "history": "Historial de Importaciones",
+      "empty": "Aún no se han importado datos.",
+      "btn_upload": "Subir Benchmark"
+    },
+    "mappings": {
+      "title": "Mapeos de Proveedor",
+      "desc": "Vincula niveles de mercado externos con grados internos.",
+      "add": "Agregar Regla",
+      "btn_save": "Guardar Mapeos",
+      "empty_msg": "No hay reglas de mapeo definidas."
+    },
+    "wizard": {
+      "step1": {
+        "title": "Parámetros Globales",
+        "desc": "Define el alcance del escenario, moneda objetivo y base.",
+        "scenario_name": "Nombre del Escenario",
+        "country": "Código de País",
+        "basis_type": "Tipo de Base",
+        "pricing_date": "Fecha de Precio (Pricing)",
+        "effective_dates": "Fechas de Vigencia (Inicio - Fin)"
+      },
+      "step2": {
+        "title": "Pesos de Mercado y Envejecimiento",
+        "desc": "Asigna pesos a proveedores y factores de proyección.",
+        "weights": "Ponderación de Proveedores (%)",
+        "aging_policy": "Política de Envejecimiento (Aging)",
+        "quality_policy": "Controles de Calidad",
+        "range_policy": "Diseño de Rango (Min/Max)"
+      },
+      "step3": {
+        "title": "Resumen y Simulación",
+        "desc": "Revisa la configuración antes de ejecutar el motor.",
+        "run": "Ejecutar Motor"
+      },
+      "common": {
+        "next": "Continuar",
+        "back": "Atrás",
+        "save": "Guardar Borrador"
+      }
+    },
+    "workbench": {
+      "title": "Workbench de Ejecución",
+      "run_failed": "El cálculo del escenario falló. Revisa los logs.",
+      "run_success": "Simulación completada.",
+      "btn_publish": "Publicar Versión Final",
+      "btn_rerun": "Ajustar y Re-ejecutar",
+      "min": "Mín",
+      "mid": "Medio",
+      "max": "Máx"
+    },
+    "validation": {
+      "weightsMustSumOne": "Los pesos globales deben sumar exactamente 100%.",
+      "requiredField": "Este campo es obligatorio.",
+      "invalidDate": "La fecha de fin debe ser posterior a la fecha de inicio."
+    },
+    "errors": {
+      "unauthorized": "Error de Seguridad: Token nulo o inválido. El acceso no verificado al motor está estrictamente prohibido."
+    },
+    "actions": {
+      "publish": "Publicar",
+      "run": "Ejecutar",
+      "delete": "Eliminar",
+      "import": "Importar"
+    },
+    "status": {
+      "draft": "Borrador",
+      "runnable": "Listo",
+      "published": "Publicado",
+      "archived": "Archivado",
+      "completed": "Completado"
+    },
+    "basisType": {
+      "baseSalary": "Salario Base",
+      "annualTargetCash": "Target Cash Anual",
+      "totalGuaranteed": "Total Garantizado"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "PROVEEDOR TERCERO"
+    }
   }
 }

@@ -9,6 +9,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { DataQualityReportModal } from '../components/scenarios/DataQualityReportModal';
+import { downloadXlsx, triggerXlsxExport } from '../utils/xlsx';
 
 const ImportsPage = () => {
   const { t } = useTranslation();
@@ -414,6 +415,14 @@ const ImportsPage = () => {
     document.body.removeChild(link);
   }
 
+  async function handleDownloadTemplateXlsx() {
+    try {
+      await triggerXlsxExport('export-import-template-xlsx', {}, supabase);
+    } catch (err: any) {
+      alert('Error downloading XLSX template: ' + err.message);
+    }
+  }
+
   return (
     <div className="p-10 max-w-7xl mx-auto space-y-12 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start gap-10">
@@ -427,11 +436,11 @@ const ImportsPage = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <button
-            onClick={handleDownloadTemplate}
-            className="group flex items-center justify-center gap-3 bg-[rgb(var(--bg-surface))] border-2 border-[rgb(var(--border))] hover:border-[rgb(var(--text-primary))] text-[rgb(var(--text-primary))] px-8 py-4 rounded-[var(--radius-btn)] font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-sm"
+            onClick={handleDownloadTemplateXlsx}
+            className="group flex items-center justify-center gap-3 bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-500 text-emerald-700 px-8 py-4 rounded-[var(--radius-btn)] font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-sm"
           >
-            <Download className="w-5 h-5 text-[rgb(var(--text-muted))] group-hover:text-[rgb(var(--text-primary))] transition-colors" />
-            {t('pages.pay_bands.download_template', 'Download Template')}
+            <Download className="w-5 h-5 text-emerald-500 group-hover:text-emerald-700 transition-colors" />
+            {t('pages.pay_bands.download_template', 'Download Template')} (XLSX)
           </button>
           <input
             type="file"

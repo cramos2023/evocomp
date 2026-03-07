@@ -75,7 +75,13 @@
       "run_scenario": "Run Scenario",
       "run_failed": "The run failed on the server. Please check logs.",
       "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
-      "results_for_run": "Results for run:"
+      "results_for_run": "Results for run:",
+      "total_increase": "Total Increase",
+      "headcount": "Headcount",
+      "avg_increase": "Avg Increase",
+      "employee_details": "Employee Details",
+      "rating": "Rating",
+      "flags": "Flags"
     },
     "reports": {
       "title": "Intelligence & Insights",
@@ -338,7 +344,10 @@
     "records": "Records",
     "back": "Back",
     "back_to_scenarios": "Back to Scenarios",
-    "running": "Running..."
+    "running": "Running...",
+    "employee": "Employee",
+    "search": "Search",
+    "export": "Export"
   },
   "plan_status": {
     "draft": "Draft",
@@ -393,7 +402,10 @@
     "col_basis": "Basis Type",
     "col_country": "Country",
     "col_currency": "Currency",
-    "create_title": "New Pay Band"
+    "create_title": "New Pay Band",
+    "all_years": "All Years",
+    "all_months": "All Months",
+    "current_period": "Current Period"
   },
   "merit_admin": {
     "create_cycle": {
@@ -694,5 +706,105 @@
     "validation_error_over_guideline": "Exceeds guideline",
     "validation_error_required": "Required",
     "col_name": "Name"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Paybands Dashboard",
+      "subtitle": "Active Compensation Structures & Market Imports",
+      "active_structures": "Active Structures",
+      "recent_activity": "Recent Activity",
+      "no_structures": "No pay structures published yet.",
+      "start_modeling": "Create Scenario",
+      "manage_imports": "Manage Data",
+      "market_coverage": "Market Data Coverage"
+    },
+    "imports": {
+      "title": "Market Data Uploader",
+      "subtitle": "Import external benchmark files and align grading.",
+      "dragDropHint": "Drag & drop your market CSV here, or click to browse.",
+      "uploading": "Processing market data securely...",
+      "success": "Market data imported successfully.",
+      "error": "Failed to parse market data. Check the CSV format.",
+      "history": "Import History",
+      "empty": "No market data imported yet.",
+      "btn_upload": "Upload Benchmark"
+    },
+    "mappings": {
+      "title": "Provider Mapping",
+      "desc": "Map external vendor levels to internal job grades.",
+      "add": "Add Rule",
+      "btn_save": "Save Mappings",
+      "empty_msg": "No mapping rules defined."
+    },
+    "wizard": {
+      "step1": {
+        "title": "Global Parameters",
+        "desc": "Define scenario scope, target currency, and foundation settings.",
+        "scenario_name": "Scenario Name",
+        "country": "Country Code",
+        "basis_type": "Basis Type",
+        "pricing_date": "Pricing Date",
+        "effective_dates": "Effective Dates (Start - End)"
+      },
+      "step2": {
+        "title": "Market Weights & Aging",
+        "desc": "Allocate vendor weights and configure data aging factors.",
+        "weights": "Provider Weightings (%)",
+        "aging_policy": "Aging Policy",
+        "quality_policy": "Data Quality Controls",
+        "range_policy": "Range Design Policy"
+      },
+      "step3": {
+        "title": "Summary & Simulation",
+        "desc": "Review settings before firing the intelligence engine.",
+        "run": "Run Simulation Engine"
+      },
+      "common": {
+        "next": "Continue",
+        "back": "Back",
+        "save": "Save Draft"
+      }
+    },
+    "workbench": {
+      "title": "Workbench Engine",
+      "run_failed": "Simulation calculation failed. Review logs.",
+      "run_success": "Simulation completed.",
+      "btn_publish": "Publish Final Version",
+      "btn_rerun": "Adjust & Re-Run",
+      "min": "Min",
+      "mid": "Mid",
+      "max": "Max"
+    },
+    "validation": {
+      "weightsMustSumOne": "Global weights must equal exactly 100%.",
+      "requiredField": "This field is required.",
+      "invalidDate": "End date must be after Start date."
+    },
+    "errors": {
+      "unauthorized": "Security Error: Missing or invalid authentication token. Direct unverified engine access is strictly prohibited."
+    },
+    "actions": {
+      "publish": "Publish",
+      "run": "Run",
+      "delete": "Delete",
+      "import": "Import"
+    },
+    "status": {
+      "draft": "Draft",
+      "runnable": "Runnable",
+      "published": "Published",
+      "archived": "Archived",
+      "completed": "Completed"
+    },
+    "basisType": {
+      "baseSalary": "Base Salary",
+      "annualTargetCash": "Annual Target Cash",
+      "totalGuaranteed": "Total Guaranteed"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "THIRD PARTY"
+    }
   }
 }

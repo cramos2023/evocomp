@@ -66,7 +66,18 @@
       "no_limit": "Senza limiti",
       "delete_confirm_title": "Sei sicuro di voler eliminare questo scenario?",
       "delete_confirm_subtitle": "Questa azione non può essere annullata e tutti i dati modellati andranno persi.",
-      "delete_confirm_button": "Elimina definitivamente"
+      "ready_to_run": "Ready to Run",
+      "empty_run_desc": "This scenario has no runs yet. Click below to generate the first run and start your analysis.",
+      "run_scenario": "Run Scenario",
+      "run_failed": "The run failed on the server. Please check logs.",
+      "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
+      "results_for_run": "Results for run:",
+      "total_increase": "Total Increase",
+      "headcount": "Headcount",
+      "avg_increase": "Avg Increase",
+      "employee_details": "Employee Details",
+      "rating": "Rating",
+      "flags": "Flags"
     },
     "reports": {
       "title": "Intelligence & Insights",
@@ -325,7 +336,13 @@
     "next_steps": "Passaggi successivi",
     "configure": "Configura",
     "details": "Dettagli",
-    "records": "Registri"
+    "records": "Record",
+    "back": "Back",
+    "back_to_scenarios": "Back to Scenarios",
+    "running": "Running...",
+    "employee": "Employee",
+    "search": "Search",
+    "export": "Export"
   },
   "plan_status": {
     "draft": "Bozza",
@@ -385,7 +402,10 @@
     "download_template": "Scarica Modello",
     "uploading": "Caricamento...",
     "upload_success": "{{count}} fasce caricate con successo.",
-    "upload_error": "Errore di caricamento. Si prega di controllare il formato CSV."
+    "upload_error": "Errore di caricamento. Si prega di controllare il formato CSV.",
+    "all_years": "Tutti gli anni",
+    "all_months": "Tutti i mesi",
+    "current_period": "Periodo attuale"
   },
   "merit_admin": {
     "create_cycle": {
@@ -686,5 +706,105 @@
     "validation_error_over_guideline": "Supera direttiva",
     "validation_error_required": "Richiesto",
     "col_name": "Nome"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Dashboard Fasce",
+      "subtitle": "Strutture Retributive Attive",
+      "active_structures": "Strutture Attive",
+      "recent_activity": "Attività Recente",
+      "no_structures": "Nessuna struttura pubblicata.",
+      "start_modeling": "Crea Scenario",
+      "manage_imports": "Gestisci Dati",
+      "market_coverage": "Copertura di Mercato"
+    },
+    "imports": {
+      "title": "Importazione Dati",
+      "subtitle": "Importa benchmark globali.",
+      "dragDropHint": "Trascina qui il tuo CSV.",
+      "uploading": "Elaborazione in corso...",
+      "success": "Dati importati con successo.",
+      "error": "Errore nel formato CSV.",
+      "history": "Cronologia",
+      "empty": "Nessun dato importato.",
+      "btn_upload": "Carica File"
+    },
+    "mappings": {
+      "title": "Mappatura",
+      "desc": "Collega livelli esterni/interni.",
+      "add": "Aggiungi",
+      "btn_save": "Salva",
+      "empty_msg": "Nessuna regola."
+    },
+    "wizard": {
+      "step1": {
+        "title": "Parametri Globali",
+        "desc": "Definisci ambito e valuta.",
+        "scenario_name": "Nome",
+        "country": "Paese",
+        "basis_type": "Tipo di Base",
+        "pricing_date": "Data di Valutazione",
+        "effective_dates": "Date Effettive"
+      },
+      "step2": {
+        "title": "Pesi e Proiezioni",
+        "desc": "Assegna pesi.",
+        "weights": "Pesi (%)",
+        "aging_policy": "Politica di Aging",
+        "quality_policy": "Qualità",
+        "range_policy": "Politica di Fascia"
+      },
+      "step3": {
+        "title": "Simulazione",
+        "desc": "Rivedi prima di eseguire.",
+        "run": "Esegui Motore"
+      },
+      "common": {
+        "next": "Continua",
+        "back": "Indietro",
+        "save": "Salva"
+      }
+    },
+    "workbench": {
+      "title": "Esecuzione",
+      "run_failed": "Simulazione fallita.",
+      "run_success": "Simulazione completata.",
+      "btn_publish": "Pubblica Finale",
+      "btn_rerun": "Esegui di nuovo",
+      "min": "Min",
+      "mid": "Medio",
+      "max": "Max"
+    },
+    "validation": {
+      "weightsMustSumOne": "I pesi devono sommare 100%.",
+      "requiredField": "Campo obbligatorio.",
+      "invalidDate": "Data di fine non valida."
+    },
+    "errors": {
+      "unauthorized": "Errore: Token non valido. Accesso negato."
+    },
+    "actions": {
+      "publish": "Pubblica",
+      "run": "Esegui",
+      "delete": "Elimina",
+      "import": "Importa"
+    },
+    "status": {
+      "draft": "Bozza",
+      "runnable": "Pronto",
+      "published": "Pubblicato",
+      "archived": "Archiviato",
+      "completed": "Completato"
+    },
+    "basisType": {
+      "baseSalary": "Salario Base",
+      "annualTargetCash": "Cash Target Annuale",
+      "totalGuaranteed": "Totale Garantito"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "TERZE PARTI"
+    }
   }
 }

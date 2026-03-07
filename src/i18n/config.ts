@@ -40,6 +40,16 @@ i18n
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
+    parseMissingKeyHandler: (key) => {
+      if (key.startsWith('paybands.')) {
+        if (import.meta.env.DEV) {
+          console.warn(`Missing i18n key: ${key}`);
+          return `[MISSING] ${key}`;
+        }
+        return ''; // Don't show literal paybands keys in production
+      }
+      return key;
+    }
   });
 
 export default i18n;

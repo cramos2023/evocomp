@@ -1,0 +1,79 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+
+  0      0   0      0   0      0      0      0                              0* Host vlmxfkazinrdfyhmxmvj.supabase.co:443 was resolved.
+* IPv6: (none)
+* IPv4: 172.64.149.246, 104.18.38.10
+*   Trying 172.64.149.246:443...
+* schannel: disabled automatic use of client certificate
+* ALPN: curl offers http/1.1
+* ALPN: server accepted http/1.1
+* Established connection to vlmxfkazinrdfyhmxmvj.supabase.co (172.64.149.246 port 443) from 192.168.1.124 port 62336 
+* using HTTP/1.x
+> POST /functions/v1/payband-engine HTTP/1.1
+
+> Host: vlmxfkazinrdfyhmxmvj.supabase.co
+
+> User-Agent: curl/8.18.0
+
+> Accept: */*
+
+> Content-Length: 2
+
+> Content-Type: application/x-www-form-urlencoded
+
+> 
+
+} [2 bytes data]
+* upload completely sent off: 2 bytes
+* schannel: remote party requests renegotiation
+* schannel: renegotiating SSL/TLS connection
+* schannel: SSL/TLS connection renegotiated
+< HTTP/1.1 401 Unauthorized
+
+< Date: Sat, 07 Mar 2026 23:54:39 GMT
+
+< Content-Type: application/json
+
+< Transfer-Encoding: chunked
+
+< Connection: keep-alive
+
+< Server: cloudflare
+
+< CF-Ray: 9d8d86c9b838a4eb-MIA
+
+< CF-Cache-Status: DYNAMIC
+
+< Access-Control-Allow-Origin: *
+
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+< Vary: Accept-Encoding
+
+< access-control-allow-headers: authorization, x-client-info, apikey
+
+< sb-gateway-version: 1
+
+< sb-project-ref: vlmxfkazinrdfyhmxmvj
+
+< sb-request-id: 019ccab9-7a1f-7bad-9fad-95b93a9f2694
+
+< x-sb-edge-region: us-east-1
+
+< x-served-by: supabase-edge-runtime
+
+< Set-Cookie: __cf_bm=EP8cVGn_KbQD2zTWcIQFWC4vyr.ArMe2wAL_b.hRuOo-1772927679-1.0.1.1-TCdDQFBY.JqFVqxv6UMV8qTr0caTaarjCb3Sgv8yoRnXDJS2k9MIjytVlBvZbp2OO7vqP6dU0u_GTnDkEpNmGw64MaAMsaEgnrfb73z2yoU; path=/; expires=Sun, 08-Mar-26 00:24:39 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+
+< alt-svc: h3=":443"; ma=86400
+
+< 
+
+{ [64 bytes data]
+
+100     55   0     53 100      2    277     10                              0
+100     55   0     53 100      2    277     10                              0
+100     55   0     53 100      2    277     10                              0
+* Connection #0 to host vlmxfkazinrdfyhmxmvj.supabase.co:443 left intact
+{"code":401,"message":"Missing authorization header"}

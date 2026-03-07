@@ -63,7 +63,19 @@
       "no_limit": "Kein Limit",
       "delete_confirm_title": "Sind Sie sicher, dass Sie dieses Szenario löschen möchten?",
       "delete_confirm_subtitle": "Diese Aktion kann nicht rückgängig gemacht werden und alle modellierten Daten gehen verloren.",
-      "delete_confirm_button": "Endgültig löschen"
+      "delete_confirm_button": "Endgültig löschen",
+      "ready_to_run": "Ready to Run",
+      "empty_run_desc": "This scenario has no runs yet. Click below to generate the first run and start your analysis.",
+      "run_scenario": "Run Scenario",
+      "run_failed": "The run failed on the server. Please check logs.",
+      "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
+      "results_for_run": "Results for run:",
+      "total_increase": "Total Increase",
+      "headcount": "Headcount",
+      "avg_increase": "Avg Increase",
+      "employee_details": "Employee Details",
+      "rating": "Rating",
+      "flags": "Flags"
     },
     "reports": {
       "title": "Intelligenz & Einblicke",
@@ -323,7 +335,13 @@
     "next_steps": "Nächste Schritte",
     "configure": "Konfigurieren",
     "details": "Details",
-    "records": "Einträge"
+    "records": "Einträge",
+    "back": "Back",
+    "back_to_scenarios": "Back to Scenarios",
+    "running": "Running...",
+    "employee": "Employee",
+    "search": "Search",
+    "export": "Export"
   },
   "plan_status": {
     "draft": "Entwurf",
@@ -386,7 +404,10 @@
     "upload_error": "Fehler beim Hochladen der Datei. Bitte überprüfen Sie das CSV-Format.",
     "delete_confirm_title": "Sind Sie sicher, dass Sie dieses Entgeltband löschen möchten?",
     "delete_confirm_subtitle": "Diese Aktion kann nicht rückgängig gemacht werden. Dieses Band wird aus der Datenbank entfernt.",
-    "delete_confirm_button": "Band löschen"
+    "delete_confirm_button": "Band löschen",
+    "all_years": "Alle Jahre",
+    "all_months": "Alle Monate",
+    "current_period": "Aktueller Zeitraum"
   },
   "merit_admin": {
     "create_cycle": {
@@ -686,5 +707,105 @@
     "validation_error_over_guideline": "Überschreitet Richtlinie",
     "validation_error_required": "Erforderlich",
     "col_name": "Name"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Gehaltsbänder Dashboard",
+      "subtitle": "Aktive Vergütungsstrukturen",
+      "active_structures": "Aktive Strukturen",
+      "recent_activity": "Letzte Aktivität",
+      "no_structures": "Noch keine veröffentlicht.",
+      "start_modeling": "Szenario Erstellen",
+      "manage_imports": "Daten Verwalten",
+      "market_coverage": "Marktabdeckung"
+    },
+    "imports": {
+      "title": "Daten-Import",
+      "subtitle": "Globale Benchmarks laden.",
+      "dragDropHint": "CSV hierher ziehen.",
+      "uploading": "Wird verarbeitet...",
+      "success": "Erfolgreich importiert.",
+      "error": "CSV-Formatfehler.",
+      "history": "Verlauf",
+      "empty": "Keine Daten importiert.",
+      "btn_upload": "Datei Hochladen"
+    },
+    "mappings": {
+      "title": "Mapping",
+      "desc": "Externe/Interne Level verbinden.",
+      "add": "Hinzufügen",
+      "btn_save": "Speichern",
+      "empty_msg": "Keine Regeln."
+    },
+    "wizard": {
+      "step1": {
+        "title": "Globale Parameter",
+        "desc": "Umfang definieren.",
+        "scenario_name": "Name",
+        "country": "Land",
+        "basis_type": "Basistyp",
+        "pricing_date": "Bewertungsdatum",
+        "effective_dates": "Gültigkeitsdaten"
+      },
+      "step2": {
+        "title": "Gewichte & Alterung",
+        "desc": "Gewichtungen zuweisen.",
+        "weights": "Gewichtungen (%)",
+        "aging_policy": "Alterungspolitik",
+        "quality_policy": "Qualität",
+        "range_policy": "Bandbreitenpolitik"
+      },
+      "step3": {
+        "title": "Simulation",
+        "desc": "Vor Ausführung prüfen.",
+        "run": "Motor Starten"
+      },
+      "common": {
+        "next": "Weiter",
+        "back": "Zurück",
+        "save": "Speichern"
+      }
+    },
+    "workbench": {
+      "title": "Ausführung",
+      "run_failed": "Simulation fehlgeschlagen.",
+      "run_success": "Simulation abgeschlossen.",
+      "btn_publish": "Final Veröffentlichen",
+      "btn_rerun": "Erneut Ausführen",
+      "min": "Min",
+      "mid": "Mitte",
+      "max": "Max"
+    },
+    "validation": {
+      "weightsMustSumOne": "Gewichte müssen 100% ergeben.",
+      "requiredField": "Pflichtfeld.",
+      "invalidDate": "Enddatum ungültig."
+    },
+    "errors": {
+      "unauthorized": "Fehler: Ungültiges Token. Zugriff verweigert."
+    },
+    "actions": {
+      "publish": "Veröffentlichen",
+      "run": "Ausführen",
+      "delete": "Löschen",
+      "import": "Importieren"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "runnable": "Bereit",
+      "published": "Publiziert",
+      "archived": "Archiviert",
+      "completed": "Abgeschlossen"
+    },
+    "basisType": {
+      "baseSalary": "Grundgehalt",
+      "annualTargetCash": "Zielbonus",
+      "totalGuaranteed": "Gesamtgarantie"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "DRITTANBIETER"
+    }
   }
 }

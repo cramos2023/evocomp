@@ -10,35 +10,93 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
+  // --- Phase 7C.AD: Manual Auth ---
+  const { getBearerToken, getAuthedUserId } = await import('../_shared/auth.ts');
+  const token = getBearerToken(req);
+  if (!token) {
+    return new Response(JSON.stringify({ code: 401, message: 'Missing authorization header' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
+  let userId: string;
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-      { auth: { persistSession: false } }
+    userId = await getAuthedUserId(token);
+  } catch (e) {
+    return new Response(JSON.stringify({ code: 401, message: 'Invalid or expired JWT' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
+  let body: Record<string, string>;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(
+      JSON.stringify({ ok: false, error_code: 'INVALID_BODY', message: 'Request body must be valid JSON' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
     );
+  }
 
-    const { scenario_id, source_run_id } = await req.json();
+  const { scenario_id, source_run_id } = body;
 
-    if (!scenario_id || !source_run_id) {
+  console.info(`[duplicate-scenario-run] scenario_id=${scenario_id}, source_run_id=${source_run_id}`);
+
+  if (!scenario_id || !source_run_id) {
+    return new Response(
+      JSON.stringify({ ok: false, error_code: 'MISSING_PARAMS', message: 'Missing scenario_id or source_run_id' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+    );
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+
+    // 0. Verify access using User JWT (RLS check)
+    const userClient = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { persistSession: false }
+    });
+
+    const { data: accessCheck, error: accessError } = await userClient
+      .from('scenario_runs')
+      .select('id, tenant_id')
+      .eq('id', source_run_id)
+      .eq('scenario_id', scenario_id)
+      .maybeSingle();
+
+    if (accessError || !accessCheck) {
+      console.error(`[duplicate-scenario-run] Access denied or run not found: ${accessError?.message}`);
       return new Response(
-        JSON.stringify({ error: 'Missing required parameters: scenario_id, source_run_id' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        JSON.stringify({ ok: false, error_code: 'FORBIDDEN', message: 'You do not have access to this scenario or run' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
       );
     }
 
-    // 1. Verify source run exists
+    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { persistSession: false }
+    });
+
+    // 1. Fetch full source run details with service role
     const { data: sourceRun, error: sourceRunError } = await supabaseClient
       .from('scenario_runs')
       .select('*')
       .eq('id', source_run_id)
-      .eq('scenario_id', scenario_id)
       .single();
 
     if (sourceRunError || !sourceRun) {
-      throw new Error(`Source run not found: ${sourceRunError?.message || 'not found'}`);
+      console.error(`[duplicate-scenario-run] Source run not found: ${sourceRunError?.message}`);
+      return new Response(
+        JSON.stringify({ ok: false, error_code: 'RUN_NOT_FOUND', message: `Source run not found: ${sourceRunError?.message || 'not found'}` }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+      );
     }
 
-    // 2. Create the new run (status DRAFT to mark it as editable and distinct from original)
+    // 2. Create the new DRAFT run
     const { data: newRun, error: insertRunError } = await supabaseClient
       .from('scenario_runs')
       .insert({
@@ -59,22 +117,27 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertRunError) {
+      console.error(`[duplicate-scenario-run] Insert run error: ${insertRunError.message}`);
       throw new Error(`Failed to create duplicate run: ${insertRunError.message}`);
     }
 
-    // 3. Duplicate results in batches to avoid payload limits
+    console.info(`[duplicate-scenario-run] Created new run ${newRun.id}. Duplicating results...`);
+
+    // 3. Duplicate results in batches
     const LIMIT = 1000;
     let offset = 0;
     let hasMore = true;
+    let totalCopied = 0;
 
     while (hasMore) {
       const { data: results, error: fetchError } = await supabaseClient
         .from('scenario_employee_results')
         .select('*')
-        .eq('run_id', source_run_id)
+        .eq('scenario_run_id', source_run_id)
         .range(offset, offset + LIMIT - 1);
 
       if (fetchError) {
+        console.error(`[duplicate-scenario-run] Fetch error at offset ${offset}: ${fetchError.message}`);
         throw new Error(`Failed to fetch source results: ${fetchError.message}`);
       }
 
@@ -83,42 +146,55 @@ Deno.serve(async (req) => {
         break;
       }
 
-      const duplicateResults = results.map(row => ({
-        tenant_id: row.tenant_id,
-        dataset_id: row.dataset_id,
-        run_id: newRun.id,
-        employee_id: row.employee_id,
-        salary_base_before: row.salary_base_before,
-        salary_base_after: row.salary_base_after,
-        before_json: row.before_json,
-        after_json: row.after_json,
-        flags_json: row.flags_json
-      }));
+      // Explicit safe column mapping — omit id and old scenario_run_id
+      const duplicateResults = results.map((row: Record<string, unknown>) => {
+        const newRow: Record<string, unknown> = {
+          scenario_run_id: newRun.id,
+        };
+        // Copy safe columns explicitly
+        const safeCols = [
+          'tenant_id', 'scenario_id', 'employee_id', 'employee_external_id',
+          'before_json', 'after_json', 'flags_json',
+          'salary_base_before', 'salary_base_after',
+          'base_currency',
+        ];
+        for (const col of safeCols) {
+          if (col in row && row[col] !== undefined) {
+            newRow[col] = row[col];
+          }
+        }
+        return newRow;
+      });
 
       const { error: insertResultsError } = await supabaseClient
         .from('scenario_employee_results')
         .insert(duplicateResults);
 
       if (insertResultsError) {
+        console.error(`[duplicate-scenario-run] Insert results error at offset ${offset}: ${insertResultsError.message}`);
         throw new Error(`Failed to insert duplicate results: ${insertResultsError.message}`);
       }
 
+      totalCopied += duplicateResults.length;
       offset += LIMIT;
       if (results.length < LIMIT) {
         hasMore = false;
       }
     }
 
+    console.info(`[duplicate-scenario-run] Done. Copied ${totalCopied} results to run ${newRun.id}`);
+
     return new Response(
-      JSON.stringify({ success: true, new_run_id: newRun.id, message: `Duplicated run ${source_run_id} to ${newRun.id}` }),
+      JSON.stringify({ ok: true, new_run_id: newRun.id, copied_rows: totalCopied }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 
-  } catch (error: any) {
-    console.error('duplicate-scenario-run error:', error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[duplicate-scenario-run] Fatal error:', message);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+      JSON.stringify({ ok: false, error_code: 'INTERNAL_ERROR', message }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }
 });

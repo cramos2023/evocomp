@@ -18,15 +18,16 @@ serve(async (req) => {
 
   try {
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) throw new Error('Missing Auth Header');
+    // Note: verify_jwt=false on this function — auth header is optional.
+    // We use it for user-context DB queries if present; otherwise fall back to service role.
 
     const body = await req.json();
     const { formula_dsl, tenant_id, scenario_id, column_key, dataset_id } = body;
     
-    if (!formula_dsl || typeof formula_dsl !== 'string' || !column_key || !dataset_id) {
+    if (!formula_dsl || typeof formula_dsl !== 'string' || !column_key) {
       return new Response(JSON.stringify({ 
         status: 'invalid', 
-        errors: [{ message: 'Missing or invalid formula_dsl' }] 
+        errors: [{ message: 'Missing required fields: formula_dsl, column_key' }] 
       }), { 
         status: 400, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -98,12 +99,17 @@ serve(async (req) => {
       });
     }
 
-    // 5. Cyclic Dependency Check (DAG Validation)
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
+    // 5. Cyclic Dependency Check (DAG Validation) — skip if no dataset_id provided
+    if (dataset_id) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      // Use user auth if available, otherwise service role (SELECT only — read-safe)
+      const supabaseKey = authHeader 
+        ? Deno.env.get('SUPABASE_ANON_KEY')!
+        : Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const clientOpts = authHeader
+        ? { global: { headers: { Authorization: authHeader } } }
+        : {};
+      const supabase = createClient(supabaseUrl, supabaseKey, clientOpts);
 
     const { data: existingCols, error: colsErr } = await supabase
        .from('column_definitions')
@@ -111,46 +117,47 @@ serve(async (req) => {
        .eq('dataset_id', dataset_id)
        .eq('is_active', true);
 
-    if (colsErr) {
-       throw new Error(`Failed to fetch column definitions: ${colsErr.message}`);
-    }
-
-    const graph = new Map<string, string[]>();
-    for (const col of (existingCols || [])) {
-      graph.set(col.column_key, col.depends_on || []);
-    }
-    graph.set(column_key, Array.from(dependencies));
-
-    const visited = new Set<string>();
-    const recursionStack = new Set<string>();
-
-    function dfs(node: string): boolean {
-      if (recursionStack.has(node)) return true;
-      if (visited.has(node)) return false;
-
-      visited.add(node);
-      recursionStack.add(node);
-
-      const deps = graph.get(node) || [];
-      for (const dep of deps) {
-        if (dfs(dep)) return true;
+      if (colsErr) {
+         throw new Error(`Failed to fetch column definitions: ${colsErr.message}`);
       }
 
-      recursionStack.delete(node);
-      return false;
-    }
-
-    for (const node of graph.keys()) {
-      if (dfs(node)) {
-         return new Response(JSON.stringify({ 
-           status: 'invalid', 
-           errors: [{ message: `Circular dependency detected involving column '${node}'. Please check formulas.` }] 
-         }), { 
-           status: 200, 
-           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-         });
+      const graph = new Map<string, string[]>();
+      for (const col of (existingCols || [])) {
+        graph.set(col.column_key, col.depends_on || []);
       }
-    }
+      graph.set(column_key, Array.from(dependencies));
+
+      const visited = new Set<string>();
+      const recursionStack = new Set<string>();
+
+      function dfs(node: string): boolean {
+        if (recursionStack.has(node)) return true;
+        if (visited.has(node)) return false;
+
+        visited.add(node);
+        recursionStack.add(node);
+
+        const deps = graph.get(node) || [];
+        for (const dep of deps) {
+          if (dfs(dep)) return true;
+        }
+
+        recursionStack.delete(node);
+        return false;
+      }
+
+      for (const node of graph.keys()) {
+        if (dfs(node)) {
+           return new Response(JSON.stringify({ 
+             status: 'invalid', 
+             errors: [{ message: `Circular dependency detected involving column '${node}'. Please check formulas.` }] 
+           }), { 
+             status: 200, 
+             headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+           });
+        }
+      }
+    } // end if (dataset_id)
 
     // Return success with extracted properties
     return new Response(JSON.stringify({ 

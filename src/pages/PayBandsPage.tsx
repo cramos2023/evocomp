@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Plus, Search, DollarSign, Layers, TrendingUp, X, AlertCircle, Upload, Download, CheckCircle2, Trash2 } from 'lucide-react';
+import { Plus, Search, DollarSign, Layers, TrendingUp, X, AlertCircle, Upload, Download, CheckCircle2, Trash2, FileSpreadsheet } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
+import { downloadXlsx, triggerXlsxExport } from '../utils/xlsx';
 
 const BASIS_OPTIONS = ['BASE_SALARY', 'ANNUAL_TARGET_CASH', 'TOTAL_GUARANTEED'];
 const BASIS_COLORS: Record<string, string> = {
@@ -23,6 +24,7 @@ const CURRENCY_OPTIONS = [
 interface Band {
   id: string; grade: string; basis_type: string; country_code: string | null; currency: string | null;
   min_salary: number; midpoint: number; max_salary: number; spread: number | null;
+  effective_year: number; effective_month: number;
 }
 
 const PayBandsPage = () => {
@@ -32,8 +34,14 @@ const PayBandsPage = () => {
   const [search, setSearch]           = useState('');
   const [filterBasis, setFilterBasis] = useState('ALL');
   const [filterCountry, setFilterCountry] = useState('ALL');
+  const [filterYear, setFilterYear]   = useState('ALL');
+  const [filterMonth, setFilterMonth] = useState('ALL');
   const [showCreate, setShowCreate]   = useState(false);
-  const [form, setForm] = useState({ grade: '', basis_type: 'BASE_SALARY', country_code: '', currency: '', min_salary: '', midpoint: '', max_salary: '' });
+  
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
+  const [form, setForm] = useState({ grade: '', basis_type: 'BASE_SALARY', country_code: '', currency: '', min_salary: '', midpoint: '', max_salary: '', effective_year: currentYear.toString(), effective_month: currentMonth.toString() });
   const [formError, setFormError]     = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +52,7 @@ const PayBandsPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [fxRates, setFxRates] = useState<any[]>([]);
   const [targetCurrency, setTargetCurrency] = useState('USD');
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => { 
     fetchBands(); 
@@ -60,10 +69,12 @@ const PayBandsPage = () => {
 
   async function fetchBands() {
     try {
-      // Order by Country Code (Ascending) -> Grade (Ascending) -> Basis Type (Ascending)
+      // Order by Latest Period -> Country Code -> Grade -> Basis Type
       const { data, error } = await supabase
         .from('pay_bands')
-        .select('id, grade, basis_type, country_code, currency, min_salary, midpoint, max_salary, spread')
+        .select('id, grade, basis_type, country_code, currency, min_salary, midpoint, max_salary, spread, effective_year, effective_month')
+        .order('effective_year', { ascending: false })
+        .order('effective_month', { ascending: false })
         .order('country_code', { ascending: true, nullsFirst: false })
         .order('grade', { ascending: true })
         .order('basis_type', { ascending: true });
@@ -109,7 +120,9 @@ const PayBandsPage = () => {
     // Robust match for basis_type (handles potential case mismatches or data glitches)
     const matchBasis  = filterBasis === 'ALL' || b.basis_type.toUpperCase() === filterBasis.toUpperCase();
     const matchCountry = filterCountry === 'ALL' || (b.country_code && b.country_code.toUpperCase() === filterCountry.toUpperCase());
-    return matchSearch && matchBasis && matchCountry;
+    const matchYear = filterYear === 'ALL' || b.effective_year.toString() === filterYear;
+    const matchMonth = filterMonth === 'ALL' || b.effective_month.toString() === filterMonth;
+    return matchSearch && matchBasis && matchCountry && matchYear && matchMonth;
   });
 
   const activeBands = filtered.length > 0 ? filtered : [];
@@ -142,9 +155,10 @@ const PayBandsPage = () => {
         grade: form.grade.trim().toUpperCase(), basis_type: form.basis_type,
         country_code: form.country_code.trim().toUpperCase() || null, currency: form.currency.trim().toUpperCase() || null,
         min_salary: parseFloat(form.min_salary), midpoint: parseFloat(form.midpoint), max_salary: parseFloat(form.max_salary),
+        effective_year: parseInt(form.effective_year), effective_month: parseInt(form.effective_month)
       });
       if (error) throw error;
-      setShowCreate(false); setForm({ grade: '', basis_type: 'BASE_SALARY', country_code: '', currency: '', min_salary: '', midpoint: '', max_salary: '' });
+      setShowCreate(false); setForm({ grade: '', basis_type: 'BASE_SALARY', country_code: '', currency: '', min_salary: '', midpoint: '', max_salary: '', effective_year: currentYear.toString(), effective_month: currentMonth.toString() });
       await fetchBands();
     } catch (err: any) { setFormError(err.message || 'Error'); }
     finally { setFormLoading(false); }
@@ -152,21 +166,40 @@ const PayBandsPage = () => {
 
   function handleDownloadTemplate() {
     const headers = [
-      'grade', 'country_code', 'currency', 
+      'grade', 'country_code', 'currency', 'effective_year', 'effective_month',
       'base_min', 'base_mid', 'base_max',
       'target_cash_min', 'target_cash_mid', 'target_cash_max',
       'total_guar_min', 'total_guar_mid', 'total_guar_max'
     ];
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
     const csvContent = [
       headers.join(','), 
-      ['G', 'CL', 'CLP', '1000', '1500', '2000', '1200', '1800', '2400', '', '', ''].join(','),
-      ['H', 'CO', 'COP', '5000', '6000', '7000', '', '', '', '', '', ''].join(',')
+      ['G', 'CL', 'CLP', currentYear.toString(), currentMonth.toString(), '1000', '1500', '2000', '1200', '1800', '2400', '', '', ''].join(','),
+      ['H', 'CO', 'COP', currentYear.toString(), currentMonth.toString(), '5000', '6000', '7000', '', '', '', '', '', ''].join(',')
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'pay_bands_template_wide.csv';
     link.click();
+  }
+
+  async function handleExportXlsx() {
+    setIsExporting(true);
+    try {
+      await triggerXlsxExport('export-pay-bands-xlsx', {
+        search,
+        filterBasis,
+        filterCountry,
+        filterYear,
+        filterMonth
+      }, supabase);
+    } catch (err: any) {
+      alert('Error exporting XLSX: ' + err.message);
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +229,8 @@ const PayBandsPage = () => {
         
         const country = rowData.country_code ? rowData.country_code.toUpperCase().substring(0,2) : null;
         const curr = rowData.currency ? rowData.currency.toUpperCase().substring(0,3) : null;
+        const eYear = rowData.effective_year ? parseInt(rowData.effective_year) : currentYear;
+        const eMonth = rowData.effective_month ? parseInt(rowData.effective_month) : currentMonth;
         
         // Helper to extract and push a band if min/mid/max are present
         const pushBand = (basisType: string, prefix: string) => {
@@ -210,6 +245,8 @@ const PayBandsPage = () => {
               basis_type: basisType,
               country_code: country,
               currency: curr,
+              effective_year: eYear,
+              effective_month: eMonth,
               min_salary: min,
               midpoint: mid,
               max_salary: max
@@ -225,6 +262,8 @@ const PayBandsPage = () => {
              basis_type: rowData.basis_type || 'BASE_SALARY',
              country_code: country,
              currency: curr,
+             effective_year: eYear,
+             effective_month: eMonth,
              min_salary: parseFloat(rowData.min_salary),
              midpoint: parseFloat(rowData.midpoint),
              max_salary: parseFloat(rowData.max_salary)
@@ -276,6 +315,12 @@ const PayBandsPage = () => {
           </button>
           <button onClick={handleDownloadTemplate} className="btn-secondary px-6 py-4 text-xs font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
             <Download className="w-5 h-5" /> {t('pages.pay_bands.download_template') || 'Download Template'}
+          </button>
+          <button 
+            onClick={handleExportXlsx} 
+            className="btn-secondary px-6 py-4 text-xs font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap border-emerald-200 hover:border-emerald-500 text-emerald-700 bg-emerald-50/30"
+          >
+            <FileSpreadsheet className="w-5 h-5 text-emerald-500" /> Export XLSX (Formatted)
           </button>
           <button 
             data-testid="create-band-btn" 
@@ -336,20 +381,43 @@ const PayBandsPage = () => {
       </div>
 
       <div className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] overflow-hidden">
-        <div className="p-6 border-b border-[rgb(var(--border))] bg-[rgb(var(--bg-surface-2))] flex flex-col md:flex-row items-center gap-6">
-          <div className="flex gap-4 items-center w-full md:w-auto">
+        <div className="p-6 border-b border-[rgb(var(--border))] bg-[rgb(var(--bg-surface-2))] flex flex-col items-stretch gap-6">
+          <div className="flex flex-wrap gap-4 items-center w-full">
+            <select
+              value={filterYear}
+              onChange={(e) => setFilterYear(e.target.value)}
+              className="flex-1 min-w-[120px] bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-xl px-4 py-3.5 text-sm font-black text-[rgb(var(--text-primary))] outline-none cursor-pointer focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all appearance-none"
+            >
+              <option value="ALL">🗓️ {t('pay_bands.all_years')}</option>
+              {Array.from(new Set(bands.map(b => b.effective_year))).sort((a,b) => b-a).map(y => y && <option key={y} value={y}>{y}</option>)}
+            </select>
+            <select
+              value={filterMonth}
+              onChange={(e) => setFilterMonth(e.target.value)}
+              className="flex-1 min-w-[140px] bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-xl px-4 py-3.5 text-sm font-black text-[rgb(var(--text-primary))] outline-none cursor-pointer focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all appearance-none"
+            >
+              <option value="ALL">📅 {t('pay_bands.all_months')}</option>
+              {Array.from({length: 12}, (_, i) => i + 1).map(m => <option key={m} value={m}>{new Date(0, m - 1).toLocaleString('default', { month: 'short' })}</option>)}
+            </select>
+            <button
+              onClick={() => { setFilterYear(currentYear.toString()); setFilterMonth(currentMonth.toString()); }}
+              className="px-5 py-3.5 text-[11px] font-black uppercase tracking-widest text-[rgb(var(--primary))] bg-[rgba(46,79,210,0.08)] rounded-xl border border-transparent border-[rgba(46,79,210,0.1)] hover:bg-[rgba(46,79,210,0.15)] transition-all whitespace-nowrap shrink-0 shadow-sm"
+              title="Shortcut to Current Year/Month"
+            >
+              {t('pay_bands.current_period')}
+            </button>
+            <div className="hidden md:block w-px h-10 bg-[rgb(var(--border))] mx-2" />
             <select
               data-testid="country-filter"
               value={filterCountry}
               onChange={(e) => setFilterCountry(e.target.value)}
-              className="bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-xl px-4 py-3.5 text-sm font-black text-[rgb(var(--text-primary))] outline-none cursor-pointer focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all appearance-none"
+              className="flex-1 min-w-[180px] bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-xl px-4 py-3.5 text-sm font-black text-[rgb(var(--text-primary))] outline-none cursor-pointer focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all appearance-none"
             >
-              <option value="ALL">🌍 {t('pay_bands.filter_all') || 'All'}</option>
+              <option value="ALL">🌍 {t('pay_bands.filter_all') || 'All Countries'}</option>
               {COUNTRY_OPTIONS.map(c => <option key={c.code} value={c.code}>{c.code} - {c.name}</option>)}
             </select>
           </div>
-          
-          <div className="relative flex-1 max-w-md w-full group">
+          <div className="relative w-full group">
             <Search className="w-5 h-5 text-[rgb(var(--text-muted))] absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[rgb(var(--primary))]" />
             <input 
               data-testid="pay-bands-search" 
@@ -376,6 +444,7 @@ const PayBandsPage = () => {
                   <th className="px-8 py-5">{t('pay_bands.col_basis') || 'Basis'}</th>
                   <th className="px-8 py-5">{t('pay_bands.col_country') || 'Country'}</th>
                    <th className="px-8 py-5">{t('pay_bands.col_currency') || 'Currency'}</th>
+                  <th className="px-8 py-5 text-center">{t('pay_bands.col_period') || 'Period'}</th>
                   <th className="px-8 py-5">{t('pages.pay_bands.table.range')}</th>
                   <th className="px-8 py-5 text-right">{t('pages.pay_bands.table.spread')}</th>
                   <th className="px-8 py-5 text-center w-20"></th>
@@ -422,6 +491,12 @@ const PayBandsPage = () => {
                           <option value="">—</option>
                           {CURRENCY_OPTIONS.map(curr => <option key={curr} value={curr}>{curr}</option>)}
                         </select>
+                      </td>
+                      <td className="px-8 py-6 text-center">
+                        <div className="flex flex-col items-center">
+                          <span className="text-xs font-black text-[rgb(var(--text-primary))]">{band.effective_year}-{band.effective_month?.toString().padStart(2, '0')}</span>
+                          {band.effective_year === 1900 && <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full mt-2 shadow-sm uppercase tracking-widest">LEGACY</span>}
+                        </div>
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-3 min-w-[200px]">
@@ -476,7 +551,7 @@ const PayBandsPage = () => {
                   {formError}
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                 <div className="space-y-3">
                   <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest">{t('pay_bands.col_grade') || 'Grade'}</label>
                   <input 
@@ -521,8 +596,28 @@ const PayBandsPage = () => {
                     className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] px-5 py-4 text-sm font-bold text-[rgb(var(--text-primary))] outline-none focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all" 
                   />
                 </div>
+                <div className="space-y-3">
+                  <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest">{t('pay_bands.col_year') || 'Effective Year'}</label>
+                  <input 
+                    type="number" 
+                    value={form.effective_year} 
+                    onChange={e => setForm(f => ({ ...f, effective_year: e.target.value }))} 
+                    className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] px-5 py-4 text-sm font-bold text-[rgb(var(--text-primary))] outline-none focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all" 
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest">{t('pay_bands.col_month') || 'Effective Month'}</label>
+                  <input 
+                    type="number"
+                    min="1"
+                    max="12"
+                    value={form.effective_month} 
+                    onChange={e => setForm(f => ({ ...f, effective_month: e.target.value }))} 
+                    className="w-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-btn)] px-5 py-4 text-sm font-bold text-[rgb(var(--text-primary))] outline-none focus:ring-[3px] focus:ring-[rgba(46,79,210,0.18)] focus:border-[rgb(var(--primary))] transition-all" 
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[{ label: t('merit.band_min'), field: 'min_salary', id: 'band-min-input' }, { label: t('merit.band_mid'), field: 'midpoint', id: 'band-mid-input' }, { label: t('merit.band_max'), field: 'max_salary', id: 'band-max-input' }].map(f => (
                   <div key={f.field} className="space-y-3">
                     <label className="block text-[11px] font-black text-[rgb(var(--text-muted))] uppercase tracking-widest">{f.label}</label>

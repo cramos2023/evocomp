@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import OnboardingTour from './components/OnboardingTour'
 import RouteLoader from './components/common/RouteLoader'
+import ErrorBoundary from './components/common/ErrorBoundary'
 
 // --- Lazy page imports (route-level code splitting) ---
 const LandingPage = React.lazy(() => import('./pages/LandingPage'))
@@ -38,8 +39,12 @@ const ApprovalsInboxPage = React.lazy(() =>
 const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'))
 const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
 
-
-
+// --- Pay Bands Builder Phase 3 ---
+const ActiveStructuresView = React.lazy(() => import('./pages/workspace/paybands/ActiveStructuresView'))
+const MarketDataUploader = React.lazy(() => import('./pages/workspace/paybands/MarketDataUploader'))
+const MappingsUI = React.lazy(() => import('./pages/workspace/paybands/MappingsUI'))
+const ScenarioOptionsWizard = React.lazy(() => import('./pages/workspace/paybands/ScenarioOptionsWizard'))
+const ScenarioWorkbench = React.lazy(() => import('./pages/workspace/paybands/ScenarioWorkbench'))
 const Layout = ({ children, profile, onStartTour }: { children: React.ReactNode, profile: any, onStartTour?: () => void }) => (
   <div className="flex bg-[rgb(var(--surface-main))] min-h-screen transition-colors duration-500 text-[rgb(var(--text-primary))] font-sans font-medium">
     <Sidebar onStartTour={onStartTour} />
@@ -123,7 +128,8 @@ function App() {
 
   return (
     <Router>
-      <Suspense fallback={<RouteLoader />}>
+      <ErrorBoundary>
+        <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           
@@ -141,6 +147,20 @@ function App() {
             <ProtectedRoute session={session} profile={profile}>
               <WorkspaceToolLayout profile={profile}>
                 <JobEvaluationPage profile={profile} />
+              </WorkspaceToolLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/workspace/paybands/*" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceToolLayout profile={profile}>
+                <Routes>
+                  <Route index element={<ActiveStructuresView profile={profile} />} />
+                  <Route path="imports" element={<MarketDataUploader />} />
+                  <Route path="mappings" element={<MappingsUI />} />
+                  <Route path="builder/new" element={<ScenarioOptionsWizard />} />
+                  <Route path="builder/:id" element={<ScenarioWorkbench />} />
+                </Routes>
               </WorkspaceToolLayout>
             </ProtectedRoute>
           } />
@@ -198,7 +218,8 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
     </Router>
   )
 }
