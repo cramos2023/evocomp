@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "Voir le Guide Immersif",
+  "back_to_scenarios": "Retour aux Scénarios",
+  "scenarios": {
+    "guide": {
+      "title": "Scénarios de Rémunération",
+      "subtitle": "Modélisez, distribuez et exécutez des actions salariales.",
+      "glossary_title": "Concepts Clés et Glossaire",
+      "quickStart": "Comprenez comment modéliser des scénarios étape par étape.",
+      "micro_help": {
+        "scenarios": "Découvrez comment créer, tester et exécuter des scénarios de rémunération en toute confiance.",
+        "results": "Examinez les résultats, appliquez les directives ou ajustez au budget de manière récursive.",
+        "execution": "Finalisez les pourcentages de mérite. Les lignes verrouillées sont protégées des ajustements."
+      },
+      "glossary": {
+        "snapshot": "Extraction de Données (Snapshot) : La population exacte d'employés qui entre dans le modèle.",
+        "compa_ratio": "Compa-Ratio : Position de l'employé par rapport au point médian de la fourchette salariale. Mesure la compétitivité de la rémunération.",
+        "step_factor": "Intensité de Distribution (Step Factor) : Facteur mathématique qui définit de manière agressive la récompense pour les 'high performers'.",
+        "top_down": "Allocation Top-Down : Distribution automatique du budget basée sur les directives.",
+        "bottom_up": "Allocation Bottom-Up : Ajustements manuels au niveau de l'employé effectués par les managers."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Phase 1 : Créer le Modèle de Scénario",
+          "description": "Initialisez un scénario à l'aide d'un snapshot et définissez le budget et les règles de distribution.",
+          "steps": [
+            "Commencez un nouveau scénario depuis le bouton en haut à droite.",
+            "Sélectionnez une extraction de données (Snapshot) et définissez le budget approuvé.",
+            "Définissez l'intensité de distribution (Step Factor) et les seuils de compétitivité.",
+            "Examinez la matrice générée qui recommande les augmentations maximales avant de créer le scénario."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Phase 2 : Distribuer et Ajuster",
+          "description": "Calculez les résultats et distribuez le budget.",
+          "steps": [
+            "Exécutez le moteur de calcul pour traiter les employés selon vos règles.",
+            "Examinez le pool budgétaire dans les cartes de mesures supérieures.",
+            "Utilisez l'action automatique 'Appliquer les Directives' (Top-Down) pour attribuer le pourcentage maximum recommandé.",
+            "Si vous dépassez le budget, réduisez proportionnellement tout le monde en utilisant 'Ajuster au Budget'.",
+            "Modifiez manuellement des lignes spécifiques (Bottom-Up) et verrouillez-les pour que les ajustements automatiques ne les affectent pas."
+          ]
+        },
+        "execution": {
+          "title": "Phase 3 : Validation et Exécution",
+          "description": "Finalisez les ajustements et déclenchez le flux d'exécution.",
+          "steps": [
+            "Ouvrez la ligne d'un employé pour voir son profil de rémunération Avant et Après.",
+            "Utilisez 'Dupliquer le Scénario' pour tester des alternatives, et 'Comparer' pour voir les différents impacts budgétaires.",
+            "Corrigez les avertissements de budget ou de directives affichés en haut de l'espace de travail.",
+            "Lorsque vous êtes prêt, déclenchez 'Exécuter' (Run Execution) pour finaliser les augmentations approuvées."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Aller aux Scénarios",
+        "go_to_results": "Ouvrir les Résultats",
+        "go_to_workbench": "Ouvrir l'Execution Workbench"
+      },
+      "notes": {
+        "safe_changes": "Seules les allocations verrouillées sont protégées contre les ajustements automatiques tels que 'Ajuster au Budget'."
+      }
+    }
+  }
+}

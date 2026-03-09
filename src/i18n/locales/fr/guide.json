@@ -1,0 +1,88 @@
+{
+  "title": "Guide des Grilles Salariales",
+  "subtitle": "Construisez et publiez des structures salariales alignées sur le marché.",
+  "back_to_dashboard": "Retour au Tableau de Bord",
+  "view_full_guide": "Voir le Guide Complet",
+  "phases": {
+    "prepareData": {
+      "title": "Phase 1: Préparer vos données",
+      "description": "Importez des benchmarks et configurez les mappages de grades.",
+      "steps": {
+        "importBenchmarks": {
+          "title": "Étape 1: Importer les benchmarks",
+          "summary": "Téléchargez des fichiers CSV de fournisseurs comme Mercer ou WTW.",
+          "bullets": [
+            "Ouvrez la zone 'Gérer les données'.",
+            "Saisissez un nom de référence pour identifier ce jeu de données.",
+            "Téléchargez votre fichier CSV structuré.",
+            "Confirmez le message d'importation réussie."
+          ],
+          "cta": "Aller aux Importations"
+        },
+        "configureMappings": {
+          "title": "Étape 2: Configurer les mappages",
+          "summary": "Définissez comment les grades du marché correspondent à vos grades internes.",
+          "bullets": [
+            "Ouvrez la zone 'Configurations de mappage'.",
+            "Cliquez sur '+ Ajouter une règle' pour créer un nouveau mappage.",
+            "Sélectionnez le fournisseur et le pays (facultatif).",
+            "Saisissez le code de grade du fournisseur tel qu'il apparaît dans l'étude.",
+            "Attribuez-le à votre grade interne.",
+            "Enregistrez les mappages."
+          ],
+          "cta": "Aller aux Mappages"
+        }
+      }
+    },
+    "buildScenario": {
+      "title": "Phase 2: Créer un scénario",
+      "description": "Créez un modèle mathématique de structure salariale.",
+      "steps": {
+        "identity": {
+          "title": "Étape 1: Identité du scénario",
+          "summary": "Définissez les paramètres de base pour la structure.",
+          "bullets": [
+            "Cliquez sur '+ Créer un scénario' depuis le tableau de bord.",
+            "Saisissez un nom, un pays cible et un type de base (ex: Salaire de base).",
+            "Sélectionnez la date de référence et les dates d'application."
+          ],
+          "cta": "Créer le Scénario"
+        },
+        "weights": {
+          "title": "Étape 2: Poids et politiques",
+          "summary": "Définissez les règles commerciales et les calculs.",
+          "bullets": [
+            "Répartissez 100% de poids entre les fournisseurs (Global ou Par Grade).",
+            "Sélectionnez une politique de vieillissement (Aging) pour l'inflation.",
+            "Sélectionnez les politiques de qualité des données et d'amplitude (Range Spread).",
+            "Cliquez sur 'Calculer et Terminer' pour générer la structure."
+          ]
+        }
+      }
+    },
+    "reviewPublish": {
+      "title": "Phase 3: Examiner et Publier",
+      "description": "Analysez les résultats et activez la structure.",
+      "steps": {
+        "workbench": {
+          "title": "Plan de travail (Workbench)",
+          "summary": "Examinez les valeurs financières des bandes proposées.",
+          "bullets": [
+            "Analysez la médiane du marché vieillie pour chaque grade.",
+            "Examinez les limites minimum, médian et maximum proposées.",
+            "Vérifiez l'amplitude et le score d'explicabilité."
+          ]
+        },
+        "publish": {
+          "title": "Publier la structure",
+          "summary": "Rendez la structure officiellement active pour l'organisation.",
+          "bullets": [
+            "Si les nombres s'alignent sur la stratégie, cliquez sur 'Publier'.",
+            "Le modèle est figé et devient la structure salariale active."
+          ],
+          "cta": "Retour au Tableau de Bord"
+        }
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ import {
   SelectValue 
 } from "@/modules/job-evaluation/components/ui/select";
 import { FilterState } from "../types";
+import { normalizeOptionKey } from "@/modules/job-evaluation/utils/translationUtils";
 
 interface BasicConfigurationSectionProps {
   filters: FilterState;
@@ -61,7 +62,7 @@ const BasicConfigurationSection: React.FC<BasicConfigurationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("country").map((country) => (
               <SelectItem key={country.toString()} value={country.toString()}>
-                {country.toString()}
+                {t(`options.${normalizeOptionKey(country)}`, country.toString())}
               </SelectItem>
             ))}
           </SelectContent>
@@ -87,7 +88,7 @@ const BasicConfigurationSection: React.FC<BasicConfigurationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("orgSize").map((size) => (
               <SelectItem key={size.toString()} value={size.toString()}>
-                {size.toString()}
+                {t(`options.${normalizeOptionKey(size)}`, size.toString())}
               </SelectItem>
             ))}
           </SelectContent>

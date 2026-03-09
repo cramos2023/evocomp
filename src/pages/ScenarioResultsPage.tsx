@@ -4,7 +4,8 @@ import {
   ArrowLeft, Calculator, Users, TrendingUp, 
   Download, Filter, Search, Settings, RefreshCw,
   AlertCircle, AlertTriangle, List, Clock, FileCheck, Play,
-  ChevronLeft, ChevronRight, FileSpreadsheet, Lock, Unlock
+  ChevronLeft, ChevronRight, FileSpreadsheet, Lock, Unlock,
+  HelpCircle, Info
 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,7 @@ import type { BudgetConfig, BudgetSummary } from '../types/budget';
 import { DEFAULT_BUDGET_CONFIG } from '../types/budget';
 import { EmployeeDetailsDrawer } from '../components/scenarios/EmployeeDetailsDrawer';
 import { downloadXlsx, triggerXlsxExport } from '../utils/xlsx';
+import ScenariosGuideDrawer from '../components/scenarios/ScenariosGuideDrawer';
 
 
 interface Scenario {
@@ -127,6 +129,7 @@ const ScenarioResultsPage = () => {
   // Phase 7A.4 Export Dropdown State
   const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   // Reset page when search or run changes
   useEffect(() => {
@@ -1151,15 +1154,22 @@ const ScenarioResultsPage = () => {
         {t('pages.scenarios.title')}
       </button>
 
-      <div className="flex justify-between items-end mb-8">
+      <div className="flex justify-between items-start mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{scenario.name}</h1>
+            <button 
+              onClick={() => setIsGuideOpen(true)}
+              className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+              title="Open Guide"
+            >
+              <HelpCircle className="w-5 h-5" />
+            </button>
             <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
               {latestRun?.status}
             </span>
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 mb-4">
             {t('pages.scenarios.results_for_run')} 
             <select 
               className="ml-2 bg-transparent border-b border-dashed border-slate-300 text-slate-700 font-bold focus:outline-none focus:border-indigo-500 cursor-pointer"
@@ -1173,6 +1183,12 @@ const ScenarioResultsPage = () => {
               ))}
             </select>
           </p>
+
+          {/* Micro-Help Callout */}
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 py-1.5 px-3 rounded-lg w-fit transition-all animate-in fade-in slide-in-from-left-4 duration-1000">
+            <Info className="w-3.5 h-3.5" />
+            <span>{t('scenarios_guide:scenarios.guide.micro_help.results', { defaultValue: 'Review results, apply guidelines, or scale to budget recursively.' })}</span>
+          </div>
         </div>
         <div className="flex gap-3 items-center flex-wrap">
           <button
@@ -2057,6 +2073,11 @@ const ScenarioResultsPage = () => {
         getAnyAttr={getAnyAttr}
         guidelineMaxPct={selectedDrawerEmployee ? getGuidelineMaxPct(selectedDrawerEmployee) : null}
         scenarioRules={(latestRun as any)?.rules_snapshot || (scenario as any)?.rules_json || {}}
+      />
+      <ScenariosGuideDrawer 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+        initialPhase="resultsAndAdjustments"
       />
     </div>
   );

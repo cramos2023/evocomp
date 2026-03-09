@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "back_to_workspace": "Torna al Workspace"
+  },
   "sidebar": {
     "strategy": "Strategia",
     "scenarios": "Scenari",
@@ -19,7 +22,9 @@
     "secure_engine": "Motore di Intelligence Sicuro",
     "approvals_section": "Approvazioni",
     "my_plan": "Il mio piano",
-    "inbox": "Posta in arrivo approvazioni"
+    "inbox": "Posta in arrivo approvazioni",
+    "resources": "Risorse",
+    "take_tour": "Inizia il Tour"
   },
   "header": {
     "verified_admin": "Amministratore Verificato",
@@ -66,8 +71,8 @@
       "no_limit": "Senza limiti",
       "delete_confirm_title": "Sei sicuro di voler eliminare questo scenario?",
       "delete_confirm_subtitle": "Questa azione non può essere annullata e tutti i dati modellati andranno persi.",
-      "ready_to_run": "Ready to Run",
-      "empty_run_desc": "This scenario has no runs yet. Click below to generate the first run and start your analysis.",
+      "ready_to_run": "Pronto per l'esecuzione",
+      "empty_run_desc": "Questo scenario non ha ancora esecuzioni. Clicca qui sotto per generare la prima e iniziare l'analisi.",
       "run_scenario": "Run Scenario",
       "run_failed": "The run failed on the server. Please check logs.",
       "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
@@ -223,6 +228,94 @@
       "discard": "Annulla",
       "privacy": "Privacy Infrastruttura",
       "privacy_desc": "Lo strato RLS garantisce la separazione dei dati."
+    },
+  "pages": {
+    "job_description": {
+      "landing": {
+        "actions": {
+          "back_to_workspace": "Torna al Workspace",
+          "coming_soon": "Prossimamente"
+        },
+        "hero": {
+          "badge": "Concetto Attivo",
+          "title": "ST. Intelligenza delle Descrizioni di Ruolo",
+          "subtitle": "Centralizza e standardizza i mansionari della tua organizzazione. Usa l'IA per redigere, valutare e mappare le competenze ai ruoli in un ambiente sicuro e unificato.",
+          "strategy_text": "Architettura Strategica e Valutazione"
+        },
+        "capabilities": {
+          "title": "Funzioni del Modulo",
+          "ai_drafting": {
+            "title": "Redazione con IA",
+            "desc": "Genera mansionari strutturati da zero o da modelli."
+          },
+          "competency_mapping": {
+            "title": "Mappatura Competenze",
+            "desc": "Mappa abilità e requisiti direttamente ai profili di ruolo."
+          },
+          "version_control": {
+            "title": "Governance Biblioteca",
+            "desc": "Un unico sistema di registrazione per tutti i ruoli e versioni."
+          },
+          "org_chart_alignment": {
+            "title": "Allineamento Org",
+            "desc": "Assicura che i ruoli siano correttamente posizionati nella gerarchia."
+          },
+          "multilingual_support": {
+            "title": "Pronto per il Mondo",
+            "desc": "Supporto completo per framework e lingue internazionali."
+          },
+          "professional_export": {
+            "title": "Esportazione Diretta",
+            "desc": "Genera PDF o documenti professionali all'istante."
+          }
+        }
+      },
+      "repository": {
+        "title": "Repository delle Descrizioni di Ruolo",
+        "subtitle": "Biblioteca istituzionale per ruoli e profili.",
+        "repository": {
+          "title": "Repository Privato",
+          "create_new": "Crea Nuovo Profilo",
+          "search_placeholder": "Cerca per titolo, codice o famiglia...",
+          "empty_state": "Nessun profilo di mansione trovato nel repository della tua organizzazione.",
+          "col_profile": "Profilo di Ruolo",
+          "col_family": "Famiglia e Livello",
+          "col_status": "Stato",
+          "status_draft": "Bozza",
+          "status_active": "Attivo",
+          "status_archived": "Archiviato"
+        }
+      },
+      "builder": {
+        "title": "Editor dei Profili di Ruolo",
+        "save_draft": "Salva Bozza",
+        "publish": "Pubblica Profilo",
+        "sections": {
+          "identity": "Identità e Informazioni Chiave",
+          "scope": "Scopo e Impatto",
+          "responsibilities": "Responsabilità",
+          "requirements": "Requisiti",
+          "stakeholders": "Stakeholder e Interlocutori",
+          "restricted": "Riservato (HR/Comp)"
+        },
+        "fields": {
+          "job_title": "Titolo del Ruolo",
+          "reference_code": "Codice di Riferimento",
+          "career_function": "Funzione di Carriera",
+          "job_family": "Famiglia Professionale",
+          "career_level": "Livello di Carriera",
+          "job_purpose": "Scopo della Posizione",
+          "team_size": "Dimensione del Team",
+          "education": "Istruzione",
+          "experience": "Esperienza Rilevante",
+          "essential": "Essenziale",
+          "time_percent": "% di Tempo"
+        },
+        "validations": {
+          "total_time_error": "La somma delle percentuali di tempo deve essere esattamente 100%. Attuale: {{total}}%",
+          "required_fields": "Si prega di compilare tutti i campi di identità obbligatori."
+        }
+      }
     }
   },
   "merit": {
@@ -337,12 +430,13 @@
     "configure": "Configura",
     "details": "Dettagli",
     "records": "Record",
-    "back": "Back",
-    "back_to_scenarios": "Back to Scenarios",
-    "running": "Running...",
-    "employee": "Employee",
-    "search": "Search",
-    "export": "Export"
+    "back": "Indietro",
+    "back_to_scenarios": "Torna agli Scenari",
+    "running": "In esecuzione...",
+    "employee": "Dipendente",
+    "search": "Cerca",
+    "export": "Export",
+    "help": "Aiuto"
   },
   "plan_status": {
     "draft": "Bozza",
@@ -370,7 +464,7 @@
     "rejection_alert": "Questo piano è stato respinto. Rivedere il motivo di seguito e inviarlo di nuovo.",
     "no_rejection_reason": "Nessun motivo specifico fornito.",
     "total_applied": "Totale applicato",
-    "team_members": "Membres de l'équipe",
+    "team_members": "Membri del team",
     "empty_inbox": "Nessun piano in attesa di approvazione.",
     "plan_details": "Dettagli del piano",
     "last_action": "Ultima azione",
@@ -681,13 +775,18 @@
         "title": "Bonus Calculations",
         "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
       },
+      "job_description": {
+        "title": "Gestione delle Descrizioni di Ruolo",
+        "desc": "Crea, standardizza e governa i mansionari con drafting assistito da IA e allineamento delle competenze.",
+        "status": "CONCEPT"
+      },
       "badges": {
-        "active": "Active",
-        "concept": "Concept"
+        "active": "Attivo",
+        "concept": "Concetto"
       },
       "actions": {
-        "launch": "Launch Module",
-        "preview": "Preview Roadmap"
+        "launch": "Lancia Modulo",
+        "preview": "Anteprima Roadmap"
       }
     }
   },
@@ -716,7 +815,35 @@
       "no_structures": "Nessuna struttura pubblicata.",
       "start_modeling": "Crea Scenario",
       "manage_imports": "Gestisci Dati",
-      "market_coverage": "Copertura di Mercato"
+      "market_coverage": "Copertura di Mercato",
+      "active_resolution": "Risoluzione attiva",
+      "resolution_desc": "Verifica quale struttura pubblicata si applica per paese, tipo base e data.",
+      "target_country": "Paese target",
+      "as_of_date": "Data di riferimento",
+      "btn_resolve": "Verifica risoluzione",
+      "resolving": "Risoluzione in corso...",
+      "match_found": "Corrispondenza trovata",
+      "version": "Versione",
+      "bands_loaded": "Bande caricate",
+      "back_dashboard": "Torna alla Dashboard"
+    },
+    "labels": {
+      "grades": "livelli",
+      "deployed": "Rilasciato",
+      "source_scenario": "Scenario di origine",
+      "hash": "Hash",
+      "run_hash": "Hash di Esecuzione",
+      "internal_grade": "Livello Interno",
+      "market_mid_aged": "Media di Mercato",
+      "proposed_min": "Min Proposto",
+      "proposed_mid": "Medio Proposto",
+      "proposed_max": "Max Proposto",
+      "spread": "Apertura",
+      "explainability": "Spiegabilità",
+      "id": "ID",
+      "bands": "Fasce",
+      "vendor_level_code": "Codice Livello Fornitore",
+      "actions": "Azioni"
     },
     "imports": {
       "title": "Importazione Dati",
@@ -727,14 +854,33 @@
       "error": "Errore nel formato CSV.",
       "history": "Cronologia",
       "empty": "Nessun dato importato.",
-      "btn_upload": "Carica File"
+      "btn_upload": "Carica File",
+      "scope_placeholder": "Es: Benchmarking Regionale 2024",
+      "empty_error": "Il file CSV è vuoto o mancano dati.",
+      "required_columns_hint": "Sono supportati solo i file .csv. Assicurarsi che siano incluse le colonne richieste.",
+      "change_file": "Cambia File",
+      "upload_another": "Carica un altro"
     },
     "mappings": {
-      "title": "Mappatura",
-      "desc": "Collega livelli esterni/interni.",
-      "add": "Aggiungi",
-      "btn_save": "Salva",
-      "empty_msg": "Nessuna regola."
+      "title": "Configurazioni di Mappatura",
+      "subtitle": "Definire regole di interconnessione tra livelli tecnici di fornitori esterni e gradi aziendali interni.",
+      "empty_msg": "Non ci sono ancora regole di mappatura. Aggiungine una per iniziare.",
+      "columns": {
+        "provider": "Fornitore",
+        "country_code": "Paese (ISO)",
+        "vendor_level_code": "Codice Livello Fornitore",
+        "internal_grade": "Grado Interno",
+        "actions": "Azioni"
+      },
+      "buttons": {
+        "add_rule": "Aggiungi Regola",
+        "save_mappings": "Salva Mappature"
+      },
+      "placeholders": {
+        "country_code": "es: ITA, USA, MEX",
+        "vendor_level_code": "es: P3, 50, M2",
+        "internal_grade": "es: 14, 15, 16"
+      }
     },
     "wizard": {
       "step1": {
@@ -752,17 +898,24 @@
         "weights": "Pesi (%)",
         "aging_policy": "Politica di Aging",
         "quality_policy": "Qualità",
-        "range_policy": "Politica di Fascia"
+        "range_policy": "Politica di Fascia",
+        "mode_global": "Modo Globale",
+        "mode_grade": "Per Livello",
+        "weight_label": "Peso",
+        "total_sum": "Somma Totale",
+        "must_equal_1": "(deve essere 1.00)",
+        "sum": "Somma"
       },
       "step3": {
         "title": "Simulazione",
         "desc": "Rivedi prima di eseguire.",
-        "run": "Esegui Motore"
+      "run": "Esegui Motore"
       },
       "common": {
         "next": "Continua",
         "back": "Indietro",
-        "save": "Salva"
+        "save": "Salva Bozza",
+        "to": "a"
       }
     },
     "workbench": {
@@ -781,7 +934,8 @@
       "invalidDate": "Data di fine non valida."
     },
     "errors": {
-      "unauthorized": "Errore: Token non valido. Accesso negato."
+      "unauthorized": "Errore di Sicurezza: Token mancante o non valido. L'accesso non verificato al motore è severamente proibito.",
+      "save_failed": "Impossibile salvare lo scenario. Controllare i dati e riprovare."
     },
     "actions": {
       "publish": "Pubblica",

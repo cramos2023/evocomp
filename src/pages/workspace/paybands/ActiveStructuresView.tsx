@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabaseClient';
+import { invokePaybandEngine } from '../../../services/paybandEngineApi';
 import { useTranslation } from 'react-i18next';
-import { Layers, Plus, ShieldCheck, Search, CheckCircle2, Navigation, AlertTriangle, ArrowRight, Activity, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Layers, Plus, ShieldCheck, Search, CheckCircle2, Navigation, AlertTriangle, ArrowRight, Activity, Calendar, ArrowLeft, HelpCircle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import PayBandsGuideDrawer, { GuidePhase } from '../../../components/paybands/PayBandsGuideDrawer';
 
 export default function ActiveStructuresView({ profile }: { profile: any }) {
   const { t } = useTranslation();
@@ -10,6 +12,10 @@ export default function ActiveStructuresView({ profile }: { profile: any }) {
 
   const [versions, setVersions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Guide Drawer State
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [guidePhase, setGuidePhase] = useState<GuidePhase | undefined>(undefined);
 
   // Resolution Tester State
   const [testCountry, setTestCountry] = useState('US');
@@ -46,13 +52,11 @@ export default function ActiveStructuresView({ profile }: { profile: any }) {
      setIsTesting(true);
      setTestResult(null);
      try {
-        const { data, error } = await supabase.functions.invoke('payband-engine', {
-           body: {
-              action: 'resolve_active_paybands',
-              payload: { country_code: testCountry, basis_type: testBasis, as_of_date: testDate }
-           }
+        const data = await invokePaybandEngine('resolve_active_paybands', {
+           country_code: testCountry,
+           basis_type: testBasis,
+           as_of_date: testDate
         });
-        if (error) throw error;
         setTestResult(data);
      } catch (err: any) {
         setTestResult({ error: err.message });
@@ -77,6 +81,24 @@ export default function ActiveStructuresView({ profile }: { profile: any }) {
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <PayBandsGuideDrawer 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+        initialPhase={guidePhase} 
+      />
+      
+      <div className="mb-0 animate-in fade-in slide-in-from-top-4 duration-700">
+        <Link 
+          to="/workspace" 
+          className="inline-flex items-center gap-2 text-[rgb(var(--text-muted))] hover:text-[rgb(var(--primary))] transition-colors font-bold text-xs uppercase tracking-widest group"
+        >
+          <div className="w-8 h-8 rounded-full bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] flex items-center justify-center group-hover:border-[rgb(var(--primary))] transition-all">
+            <ArrowLeft className="w-4 h-4" />
+          </div>
+          {t('nav.back_to_workspace')}
+        </Link>
+      </div>
+
       <div className="flex justify-between items-start flex-col md:flex-row gap-4">
         <div>
           <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 tracking-tighter">
@@ -85,6 +107,11 @@ export default function ActiveStructuresView({ profile }: { profile: any }) {
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-bold">{t('paybands.dashboard.subtitle')}</p>
         </div>
         <div className="flex flex-wrap gap-3">
+          <button 
+             onClick={() => { setGuidePhase(undefined); setIsGuideOpen(true); }}
+             className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl text-sm font-bold transition-colors flex items-center gap-2">
+            <HelpCircle className="w-4 h-4" /> {t('common.help', { defaultValue: 'Guide & Help' })}
+          </button>
           <button 
              onClick={() => navigate('/workspace/paybands/mappings')}
              className="px-5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">

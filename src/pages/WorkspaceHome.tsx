@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, Calculator, BarChart3, Layers, DollarSign, Activity, ChevronRight, Sparkles } from 'lucide-react';
+import { LogOut, Calculator, BarChart3, Layers, DollarSign, Activity, ChevronRight, Sparkles, FileText } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import gsap from 'gsap';
 import { useTranslation } from 'react-i18next';
@@ -48,40 +48,42 @@ export default function WorkspaceHome({ profile }: { profile: any }) {
       description: t('workspace_hub.modules.m1.desc'),
       icon: Calculator,
       status: 'Active',
-      link: '/app/comp/scenarios',
-      className: 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+      link: '/app/comp/scenarios'
     },
     {
       title: t('workspace_hub.modules.m2.title'),
       description: t('workspace_hub.modules.m2.desc'),
       icon: BarChart3,
-      status: 'Coming Soon',
-      link: '#',
-      className: 'bg-white/10 border-white/20 text-white/50'
+      status: 'Active',
+      link: '/workspace/paybands'
     },
     {
       title: t('workspace_hub.modules.m3.title'),
       description: t('workspace_hub.modules.m3.desc'),
       icon: Layers,
       status: 'Active',
-      link: '/workspace/job-evaluation',
-      className: 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+      link: '/workspace/job-evaluation'
     },
     {
       title: t('workspace_hub.modules.m4.title'),
       description: t('workspace_hub.modules.m4.desc'),
       icon: DollarSign,
       status: 'Coming Soon',
-      link: '#',
-      className: 'bg-white/10 border-white/20 text-white/50'
+      link: '#'
     },
     {
       title: t('workspace_hub.modules.m5.title'),
       description: t('workspace_hub.modules.m5.desc'),
       icon: Activity,
       status: 'Coming Soon',
-      link: '#',
-      className: 'bg-white/10 border-white/20 text-white/50'
+      link: '#'
+    },
+    {
+      title: t('workspace_hub.modules.job_description.title'),
+      description: t('workspace_hub.modules.job_description.desc'),
+      icon: FileText,
+      status: 'Active',
+      link: '/workspace/job-description'
     }
   ];
 
@@ -170,7 +172,11 @@ export default function WorkspaceHome({ profile }: { profile: any }) {
                 
                 <div className="p-10 h-full flex flex-col relative z-20">
                   <div className="flex items-start justify-between mb-12">
-                    <div className={`w-14 h-14 rounded-3xl flex items-center justify-center border shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-3 ${mod.className}`}>
+                    <div className={`w-14 h-14 rounded-3xl flex items-center justify-center border shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-3 ${
+                      isClickable 
+                        ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
+                        : 'bg-white/10 border-white/20 text-white/50'
+                    }`}>
                       <mod.icon className="w-7 h-7" />
                     </div>
                     {isClickable ? (

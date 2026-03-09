@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "Visualizza Guida Immersiva",
+  "back_to_scenarios": "Torna agli Scenari",
+  "scenarios": {
+    "guide": {
+      "title": "Scenari di Retribuzione",
+      "subtitle": "Modella, distribuisci ed esegui azioni salariali.",
+      "glossary_title": "Concetti Chiave e Glossario",
+      "quickStart": "Scopri come modellare gli scenari passo dopo passo.",
+      "micro_help": {
+        "scenarios": "Esplora come creare, testare ed eseguire scenari di retribuzione con fiducia.",
+        "results": "Rivedi i risultati, applica le linee guida o adatta al budget in modo ricorsivo.",
+        "execution": "Finalizza le percentuali di merito. Le righe bloccate sono protette dagli adeguamenti."
+      },
+      "glossary": {
+        "snapshot": "Estrazione Dati (Snapshot): La popolazione esatta di dipendenti che entra nel modello.",
+        "compa_ratio": "Compa-Ratio: Posizione del dipendente rispetto al punto medio della fascia salariale. Misura la competitività della retribuzione.",
+        "step_factor": "Intensità di Distribuzione (Step Factor): Fattore matematico che definisce in modo aggressivo il premio per i 'high performer'.",
+        "top_down": "Allocazione Top-Down: Distribuzione automatica del budget basata sulle linee guida.",
+        "bottom_up": "Allocazione Bottom-Up: Rettifiche manuali a livello di dipendente effettuate dai manager."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Fase 1: Creazione Modello di Scenario",
+          "description": "Inizializza uno scenario utilizzando uno snapshot e definisci il budget e le regole di distribuzione.",
+          "steps": [
+            "Inizia un nuovo scenario dal pulsante in alto a destra.",
+            "Seleziona un'estrazione dati (Snapshot) e definisci il budget approvato.",
+            "Imposta l'intensità di distribuzione (Step Factor) e le soglie di competitività.",
+            "Rivedi la matrice generata che raccomanda gli aumenti massimi prima di creare lo scenario."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Fase 2: Distribuzione e Rettifica",
+          "description": "Calcola i risultati e distribuisci il budget.",
+          "steps": [
+            "Esegui il motore di calcolo per elaborare i dipendenti in base alle tue regole.",
+            "Rivedi la riserva di budget nelle schede delle metriche superiori.",
+            "Utilizza l'azione automatica 'Applica Linee Guida' (Top-Down) per assegnare la percentuale massima raccomandata.",
+            "Se superi il budget, riduci proporzionalmente tutti i valori utilizzando 'Adatta al Budget'.",
+            "Modifica manualmente righe specifiche (Bottom-Up) e bloccale in modo che gli adeguamenti automatici non le influenzino."
+          ]
+        },
+        "execution": {
+          "title": "Fase 3: Validazione ed Esecuzione",
+          "description": "Finalizza le rettifiche e attiva il flusso di esecuzione.",
+          "steps": [
+            "Apri la riga di un dipendente per vedere il suo profilo retributivo Prima e Dopo.",
+            "Utilizza 'Duplica Scenario' per testare alternative e 'Confronta' per vedere i diversi impatti sul budget.",
+            "Correggi eventuali avvisi di budget o linee guida visualizzati all'inizio del workbench.",
+            "Quando sei pronto, attiva 'Esegui' (Run Execution) per finalizzare gli aumenti approvati."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Vai agli Scenari",
+        "go_to_results": "Apri Risultati",
+        "go_to_workbench": "Apri Execution Workbench"
+      },
+      "notes": {
+        "safe_changes": "Solo le allocazioni bloccate sono protette da adeguamenti automatici come 'Adatta al Budget'."
+      }
+    }
+  }
+}

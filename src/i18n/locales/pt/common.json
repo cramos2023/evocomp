@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "back_to_workspace": "Voltar ao Workspace"
+  },
   "sidebar": {
     "strategy": "Estratégia",
     "scenarios": "Cenários",
@@ -16,7 +19,9 @@
     "users": "Usuários",
     "platform_status": "Status da Plataforma",
     "mvp_mode": "Modo MVP v1.0.42",
-    "secure_engine": "Motor de Inteligência Seguro"
+    "secure_engine": "Motor de Inteligência Seguro",
+    "resources": "Recursos",
+    "take_tour": "Iniciar visita"
   },
   "header": {
     "verified_admin": "Administrador Verificado",
@@ -98,7 +103,7 @@
       "queue_stats": "Estatísticas da Fila",
       "wait_time": "Tempo de Espera (Média)",
       "pending_amount": "Valor Pendente",
-      "guardrails": "Reglas de Política",
+      "guardrails": "Regras de Política",
       "guardrails_desc": "A aplicação automática de RLS garante a privacidade.",
       "filter_placeholder": "Filtrar por cenário ou proprietário...",
       "table": {
@@ -222,6 +227,94 @@
       "discard": "Descartar Alterações",
       "privacy": "Privacidade da Infraestrutura",
       "privacy_desc": "A camada RLS garante a separação de dados."
+    },
+  "pages": {
+    "job_description": {
+      "landing": {
+        "actions": {
+          "back_to_workspace": "Voltar ao Workspace",
+          "coming_soon": "Em Breve"
+        },
+        "hero": {
+          "badge": "Conceito Ativo",
+          "title": "ST. Inteligência de Descrições de Cargos",
+          "subtitle": "Centralize e padronize as descrições de cargos da sua organização. Use IA para redigir, avaliar e mapear competências a cargos em um ambiente seguro e unificado.",
+          "strategy_text": "Arquitetura Estratégica e Avaliação"
+        },
+        "capabilities": {
+          "title": "Funções do Módulo",
+          "ai_drafting": {
+            "title": "Redação baseada em IA",
+            "desc": "Gere descrições estruturadas do zero ou modelos."
+          },
+          "competency_mapping": {
+            "title": "Mapeamento de Competências",
+            "desc": "Mapeie habilidades e requisitos diretamente aos perfis de cargos."
+          },
+          "version_control": {
+            "title": "Governança de Biblioteca",
+            "desc": "Um único sistema de registro para todos os cargos e versões."
+          },
+          "org_chart_alignment": {
+            "title": "Alinhamento Org",
+            "desc": "Garanta que os cargos estejam corretamente posicionados na hierarquia."
+          },
+          "multilingual_support": {
+            "title": "Pronto para o Mundo",
+            "desc": "Suporte total para estruturas e idiomas internacionais."
+          },
+          "professional_export": {
+            "title": "Exportação Direta",
+            "desc": "Gere PDFs ou documentos profissionais instantaneamente."
+          }
+        }
+      },
+      "repository": {
+        "title": "Repositório de Descrições de Cargos",
+        "subtitle": "Biblioteca institucional de funções e perfis.",
+        "repository": {
+          "title": "Repositório Privado",
+          "create_new": "Criar um perfil",
+          "search_placeholder": "Pesquisar por título, código ou família...",
+          "empty_state": "Nenhum perfil de cargo encontrado no repositório da sua organização.",
+          "col_profile": "Perfil de Cargo",
+          "col_family": "Família e Nível",
+          "col_status": "Status",
+          "status_draft": "Rascunho",
+          "status_active": "Ativo",
+          "status_archived": "Arquivado"
+        }
+      },
+      "builder": {
+        "title": "Construtor de Perfis de Cargos",
+        "save_draft": "Salvar Rascunho",
+        "publish": "Publicar Perfil",
+        "sections": {
+          "identity": "Identidade e Informações Principais",
+          "scope": "Escopo e Impacto",
+          "responsibilities": "Responsabilidades",
+          "requirements": "Requisitos",
+          "stakeholders": "Stakeholders e Aliados",
+          "restricted": "Restrito (RH/Comp)"
+        },
+        "fields": {
+          "job_title": "Título do Cargo",
+          "reference_code": "Código de Referência do Cargo",
+          "career_function": "Função de Carreira",
+          "job_family": "Família de Cargos",
+          "career_level": "Nível de Carreira",
+          "job_purpose": "Objetivo do Cargo",
+          "team_size": "Tamanho da Equipe",
+          "education": "Educação",
+          "experience": "Experiência Relevante",
+          "essential": "Essencial",
+          "time_percent": "% de Tempo"
+        },
+        "validations": {
+          "total_time_error": "A soma da porcentagem de tempo deve ser exatamente 100%. Atual: {{total}}%",
+          "required_fields": "Por favor, preencha todos os campos de identidade obrigatórios."
+        }
+      }
     }
   },
   "merit": {
@@ -336,12 +429,13 @@
     "configure": "Configurar",
     "details": "Detalhes",
     "records": "Registros",
-    "back": "Back",
-    "back_to_scenarios": "Back to Scenarios",
-    "running": "Running...",
-    "employee": "Employee",
-    "search": "Search",
-    "export": "Export"
+    "back": "Voltar",
+    "back_to_scenarios": "Voltar para Cenários",
+    "running": "Executando...",
+    "employee": "Funcionário",
+    "search": "Pesquisar",
+    "export": "Export",
+    "help": "Ajuda"
   },
   "plan_status": {
     "draft": "Rascunho",
@@ -675,6 +769,11 @@
         "title": "Cálculo de Bônus",
         "desc": "Faça previsões, modele e distribua remuneração variável com base em métricas de desempenho complexas."
       },
+      "job_description": {
+        "title": "Gestão de Descrições de Cargos",
+        "desc": "Crie, padronize e governe descrições de cargos com redação baseada em IA e alinhamento de competências.",
+        "status": "ATIVO"
+      },
       "badges": {
         "active": "Ativo",
         "concept": "Conceito"
@@ -710,7 +809,35 @@
       "no_structures": "Nenhuma estrutura publicada ainda.",
       "start_modeling": "Criar Cenário",
       "manage_imports": "Gerenciar Dados",
-      "market_coverage": "Cobertura de Mercado"
+      "market_coverage": "Cobertura de Mercado",
+      "active_resolution": "Resolução ativa",
+      "resolution_desc": "Teste qual estrutura publicada resolve para um país, tipo de base e data.",
+      "target_country": "País alvo",
+      "as_of_date": "Data de referência",
+      "btn_resolve": "Testar resolução",
+      "resolving": "Resolvendo...",
+      "match_found": "Correspondência encontrada",
+      "version": "Versão",
+      "bands_loaded": "Bandas carregadas",
+      "back_dashboard": "Voltar ao Painel"
+    },
+    "labels": {
+      "grades": "níveis",
+      "deployed": "Implantado",
+      "source_scenario": "Cenário de origem",
+      "hash": "Hash",
+      "run_hash": "Hash de Execução",
+      "internal_grade": "Grau Interno",
+      "market_mid_aged": "Média de Mercado",
+      "proposed_min": "Mín. Proposto",
+      "proposed_mid": "Méd. Proposto",
+      "proposed_max": "Máx. Proposto",
+      "spread": "Amplitude",
+      "explainability": "Explicabilidade",
+      "id": "ID",
+      "bands": "Bandas",
+      "vendor_level_code": "Código Nível Fornecedor",
+      "actions": "Ações"
     },
     "imports": {
       "title": "Carga de Dados de Mercado",
@@ -721,14 +848,33 @@
       "error": "Erro no formato CSV.",
       "history": "Histórico",
       "empty": "Nenhum dado importado.",
-      "btn_upload": "Carregar Arquivo"
+      "btn_upload": "Carregar Arquivo",
+      "scope_placeholder": "Ex: Benchmarking Regional 2024",
+      "empty_error": "O arquivo CSV está vazio ou faltam dados.",
+      "required_columns_hint": "Apenas arquivos .csv são suportados. Verifique se as colunas obrigatórias estão incluídas.",
+      "change_file": "Alterar Arquivo",
+      "upload_another": "Carregar Outro"
     },
     "mappings": {
-      "title": "Mapeamento",
-      "desc": "Vincular níveis externos a internos.",
-      "add": "Adicionar",
-      "btn_save": "Salvar",
-      "empty_msg": "Sem regras."
+      "title": "Configurações de Mapeamento",
+      "subtitle": "Defina regras de interconexão entre níveis técnicos de provedores externos e graus corporativos internos.",
+      "empty_msg": "Ainda não há regras de mapeamento. Adicione uma para começar.",
+      "columns": {
+        "provider": "Provedor",
+        "country_code": "País (ISO)",
+        "vendor_level_code": "Código Nível Provedor",
+        "internal_grade": "Grau Interno",
+        "actions": "Ações"
+      },
+      "buttons": {
+        "add_rule": "Adicionar Regra",
+        "save_mappings": "Salvar Mapeamentos"
+      },
+      "placeholders": {
+        "country_code": "ex: BRA, USA, MEX",
+        "vendor_level_code": "ex: P3, 50, M2",
+        "internal_grade": "ex: 14, 15, 16"
+      }
     },
     "wizard": {
       "step1": {
@@ -746,7 +892,13 @@
         "weights": "Pesos (%)",
         "aging_policy": "Política (Aging)",
         "quality_policy": "Qualidade",
-        "range_policy": "Rango (Range)"
+        "range_policy": "Rango (Range)",
+        "mode_global": "Modo Global",
+        "mode_grade": "Por Grau",
+        "weight_label": "Peso",
+        "total_sum": "Soma Total",
+        "must_equal_1": "(deve ser 1.00)",
+        "sum": "Soma"
       },
       "step3": {
         "title": "Simulação",
@@ -756,7 +908,8 @@
       "common": {
         "next": "Continuar",
         "back": "Voltar",
-        "save": "Salvar"
+        "save": "Salvar Rascunho",
+        "to": "a"
       }
     },
     "workbench": {
@@ -775,7 +928,8 @@
       "invalidDate": "Data final inválida."
     },
     "errors": {
-      "unauthorized": "Erro: Token inválido. Acesso não verificado proibido."
+      "unauthorized": "Erro de Segurança: Token nulo ou inválido. O acesso não verificado à engine é estritamente proibido.",
+      "save_failed": "Falha ao salvar cenário. Por favor, verifique os dados e tente novamente."
     },
     "actions": {
       "publish": "Publicar",

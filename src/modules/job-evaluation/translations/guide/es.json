@@ -1,0 +1,88 @@
+{
+  "title": "Guía de Arquitectura y Evaluación",
+  "subtitle": "Sistema analítico para la clasificación de puestos y diseño organizacional.",
+  "back_to_dashboard": "Volver a Arquitectura y Evaluación",
+  "view_full_guide": "Ver Onboarding Completo",
+  "phases": {
+    "orgContext": {
+      "title": "Fase 1: Configurar el contexto organizacional",
+      "description": "Configure el entorno y los parámetros para su evaluación.",
+      "steps": {
+        "configureMarket": {
+          "title": "Paso 1: Definir el Mercado",
+          "summary": "Seleccione el país y el tamaño organizacional para dar contexto.",
+          "bullets": [
+            "Abra la barra lateral de Filtros Dinámicos.",
+            "Elija el País objetivo (ej. USA, Argentina).",
+            "Seleccione el Tamaño de la Org (ej. Grande, Mediana).",
+            "Observe cómo las escalas de las dimensiones se adaptan."
+          ],
+          "cta": "Configurar Filtros",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Paso 2: Definir el Perfil de Carrera",
+          "summary": "Identifique la naturaleza funcional del puesto.",
+          "bullets": [
+             "Seleccione el Flujo de Carrera (Gerencia, Profesional o Soporte).",
+             "Especifique la Función y Familia de Puestos.",
+             "Esto asegura comparaciones consistentes."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Fase 2: Evaluar los factores del puesto",
+      "description": "Evalúe la posición a través de las 12 dimensiones clave.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Paso 1: Calificar Dimensiones",
+          "summary": "Use la matriz interactiva para asignar niveles a cada criterio.",
+          "bullets": [
+            "Seleccione el nivel para cada una de las 12 filas (Impacto, Conocimiento, etc.).",
+            "Revise las definiciones usando los iconos de 'Info'.",
+            "Elija el nivel que mejor describa los requisitos del puesto.",
+            "Use los botones de 'Show Matrix' arriba de la tabla como referencia."
+          ],
+          "cta": "Abrir Calculadora",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Paso 2: Calibrar Resultados",
+          "summary": "Asegure la consistencia entre diferentes roles.",
+          "bullets": [
+            "Compare evaluaciones entre posiciones similares lado a lado.",
+            "Evite inflar niveles para mantener la equidad interna.",
+            "Use la visualización de matriz para ver la distribución."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Fase 3: Revisar el puntaje y la clasificación",
+      "description": "Finalice la clasificación y compare con datos de mercado.",
+      "steps": {
+        "validateGrade": {
+          "title": "Paso 1: Confirmar Grado del Puesto",
+          "summary": "Revise el puntaje numérico final y el grado resultante.",
+          "bullets": [
+            "Verifique la columna 'Total Points' para la suma ponderada.",
+            "El 'Position Grade' muestra la clasificación final (ej. G14).",
+            "Valide que el resultado sea coherente con la organización."
+          ],
+          "cta": "Ver Resultados",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Paso 2: Guardar Trabajo",
+          "summary": "Almacene su evaluación para futuras referencias.",
+          "bullets": [
+            "Haga clic en 'Save Matrix' para guardar su progreso.",
+            "Use 'Load Matrix' para recuperar sesiones previas.",
+            "Exporte la matriz final para documentación."
+          ]
+        }
+      }
+    }
+  }
+}

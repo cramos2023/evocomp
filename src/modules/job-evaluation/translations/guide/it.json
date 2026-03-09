@@ -1,0 +1,88 @@
+{
+  "title": "Guida all'Architettura e Valutazione",
+  "subtitle": "Sistema analitico per la classificazione delle posizioni e il design organizzativo.",
+  "back_to_dashboard": "Torna ad Architettura e Valutazione",
+  "view_full_guide": "Visualizza Onboarding Completo",
+  "phases": {
+    "orgContext": {
+      "title": "Fase 1: Configura il contesto organizzativo",
+      "description": "Configura l'ambiente e i parametri per la tua valutazione.",
+      "steps": {
+        "configureMarket": {
+          "title": "Passaggio 1: Imposta il Mercato",
+          "summary": "Seleziona il paese e la dimensione organizzativa per fornire contesto.",
+          "bullets": [
+            "Apri la barra laterale dei Filtri Dinamici.",
+            "Scegli il Paese di destinazione (es. USA, Argentina).",
+            "Seleziona la dimensione dell'organizzazione (es. Grande, Media).",
+            "Nota come le scale delle dimensioni si adattano a queste impostazioni."
+          ],
+          "cta": "Configura Filtri",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Passaggio 2: Definisci il Profilo di Carriera",
+          "summary": "Identifica la natura funzionale del ruolo.",
+          "bullets": [
+             "Seleziona il Percorso di Carriera (Management, Professionale o Supporto).",
+             "Specifica la Funzione e la Famiglia Professionale.",
+             "Questo garantisce confronti coerenti."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Fase 2: Valuta i fattori del ruolo",
+      "description": "Valuta la posizione attraverso le 12 dimensioni chiave.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Passaggio 1: Grada le Dimensioni",
+          "summary": "Usa la matrice interattiva per assegnare i livelli a ogni criterio.",
+          "bullets": [
+            "Seleziona il livello per ciascuna delle 12 righe (Impatto, Conoscenza, ecc.).",
+            "Rivedi le definizioni usando le icone 'Info'.",
+            "Scegli il livello che meglio descrive i requisiti del ruolo.",
+            "Usa i pulsanti 'Show Matrix' sopra la tabella come riferimento."
+          ],
+          "cta": "Apri Calcolatrice",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Passaggio 2: Calibra i Risultati",
+          "summary": "Garantisci la coerenza tra i diversi ruoli.",
+          "bullets": [
+            "Confronta le valutazioni tra posizioni simili fianco a fianco.",
+            "Evita di gonfiare i livelli per mantenere l'equità interna.",
+            "Usa la visualizzazione a matrice per vedere la distribuzione."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Fase 3: Rivedi il punteggio e la classificazione",
+      "description": "Finalizza la classificazione e confrontala con i dati di mercato.",
+      "steps": {
+        "validateGrade": {
+          "title": "Passaggio 1: Conferma il Grado della Posizione",
+          "summary": "Rivedi il punteggio numerico finale e il grado risultante.",
+          "bullets": [
+            "Controlla la colonna 'Total Points' per la somma ponderata.",
+            "Il 'Position Grade' mostra la classificazione finale (es. G14).",
+            "Verifica che il risultato sembri corretto per l'organizzazione."
+          ],
+          "cta": "Visualizza Risultati",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Passaggio 2: Salva Lavoro",
+          "summary": "Salva la tua valutazione per riferimenti futuri.",
+          "bullets": [
+            "Clicca su 'Save Matrix' per salvare i tuoi progressi.",
+            "Usa 'Load Matrix' per recuperare sessioni precedenti.",
+            "Esporta la matrice finale per la documentazione."
+          ]
+        }
+      }
+    }
+  }
+}

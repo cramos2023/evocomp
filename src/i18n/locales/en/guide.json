@@ -1,0 +1,88 @@
+{
+  "title": "Pay Bands Guide",
+  "subtitle": "Build and publish market-aligned salary structures.",
+  "back_to_dashboard": "Back to Pay Bands Dashboard",
+  "view_full_guide": "View Full Guide",
+  "phases": {
+    "prepareData": {
+      "title": "Phase 1: Prepare your data",
+      "description": "Import market benchmarks and configure grade mappings.",
+      "steps": {
+        "importBenchmarks": {
+          "title": "Step 1: Import market benchmarks",
+          "summary": "Upload CSV files from survey providers (e.g., Mercer, WTW).",
+          "bullets": [
+            "Open the 'Manage Data' area.",
+            "Enter a reference name to identify this dataset.",
+            "Upload your structured CSV file.",
+            "Confirm the successful import message."
+          ],
+          "cta": "Go to Imports"
+        },
+        "configureMappings": {
+          "title": "Step 2: Configure mappings",
+          "summary": "Define how external market grades map to your internal corporate grades.",
+          "bullets": [
+            "Open the 'Mapping Configurations' area.",
+            "Click '+ Add Rule' to create a new mapping.",
+            "Select the data provider and country (optional).",
+            "Enter the vendor's grade code exactly as it appears in the survey.",
+            "Assign the corresponding internal grade.",
+            "Save the mappings."
+          ],
+          "cta": "Go to Mappings"
+        }
+      }
+    },
+    "buildScenario": {
+      "title": "Phase 2: Build Scenario",
+      "description": "Create a mathematical salary structure model.",
+      "steps": {
+        "identity": {
+          "title": "Step 1: Scenario Identity",
+          "summary": "Set basic parameters for the new structure.",
+          "bullets": [
+            "Click '+ Create Scenario' from the main dashboard.",
+            "Enter a clear Name, Target Country, and Base Type (e.g., Base Salary).",
+            "Select the Pricing Date (base date of market data) and Effective Dates."
+          ],
+          "cta": "Create Scenario"
+        },
+        "weights": {
+          "title": "Step 2: Weights and Policies",
+          "summary": "Define business rules and calculations.",
+          "bullets": [
+            "Allocate 100% weight across data providers (Global or By Grade).",
+            "Select an Aging Policy to adjust data for inflation/time.",
+            "Select Data Quality and Range Spread policies.",
+            "Click 'Calculate & Finish' to generate the mathematical structure."
+          ]
+        }
+      }
+    },
+    "reviewPublish": {
+      "title": "Phase 3: Review & Publish",
+      "description": "Analyze the calculated results and activate the structure.",
+      "steps": {
+        "workbench": {
+          "title": "Scenario Workbench",
+          "summary": "Review the exact financial values for the proposed bands.",
+          "bullets": [
+            "Analyze the aged market median for each internal grade.",
+            "Review the proposed minimum, midpoint, and maximum limits.",
+            "Check the calculated spread and explainability score."
+          ]
+        },
+        "publish": {
+          "title": "Publish Structure",
+          "summary": "Make the structure officially active for the organization.",
+          "bullets": [
+            "If the proposed numbers align with business strategy, click 'Publish Structure'.",
+            "The model freezes and becomes the active pay structure in the system for the specified parameters."
+          ],
+          "cta": "Go to Dashboard"
+        }
+      }
+    }
+  }
+}

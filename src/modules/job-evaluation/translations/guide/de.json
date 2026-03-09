@@ -1,0 +1,88 @@
+{
+  "title": "Leitfaden für Architektur & Bewertung",
+  "subtitle": "Analytisches System zur Stellenklassifizierung und Organisationsgestaltung.",
+  "back_to_dashboard": "Zurück zu Architektur & Bewertung",
+  "view_full_guide": "Vollständiges Onboarding anzeigen",
+  "phases": {
+    "orgContext": {
+      "title": "Phase 1: Organisatorischen Kontext festlegen",
+      "description": "Konfigurieren Sie die Umgebung und Parameter für Ihre Bewertung.",
+      "steps": {
+        "configureMarket": {
+          "title": "Schritt 1: Markt festlegen",
+          "summary": "Wählen Sie das Land und die Organisationsgröße aus, um den Kontext bereitzustellen.",
+          "bullets": [
+            "Öffnen Sie die Seitenleiste für Dynamische Filter.",
+            "Wählen Sie das Zielland (z. B. USA, Argentinien).",
+            "Wählen Sie die Org-Größe (z. B. Großunternehmen, Mittelstand).",
+            "Beachten Sie, wie sich die Dimensionsskalen anpassen."
+          ],
+          "cta": "Filter konfigurieren",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Schritt 2: Karriereprofil definieren",
+          "summary": "Identifizieren Sie die funktionale Natur der Rolle.",
+          "bullets": [
+             "Wählen Sie den Karrierestrom (Management, Professional oder Support).",
+             "Geben Sie die Karrierefunktion und Jobfamilie an.",
+             "Dies gewährleistet konsistente Vergleiche."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Phase 2: Die Rollenfaktoren bewerten",
+      "description": "Bewerten Sie die Position anhand der 12 Schlüsseldimensionen.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Schritt 1: Dimensionen bewerten",
+          "summary": "Nutzen Sie die interaktive Matrix, um jedem Kriterium Stufen zuzuweisen.",
+          "bullets": [
+            "Wählen Sie die Stufe für jede der 12 Zeilen aus (Impact, Wissen usw.).",
+            "Prüfen Sie die Definitionen über die 'Info'-Icons.",
+            "Wählen Sie die Stufe aus, die die Anforderungen am besten beschreibt.",
+            "Nutzen Sie die 'Show Matrix'-Buttons über der Tabelle als Referenz."
+          ],
+          "cta": "Rechner öffnen",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Schritt 2: Ergebnisse kalibrieren",
+          "summary": "Stellen Sie die Konsistenz zwischen verschiedenen Rollen sicher.",
+          "bullets": [
+            "Vergleichen Sie Bewertungen ähnlicher Positionen direkt nebeneinander.",
+            "Vermeiden Sie aufgeblähte Stufen, um interne Fairness zu wahren.",
+            "Nutzen Sie die Matrix-Visualisierung, um die Verteilung zu sehen."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Phase 3: Punktzahl und Klassifizierung prüfen",
+      "description": "Schließen Sie die Klassifizierung ab und vergleichen Sie mit Marktdaten.",
+      "steps": {
+        "validateGrade": {
+          "title": "Schritt 1: Stufe der Position bestätigen",
+          "summary": "Prüfen Sie die numerische Endpunktzahl und die resultierende Stufe.",
+          "bullets": [
+            "Prüfen Sie die Spalte 'Total Points' für die gewichtete Summe.",
+            "Die 'Position Grade' zeigt die endgültige Klassifizierung (z. B. G14).",
+            "Überprüfen Sie, ob das Ergebnis für die Organisation stimmig ist."
+          ],
+          "cta": "Ergebnisse anzeigen",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Schritt 2: Arbeit speichern",
+          "summary": "Speichern Sie Ihre Bewertung für spätere Referenz.",
+          "bullets": [
+            "Klicken Sie auf 'Matrix speichern', um den Fortschritt zu sichern.",
+            "Nutzen Sie 'Matrix laden', um frühere Sitzungen aufzurufen.",
+            "Exportieren Sie die Matrix für die Dokumentation."
+          ]
+        }
+      }
+    }
+  }
+}

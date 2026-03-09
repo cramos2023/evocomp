@@ -1,13 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileUp, Search, CheckCircle2, AlertTriangle, ArrowRight, Loader2, FileSpreadsheet } from 'lucide-react';
+import { FileUp, Search, CheckCircle2, AlertTriangle, ArrowRight, Loader2, FileSpreadsheet, HelpCircle, Download } from 'lucide-react';
 import { supabase } from '../../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import PayBandsGuideDrawer from '../../../components/paybands/PayBandsGuideDrawer';
 
 export default function MarketDataUploader() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   
   const [provider, setProvider] = useState<'MERCER' | 'WTW' | 'THIRD'>('MERCER');
   const [pricingScope, setPricingScope] = useState('');
@@ -19,6 +22,45 @@ export default function MarketDataUploader() {
   const [isUploading, setIsUploading] = useState(false);
   const [errorReport, setErrorReport] = useState<{valid: number, invalid: number, errors: string[]} | null>(null);
   const [successImportId, setSuccessImportId] = useState<string | null>(null);
+
+  function handleDownloadTemplate() {
+    const headers = [
+      'provider',
+      'country_code',
+      'currency',
+      'vendor_level_code',
+      'market_effective_date',
+      'org_count',
+      'obs_count',
+      'base_salary_p50',
+      'target_cash_p50',
+      'total_guaranteed_p50',
+      'vendor_job_code',
+      'vendor_job_title',
+      'industry_cut',
+      'size_cut',
+      'geo_cut',
+      'notes'
+    ];
+
+    const sampleRow = [
+      'MERCER', 'US', 'USD', '51', '2025-01-01',
+      '25', '140', '120000', '135000', '140000',
+      'PRO-3', 'Senior Software Engineer', 'Technology', 'Large', 'National', ''
+    ];
+
+    const csvContent = [headers.join(','), sampleRow.join(',')].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'evocomp_market_data_template.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -108,18 +150,38 @@ export default function MarketDataUploader() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <PayBandsGuideDrawer 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+        initialPhase="prepareData" 
+      />
       
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{t('paybands.imports.title')}</h1>
           <p className="text-slate-500 font-bold mt-2">{t('paybands.imports.subtitle')}</p>
         </div>
-        <button 
-           onClick={() => navigate('/workspace/paybands')}
-           className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-bold hover:bg-slate-200 transition-colors"
-        >
-          {t('paybands.wizard.common.back')}
-        </button>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <button
+            onClick={handleDownloadTemplate}
+            className="group flex items-center justify-center gap-2 bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-500 text-emerald-700 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
+          >
+            <Download className="w-4 h-4 text-emerald-500 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors" />
+            {t('pages.pay_bands.download_template', 'Download Template')} (CSV)
+          </button>
+          <button 
+             onClick={() => setIsGuideOpen(true)}
+             className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 dark:text-indigo-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"
+          >
+            <HelpCircle className="w-4 h-4" /> {t('common.help', { defaultValue: 'Help' })}
+          </button>
+          <button 
+             onClick={() => navigate('/workspace/paybands')}
+             className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-bold hover:bg-slate-200 transition-colors"
+          >
+            {t('paybands.wizard.common.back')}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -146,7 +208,7 @@ export default function MarketDataUploader() {
                   type="text" 
                   value={pricingScope}
                   onChange={e => setPricingScope(e.target.value)}
-                  placeholder={t('paybands.imports.name_placeholder')}
+                  placeholder={t('paybands.imports.scope_placeholder')}
                   className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all"
                />
             </div>

@@ -1,0 +1,88 @@
+{
+  "title": "Guia de Tabela Salarial",
+  "subtitle": "Construa e publique estruturas salariais alinhadas ao mercado.",
+  "back_to_dashboard": "Voltar ao Painel de Faixas Salariais",
+  "view_full_guide": "Ver Guia Completo",
+  "phases": {
+    "prepareData": {
+      "title": "Fase 1: Prepare seus dados",
+      "description": "Importe benchmarks de mercado e configure os mapeamentos de graus.",
+      "steps": {
+        "importBenchmarks": {
+          "title": "Passo 1: Importar benchmarks",
+          "summary": "Faça upload de arquivos CSV de fornecedores como Mercer ou WTW.",
+          "bullets": [
+            "Abra a área 'Gerenciar Dados'.",
+            "Insira um nome de referência para identificar este conjunto de dados.",
+            "Faça o upload do seu arquivo CSV estruturado.",
+            "Confirme a mensagem de sucesso na importação."
+          ],
+          "cta": "Ir para Importações"
+        },
+        "configureMappings": {
+          "title": "Passo 2: Configurar mapeamentos",
+          "summary": "Defina como os graus de mercado correspondem aos graus internos.",
+          "bullets": [
+            "Abra a área 'Configurações de Mapeamento'.",
+            "Clique em '+ Adicionar Regra' para criar um novo mapeamento.",
+            "Selecione o provedor e o país (opcional).",
+            "Insira o código de nível do provedor exatamente como no estudo.",
+            "Atribua ao seu grau interno correspondente.",
+            "Salve os mapeamentos."
+          ],
+          "cta": "Ir para Mapeamentos"
+        }
+      }
+    },
+    "buildScenario": {
+      "title": "Fase 2: Criar Cenário",
+      "description": "Crie um modelo matemático de estrutura salarial.",
+      "steps": {
+        "identity": {
+          "title": "Passo 1: Identidade do Cenário",
+          "summary": "Defina os parâmetros básicos para a nova estrutura.",
+          "bullets": [
+            "Clique em '+ Criar Cenário' no painel principal.",
+            "Insira um Nome, País Alvo e Tipo de Base (ex. Salário Base).",
+            "Selecione a Data de Referência dos dados e as Datas de Vigência."
+          ],
+          "cta": "Criar Cenário"
+        },
+        "weights": {
+          "title": "Passo 2: Pesos e Políticas",
+          "summary": "Defina regras de negócios e cálculos.",
+          "bullets": [
+            "Distribua 100% do peso entre os provedores (Global ou Por Grau).",
+            "Selecione uma Política de Envelhecimento (Aging) para ajustar à inflação.",
+            "Selecione políticas de Qualidade de Dados e Amplitude (Range Spread).",
+            "Clique em 'Calcular e Finalizar' para gerar a estrutura."
+          ]
+        }
+      }
+    },
+    "reviewPublish": {
+      "title": "Fase 3: Revisão e Publicação",
+      "description": "Analise os resultados e ative a estrutura.",
+      "steps": {
+        "workbench": {
+          "title": "Mesa de Trabalho (Workbench)",
+          "summary": "Revise os valores financeiros exatos das bandas propostas.",
+          "bullets": [
+            "Analise a mediana de mercado envelhecida para cada grau.",
+            "Revise os limites propostos: mínimo, médio e máximo.",
+            "Verifique a amplitude calculada e a pontuação de explicabilidade."
+          ]
+        },
+        "publish": {
+          "title": "Publicar Estrutura",
+          "summary": "Ative oficialmente a estrutura para a organização.",
+          "bullets": [
+            "Se os números estiverem alinhados com a estratégia, clique em 'Publicar'.",
+            "O modelo é congelado e torna-se a estrutura salarial ativa no sistema."
+          ],
+          "cta": "Ir para o Painel"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "View Immersive Guide",
+  "back_to_scenarios": "Back to Scenarios",
+  "scenarios": {
+    "guide": {
+      "title": "Compensation Scenarios",
+      "subtitle": "Model, distribute, and execute pay actions.",
+      "glossary_title": "Key Concepts & Glossary",
+      "quickStart": "Understand how to model scenarios step-by-step.",
+      "micro_help": {
+        "scenarios": "Explore how to create, test and execute compensation scenarios with confidence.",
+        "results": "Review results, apply guidelines, or scale to budget recursively.",
+        "execution": "Finalize merit percentages. Locked rows are protected from scaling."
+      },
+      "glossary": {
+        "snapshot": "Employee Data Cut: The exact workforce population entering the model.",
+        "compa_ratio": "Compa-Ratio: An employee's position vs. the salary range midpoint. Calculates how competitive their pay is.",
+        "step_factor": "Distribution Intensity: Mathematical factor defining how aggressively high performers are rewarded.",
+        "top_down": "Top-Down Allocation: Automatic distribution of budget based on guidelines.",
+        "bottom_up": "Bottom-Up Allocation: Manual, employee-level adjustments by managers."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Phase 1: Create Scenario Model",
+          "description": "Initialize a scenario using a snapshot and define the budget and distribution rules.",
+          "steps": [
+            "Start a new scenario from the top right button.",
+            "Select an employee data cut (Snapshot) and define the approved budget.",
+            "Set the distribution intensity (Step Factor) and competitiveness thresholds.",
+            "Review the generated matrix recommending maximum increases before creating the scenario."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Phase 2: Distribute & Adjust",
+          "description": "Calculate results and distribute the budget.",
+          "steps": [
+            "Run the calculation engine to process employees against your rules.",
+            "Review the budget pool in the top metrics cards.",
+            "Use the 'Apply Guidelines' (Top-Down) automatic action to assign the maximum recommended percentage.",
+            "If over budget, proportionally reduce everyone using 'Scale to Budget'.",
+            "Manually edit specific rows (Bottom-Up) and lock them so automatic adjustments won't affect them."
+          ]
+        },
+        "execution": {
+          "title": "Phase 3: Validation & Execution",
+          "description": "Finalize adjustments and trigger the execution workflow.",
+          "steps": [
+            "Open an employee row to view their Before & After compensation profile.",
+            "Use 'Duplicate Scenario' to test alternatives, and 'Compare' to see differing budget impacts.",
+            "Fix any budget or guideline warnings shown at the top of the workbench.",
+            "When ready, trigger 'Run Execution' to finalize the approved increases."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Go to Scenarios",
+        "go_to_results": "Open Results",
+        "go_to_workbench": "Open Execution Workbench"
+      },
+      "notes": {
+        "safe_changes": "Only locked allocations are protected from automatic adjustments like 'Scale to Budget'."
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "Ver Guía Inmersiva",
+  "back_to_scenarios": "Volver a Escenarios",
+  "scenarios": {
+    "guide": {
+      "title": "Escenarios de Compensación",
+      "subtitle": "Modela, distribuye y ejecuta acciones salariales.",
+      "glossary_title": "Conceptos Clave y Glosario",
+      "quickStart": "Comprende cómo modelar escenarios paso a paso.",
+      "micro_help": {
+        "scenarios": "Explora cómo crear, probar y ejecutar escenarios de compensación con confianza.",
+        "results": "Revisa resultados, aplica lineamientos o escala al presupuesto de forma recursiva.",
+        "execution": "Finaliza porcentajes de mérito. Las filas bloqueadas están protegidas del escalado."
+      },
+      "glossary": {
+        "snapshot": "Corte de Datos (Snapshot): La población exacta de empleados que entra en el modelo.",
+        "compa_ratio": "Compa-Ratio: Posición del empleado vs. punto medio del rango. Mide la competitividad del salario.",
+        "step_factor": "Intensidad de Distribución (Step Factor): Factor matemático que define qué tan agresivo es el premio a los high performers.",
+        "top_down": "Asignación Top-Down: Distribución automática del presupuesto basada en lineamientos.",
+        "bottom_up": "Asignación Bottom-Up: Ajustes manuales a nivel de empleado realizados por gerentes."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Fase 1: Crear Modelo de Escenario",
+          "description": "Inicializa un escenario usando un snapshot y define el presupuesto y las reglas de distribución.",
+          "steps": [
+            "Inicia un nuevo escenario desde el botón superior derecho.",
+            "Selecciona un corte de datos (Snapshot) y define el presupuesto aprobado.",
+            "Establece la intensidad de distribución (Step Factor) y los umbrales de competitividad.",
+            "Revisa la matriz generada que recomienda aumentos máximos antes de crear el escenario."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Fase 2: Distribuir y Ajustar",
+          "description": "Calcula resultados y distribuye el presupuesto.",
+          "steps": [
+            "Ejecuta el motor de cálculo para procesar a los empleados según tus reglas.",
+            "Revisa el pool de presupuesto en las tarjetas de métricas superiores.",
+            "Usa la acción automática 'Aplicar Lineamientos' (Top-Down) para asignar el porcentaje máximo recomendado.",
+            "Si excedes el presupuesto, reduce a todos proporcionalmente usando 'Escalar a Presupuesto'.",
+            "Edita manualmente filas específicas (Bottom-Up) y bloquéalas para que los ajustes automáticos no las afecten."
+          ]
+        },
+        "execution": {
+          "title": "Fase 3: Validación y Ejecución",
+          "description": "Finaliza los ajustes y activa el flujo de ejecución.",
+          "steps": [
+            "Abre la fila de un empleado para ver su perfil de compensación Antes y Después.",
+            "Usa 'Duplicar Escenario' para probar alternativas y 'Comparar' para ver diferentes impactos presupuestarios.",
+            "Corrige cualquier advertencia de presupuesto o lineamientos al principio del workbench.",
+            "Cuando estés listo, activa 'Ejecutar' (Run Execution) para finalizar los aumentos aprobados."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Ir a Escenarios",
+        "go_to_results": "Abrir Resultados",
+        "go_to_workbench": "Abrir Execution Workbench"
+      },
+      "notes": {
+        "safe_changes": "Solo las asignaciones bloqueadas están protegidas de ajustes automáticos como 'Escalar a Presupuesto'."
+      }
+    }
+  }
+}

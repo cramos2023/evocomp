@@ -1,0 +1,65 @@
+
+> evocomp@0.0.0 build
+> tsc && vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 2025 modules transformed.
+Circular chunk: vendor -> react-vendor -> vendor. Please adjust the manual chunk logic for these chunks.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                                 [39m[1m[2m  1.43 kB[22m[1m[22m[2m Γöé gzip:   0.61 kB[22m
+[2mdist/[22m[35massets/index-BmY1MuTe.css                  [39m[1m[2m131.06 kB[22m[1m[22m[2m Γöé gzip:  19.99 kB[22m
+[2mdist/[22m[36massets/paybandEngineApi-CmUIDqIL.js        [39m[1m[2m  0.46 kB[22m[1m[22m[2m Γöé gzip:   0.31 kB[22m
+[2mdist/[22m[36massets/PlanStatusBadge-DdB8LxI2.js         [39m[1m[2m  1.83 kB[22m[1m[22m[2m Γöé gzip:   0.66 kB[22m
+[2mdist/[22m[36massets/meritAdminApi-YPakx4K0.js           [39m[1m[2m  1.85 kB[22m[1m[22m[2m Γöé gzip:   0.60 kB[22m
+[2mdist/[22m[36massets/xlsx-DyOfipbC.js                    [39m[1m[2m  2.57 kB[22m[1m[22m[2m Γöé gzip:   1.26 kB[22m
+[2mdist/[22m[36massets/PayBandsGuidePage-Drqik3KC.js       [39m[1m[2m  3.10 kB[22m[1m[22m[2m Γöé gzip:   1.21 kB[22m
+[2mdist/[22m[36massets/OnboardingPage-CmxntNHP.js          [39m[1m[2m  3.78 kB[22m[1m[22m[2m Γöé gzip:   1.55 kB[22m
+[2mdist/[22m[36massets/ScenariosGuidePage-DmbLYF1E.js      [39m[1m[2m  4.15 kB[22m[1m[22m[2m Γöé gzip:   1.43 kB[22m
+[2mdist/[22m[36massets/DataQualityReportModal-CnWSWu7b.js  [39m[1m[2m  4.59 kB[22m[1m[22m[2m Γöé gzip:   1.58 kB[22m
+[2mdist/[22m[36massets/ScenariosGuideDrawer-ng8o42o9.js    [39m[1m[2m  4.83 kB[22m[1m[22m[2m Γöé gzip:   1.66 kB[22m
+[2mdist/[22m[36massets/ResetPasswordPage-C1LsMeUP.js       [39m[1m[2m  5.13 kB[22m[1m[22m[2m Γöé gzip:   1.77 kB[22m
+[2mdist/[22m[36massets/ApprovalsPage-BSs-w6FT.js           [39m[1m[2m  5.46 kB[22m[1m[22m[2m Γöé gzip:   1.60 kB[22m
+[2mdist/[22m[36massets/PayBandsGuideDrawer-DXvpSD2m.js     [39m[1m[2m  5.48 kB[22m[1m[22m[2m Γöé gzip:   1.88 kB[22m
+[2mdist/[22m[36massets/ReportsPage-BjKJCeJ1.js             [39m[1m[2m  7.15 kB[22m[1m[22m[2m Γöé gzip:   1.94 kB[22m
+[2mdist/[22m[36massets/WorkspaceHome-BoV8KVlZ.js           [39m[1m[2m  7.21 kB[22m[1m[22m[2m Γöé gzip:   2.39 kB[22m
+[2mdist/[22m[36massets/AuditLogPage-CUqIWcKJ.js            [39m[1m[2m  7.86 kB[22m[1m[22m[2m Γöé gzip:   2.16 kB[22m
+[2mdist/[22m[36massets/MappingsUI-BLetaX7E.js              [39m[1m[2m  8.39 kB[22m[1m[22m[2m Γöé gzip:   2.27 kB[22m
+[2mdist/[22m[36massets/LoginPage-VDGoDvTP.js               [39m[1m[2m  8.65 kB[22m[1m[22m[2m Γöé gzip:   2.90 kB[22m
+[2mdist/[22m[36massets/ManagerWorkspacePage-Bsof3vY8.js    [39m[1m[2m  8.66 kB[22m[1m[22m[2m Γöé gzip:   2.36 kB[22m
+[2mdist/[22m[36massets/DashboardPage-6mvX9Z4p.js           [39m[1m[2m  8.85 kB[22m[1m[22m[2m Γöé gzip:   2.53 kB[22m
+[2mdist/[22m[36massets/TenantSettingsPage-TEWaOSOA.js      [39m[1m[2m  9.32 kB[22m[1m[22m[2m Γöé gzip:   2.45 kB[22m
+[2mdist/[22m[36massets/ScenarioWorkbench-Bftxag_b.js       [39m[1m[2m  9.46 kB[22m[1m[22m[2m Γöé gzip:   2.49 kB[22m
+[2mdist/[22m[36massets/MarketDataUploader-X8gl3wYX.js      [39m[1m[2m  9.58 kB[22m[1m[22m[2m Γöé gzip:   3.25 kB[22m
+[2mdist/[22m[36massets/ApprovalsInboxPage-DbkttllJ.js      [39m[1m[2m  9.92 kB[22m[1m[22m[2m Γöé gzip:   2.77 kB[22m
+[2mdist/[22m[36massets/ActiveStructuresView-CSZ370WH.js    [39m[1m[2m 10.85 kB[22m[1m[22m[2m Γöé gzip:   3.08 kB[22m
+[2mdist/[22m[36massets/UsersPage-DLbrUS7E.js               [39m[1m[2m 11.27 kB[22m[1m[22m[2m Γöé gzip:   2.91 kB[22m
+[2mdist/[22m[36massets/CyclesPage-CCSA3Rnu.js              [39m[1m[2m 13.40 kB[22m[1m[22m[2m Γöé gzip:   2.98 kB[22m
+[2mdist/[22m[36massets/SnapshotsPage-BUJuufrF.js           [39m[1m[2m 14.04 kB[22m[1m[22m[2m Γöé gzip:   3.66 kB[22m
+[2mdist/[22m[36massets/MeritResultsPage-CbZp_xRj.js        [39m[1m[2m 17.40 kB[22m[1m[22m[2m Γöé gzip:   4.83 kB[22m
+[2mdist/[22m[36massets/ScenarioOptionsWizard-BCW6y5qu.js   [39m[1m[2m 18.00 kB[22m[1m[22m[2m Γöé gzip:   4.23 kB[22m
+[2mdist/[22m[36massets/ImportsPage-B7Xxjn1f.js             [39m[1m[2m 19.31 kB[22m[1m[22m[2m Γöé gzip:   5.64 kB[22m
+[2mdist/[22m[36massets/csv-vendor-rM7jMs84.js              [39m[1m[2m 19.40 kB[22m[1m[22m[2m Γöé gzip:   7.17 kB[22m
+[2mdist/[22m[36massets/LandingPage-Cg65OEsd.js             [39m[1m[2m 20.53 kB[22m[1m[22m[2m Γöé gzip:   4.62 kB[22m
+[2mdist/[22m[36massets/ExecutionWorkbenchPage-DRhKo5ct.js  [39m[1m[2m 20.65 kB[22m[1m[22m[2m Γöé gzip:   6.43 kB[22m
+[2mdist/[22m[36massets/ScenariosPage-CTRdkLOi.js           [39m[1m[2m 21.87 kB[22m[1m[22m[2m Γöé gzip:   5.60 kB[22m
+[2mdist/[22m[36massets/css-utils-vendor-BmjxSsjX.js        [39m[1m[2m 27.30 kB[22m[1m[22m[2m Γöé gzip:   8.70 kB[22m
+[2mdist/[22m[36massets/PayBandsPage-AeBW9elT.js            [39m[1m[2m 34.55 kB[22m[1m[22m[2m Γöé gzip:   7.40 kB[22m
+[2mdist/[22m[36massets/MeritCycleAdminPage-J9-ca3jB.js     [39m[1m[2m 37.42 kB[22m[1m[22m[2m Γöé gzip:   7.71 kB[22m
+[2mdist/[22m[36massets/i18n-vendor-D2wTYGEc.js             [39m[1m[2m 54.69 kB[22m[1m[22m[2m Γöé gzip:  17.78 kB[22m
+[2mdist/[22m[36massets/ui-vendor-D7kScgWI.js               [39m[1m[2m 79.83 kB[22m[1m[22m[2m Γöé gzip:  24.88 kB[22m
+[2mdist/[22m[36massets/JobEvaluationPage-Cs9_VxUK.js       [39m[1m[2m100.37 kB[22m[1m[22m[2m Γöé gzip:  24.78 kB[22m
+[2mdist/[22m[36massets/ScenarioResultsPage-DMUfoLlW.js     [39m[1m[2m105.14 kB[22m[1m[22m[2m Γöé gzip:  24.45 kB[22m
+[2mdist/[22m[36massets/animation-vendor-B2uKOqL4.js        [39m[1m[2m113.54 kB[22m[1m[22m[2m Γöé gzip:  45.01 kB[22m
+[2mdist/[22m[36massets/react-vendor-Dk6XvrHr.js            [39m[1m[2m157.19 kB[22m[1m[22m[2m Γöé gzip:  51.15 kB[22m
+[2mdist/[22m[36massets/supabase-vendor-Cf1iOX2F.js         [39m[1m[2m165.67 kB[22m[1m[22m[2m Γöé gzip:  44.19 kB[22m
+[2mdist/[22m[36massets/html2canvas-vendor-DXEQVQnt.js      [39m[1m[2m201.04 kB[22m[1m[22m[2m Γöé gzip:  47.43 kB[22m
+[2mdist/[22m[36massets/index-C-5scz4D.js                   [39m[1m[2m267.03 kB[22m[1m[22m[2m Γöé gzip:  73.95 kB[22m
+[2mdist/[22m[36massets/vendor-CJRlHBHE.js                  [39m[1m[33m649.59 kB[39m[22m[2m Γöé gzip: 215.28 kB[22m
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[32mΓ£ô built in 9.61s[39m

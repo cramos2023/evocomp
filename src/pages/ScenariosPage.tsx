@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Plus, Calculator, Calendar, ArrowRight, Shield, Play, BarChart3, Trash2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Plus, Calculator, Calendar, ArrowRight, Shield, Play, BarChart3, Trash2, AlertCircle, ArrowLeft, HelpCircle, Info } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import MeritScenarioBuilderModal from './MeritScenarioBuilderModal';
+import ScenariosGuideDrawer from '../components/scenarios/ScenariosGuideDrawer';
 
 const TYPE_BADGE: Record<string, string> = { MERIT_REVIEW: 'bg-blue-100 text-blue-700', GENERAL: 'bg-slate-100 text-slate-600' };
 const STATUS_BADGE: Record<string, string> = { COMPLETE: 'bg-green-100 text-green-700', RUNNING: 'bg-amber-100 text-amber-700', DRAFT: 'bg-slate-100 text-slate-500', LOCKED: 'bg-purple-100 text-purple-700' };
@@ -19,6 +20,7 @@ const ScenariosPage = () => {
   const [showBuilder, setShowBuilder] = useState(!!snapshotIdFromUrl);
   const [scenarioToDelete, setScenarioToDelete] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   useEffect(() => { fetchScenarios(); }, []);
 
@@ -61,24 +63,42 @@ const ScenariosPage = () => {
         </Link>
       </div>
 
-      <div className="flex justify-between items-center mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
-        <div>
-          <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] tracking-tight leading-none mb-2 transition-colors">
-            {t('pages.scenarios.title')}
-          </h1>
+      <div className="flex justify-between items-start mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-4xl font-black text-[rgb(var(--text-primary))] tracking-tight leading-none transition-colors">
+              {t('pages.scenarios.title')}
+            </h1>
+            <button 
+              onClick={() => setIsGuideOpen(true)}
+              className="p-2 text-[rgb(var(--primary))] hover:bg-[rgba(var(--primary-rgb),0.05)] rounded-full transition-all"
+              title="Open Guide"
+            >
+              <HelpCircle className="w-6 h-6" />
+            </button>
+          </div>
           <p className="text-[rgb(var(--text-secondary))] font-medium transition-colors">
             {t('pages.scenarios.subtitle')}
           </p>
+
+          {/* Micro-Help Callout */}
+          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-[rgb(var(--primary))] bg-[rgba(var(--primary-rgb),0.05)] border border-[rgba(var(--primary-rgb),0.1)] py-2 px-3 rounded-lg w-fit transition-all animate-in fade-in slide-in-from-left-4 duration-1000">
+            <Info className="w-3.5 h-3.5" />
+            <span>{t('scenarios_guide:scenarios.guide.micro_help.scenarios', { defaultValue: 'Start by creating a scenario model based on an employee data cut (snapshot).' })}</span>
+          </div>
         </div>
-        <button 
-          id="new-scenario-btn"
-          data-testid="new-scenario-btn" 
-          onClick={() => setShowBuilder(true)} 
-          className="btn-premium py-3 px-6 text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          <span>{t('pages.scenarios.new')}</span>
-        </button>
+        
+        <div className="flex items-center gap-3">
+          <button 
+            id="new-scenario-btn"
+            data-testid="new-scenario-btn" 
+            onClick={() => setShowBuilder(true)} 
+            className="btn-premium py-3 px-6 text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{t('pages.scenarios.new')}</span>
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -236,6 +256,12 @@ const ScenariosPage = () => {
           </div>
         </div>
       )}
+
+      <ScenariosGuideDrawer 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+        initialPhase="createScenario"
+      />
     </div>
   );
 };

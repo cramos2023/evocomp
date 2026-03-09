@@ -2,6 +2,7 @@
 import React from "react";
 import { Position } from "@/modules/job-evaluation/types/position";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/modules/job-evaluation/components/ui/select";
+import { normalizeOptionKey } from "@/modules/job-evaluation/utils/translationUtils";
 
 interface OrgFieldRowComponentProps {
   fieldName: string;
@@ -58,9 +59,9 @@ const OrgFieldRowComponent: React.FC<OrgFieldRowComponentProps> = ({
               </SelectTrigger>
               <SelectContent>
                 {options.map((option) => (
-                  <SelectItem key={option} value={option.toString()}>
-                    {t(`options.${option}`, option.toString()) as string}
-                  </SelectItem>
+                   <SelectItem key={option} value={option.toString()}>
+                    {t(`options.${normalizeOptionKey(option)}`, option.toString()) as string}
+                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -1,0 +1,88 @@
+{
+  "title": "Guia de Arquitetura e Avaliação",
+  "subtitle": "Sistema analítico para classificação de cargos e desenho organizacional.",
+  "back_to_dashboard": "Voltar para Arquitetura e Avaliação",
+  "view_full_guide": "Ver Onboarding Completo",
+  "phases": {
+    "orgContext": {
+      "title": "Fase 1: Configurar o contexto organizacional",
+      "description": "Configure o ambiente e os parâmetros para sua avaliação.",
+      "steps": {
+        "configureMarket": {
+          "title": "Passo 1: Definir o Mercado",
+          "summary": "Selecione o país e o tamanho organizacional para contextualizar.",
+          "bullets": [
+            "Abra a barra lateral de Filtros Dinâmicos.",
+            "Escolha o País alvo (ex: USA, Brasil).",
+            "Selecione o Tamanho da Org (ex: Grande, Médio).",
+            "Observe como as escalas das dimensões se adaptam."
+          ],
+          "cta": "Configurar Filtros",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Passo 2: Definir o Perfil de Carreira",
+          "summary": "Identifique a natureza funcional do cargo.",
+          "bullets": [
+             "Selecione o Fluxo de Carreira (Gestão, Profissional ou Suporte).",
+             "Especifique a Função e Família de Cargos.",
+             "Isso garante comparações consistentes."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Fase 2: Avaliar os fatores do cargo",
+      "description": "Avalie a posição através das 12 dimensões principais.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Passo 1: Classificar Dimensões",
+          "summary": "Use la matriz interativa para atribuir níveis a cada critério.",
+          "bullets": [
+            "Selecione o nível para cada uma das 12 linhas (Impacto, Conhecimento, etc.).",
+            "Revise as definições das dimensões usando os ícones 'Info'.",
+            "Escolha o nível que melhor descreve os requisitos do cargo.",
+            "Use os botões 'Show Matrix' acima da tabela para referência."
+          ],
+          "cta": "Abrir Calculadora",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Passo 2: Calibrar Resultados",
+          "summary": "Garanta a consistência entre diferentes funções.",
+          "bullets": [
+            "Compare avaliações entre posições semelhantes lado a lado.",
+            "Evite inflar níveis para manter a equidade interna.",
+            "Use a visualização da matriz para ver a distribuição."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Fase 3: Revisar a pontuação e a classificação",
+      "description": "Finalize a classificação e compare com dados de mercado.",
+      "steps": {
+        "validateGrade": {
+          "title": "Passo 1: Confirmar o Grau do Cargo",
+          "summary": "Revise a pontuação numérica final e o grau resultante.",
+          "bullets": [
+            "Verifique a coluna 'Total Points' para a soma ponderada.",
+            "O 'Position Grade' mostra a classificação final (ex: G14).",
+            "Valide se o resultado faz sentido para a organização."
+          ],
+          "cta": "Ver Resultados",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Passo 2: Salvar Trabalho",
+          "summary": "Armazene sua avaliação para futuras referências.",
+          "bullets": [
+            "Clique em 'Save Matrix' para salvar seu progresso.",
+            "Use 'Load Matrix' para recuperar sessões anteriores.",
+            "Exporte a matriz final para documentação."
+          ]
+        }
+      }
+    }
+  }
+}

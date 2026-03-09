@@ -1,0 +1,88 @@
+{
+  "title": "Entgeltgruppen-Handbuch",
+  "subtitle": "Erstellen und veröffentlichen Sie marktgerechte Gehaltsstrukturen.",
+  "back_to_dashboard": "Zurück zum Dashboard",
+  "view_full_guide": "Vollständige Anleitung anzeigen",
+  "phases": {
+    "prepareData": {
+      "title": "Phase 1: Bereiten Sie Ihre Daten vor",
+      "description": "Importieren Sie Markt-Benchmarks und konfigurieren Sie Zuordnungen.",
+      "steps": {
+        "importBenchmarks": {
+          "title": "Schritt 1: Benchmarks importieren",
+          "summary": "Laden Sie CSV-Dateien von Anbietern wie Mercer oder WTW hoch.",
+          "bullets": [
+            "Öffnen Sie den Bereich 'Daten verwalten'.",
+            "Geben Sie einen Referenznamen für diesen Datensatz ein.",
+            "Laden Sie Ihre strukturierte CSV-Datei hoch.",
+            "Bestätigen Sie die Erfolgsmeldung des Imports."
+          ],
+          "cta": "Zu Importen"
+        },
+        "configureMappings": {
+          "title": "Schritt 2: Zuordnungen konfigurieren",
+          "summary": "Definieren Sie, wie Marktstufen Ihren internen Stufen entsprechen.",
+          "bullets": [
+            "Öffnen Sie die 'Zuordnungskonfigurationen'.",
+            "Klicken Sie auf '+ Regel hinzufügen', um eine neue Zuordnung zu erstellen.",
+            "Wählen Sie Anbieter und Land (optional).",
+            "Geben Sie den Stufencode des Anbieters genau wie in der Studie ein.",
+            "Weisen Sie ihn Ihrer entsprechenden internen Stufe zu.",
+            "Speichern Sie die Zuordnungen."
+          ],
+          "cta": "Zu Zuordnungen"
+        }
+      }
+    },
+    "buildScenario": {
+      "title": "Phase 2: Szenario erstellen",
+      "description": "Erstellen Sie ein mathematisches Modell der Gehaltsstruktur.",
+      "steps": {
+        "identity": {
+          "title": "Schritt 1: Szenario-Identität",
+          "summary": "Legen Sie Basisparameter für die neue Struktur fest.",
+          "bullets": [
+            "Klicken Sie im Dashboard auf '+ Szenario erstellen'.",
+            "Geben Sie einen Namen, ein Zielland und den Basistyp (z. B. Grundgehalt) ein.",
+            "Wählen Sie das Referenzdatum und die Gültigkeitsdaten aus."
+          ],
+          "cta": "Szenario Erstellen"
+        },
+        "weights": {
+          "title": "Schritt 2: Gewichtungen und Richtlinien",
+          "summary": "Definieren Sie Geschäftsregeln und Berechnungen.",
+          "bullets": [
+            "Verteilen Sie 100% Gewichtung auf die Anbieter (Global oder Nach Stufe).",
+            "Wählen Sie eine Alterungsrichtlinie (Aging) für die Inflation.",
+            "Wählen Sie Richtlinien für Datenqualität und Bandbreite (Range Spread).",
+            "Klicken Sie auf 'Berechnen & Abschließen', um die Struktur zu generieren."
+          ]
+        }
+      }
+    },
+    "reviewPublish": {
+      "title": "Phase 3: Überprüfen und Veröffentlichen",
+      "description": "Analysieren Sie die Ergebnisse und aktivieren Sie die Struktur.",
+      "steps": {
+        "workbench": {
+          "title": "Workbench",
+          "summary": "Überprüfen Sie die finanziellen Werte für die vorgeschlagenen Bänder.",
+          "bullets": [
+            "Analysieren Sie den gealterten Marktmedian für jede Stufe.",
+            "Überprüfen Sie das vorgeschlagene Minimum, den Median und das Maximum.",
+            "Überprüfen Sie die berechnete Spanne."
+          ]
+        },
+        "publish": {
+          "title": "Struktur veröffentlichen",
+          "summary": "Aktivieren Sie die Struktur offiziell für die Organisation.",
+          "bullets": [
+            "Wenn die Zahlen mit der Strategie übereinstimmen, klicken Sie auf 'Veröffentlichen'.",
+            "Das Modell wird eingefroren und wird zur aktiven Gehaltsstruktur im System."
+          ],
+          "cta": "Zurück zum Dashboard"
+        }
+      }
+    }
+  }
+}

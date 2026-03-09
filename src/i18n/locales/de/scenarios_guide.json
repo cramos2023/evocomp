@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "Vollständigen Guide anzeigen",
+  "back_to_scenarios": "Zurück zu Szenarien",
+  "scenarios": {
+    "guide": {
+      "title": "Vergütungsszenarien",
+      "subtitle": "Modellieren, verteilen und führen Sie Gehaltsaktionen aus.",
+      "glossary_title": "Kernkonzepte & Glossar",
+      "quickStart": "Erfahren Sie Schritt für Schritt, wie Sie Szenarien modellieren.",
+      "micro_help": {
+        "scenarios": "Entdecken Sie, wie Sie Vergütungsszenarien vertrauensvoll erstellen, testen und ausführen.",
+        "results": "Überprüfen Sie Ergebnisse, wenden Sie Richtlinien an oder skalieren Sie das Budget rekursiv an.",
+        "execution": "Finalisieren Sie Verdienstprozentsätze. Gesperrte Zeilen sind vor Skalierung geschützt."
+      },
+      "glossary": {
+        "snapshot": "Datenextrakt (Snapshot): Die exakte Mitarbeiterpopulation, die in das Modell einfließt.",
+        "compa_ratio": "Compa-Ratio: Position eines Mitarbeiters im Vergleich zum Mittelpunkt des Gehaltsbereichs. Misst die Gehaltswettbewerbsfähigkeit.",
+        "step_factor": "Verteilungsintensität (Step Factor): Mathematischer Faktor, der definiert, wie aggressiv Top-Performer belohnt werden.",
+        "top_down": "Top-Down-Verteilung: Automatische Budgetverteilung basierend auf Richtlinien.",
+        "bottom_up": "Bottom-Up-Verteilung: Manuelle Anpassungen auf Mitarbeiterebene durch Manager."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Phase 1: Szenariomodell erstellen",
+          "description": "Initialisieren Sie ein Szenario mit einem Snapshot und definieren Sie das Budget und die Verteilungsregeln.",
+          "steps": [
+            "Starten Sie ein neues Szenario über die Schaltfläche oben rechts.",
+            "Wählen Sie einen Mitarbeiterdatenextrakt (Snapshot) und definieren Sie das genehmigte Budget.",
+            "Legen Sie die Verteilungsintensität (Step Factor) und die Wettbewerbsfähigkeitsschwellen fest.",
+            "Überprüfen Sie die generierte Matrix, die maximale Erhöhungen empfiehlt, bevor Sie das Szenario erstellen."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Phase 2: Verteilen und Anpassen",
+          "description": "Berechnen Sie Ergebnisse und verteilen Sie das Budget.",
+          "steps": [
+            "Führen Sie die Berechnungs-Engine aus, um Mitarbeiter anhand Ihrer Regeln zu verarbeiten.",
+            "Überprüfen Sie den Budgetpool in den oberen Metrikkarten.",
+            "Verwenden Sie die automatische Aktion 'Richtlinien anwenden' (Top-Down), um den maximal empfohlenen Prozentsatz zuzuweisen.",
+            "Wenn das Budget überschritten wird, reduzieren Sie alle Werte proportional über 'An Budget anpassen'.",
+            "Bearbeiten Sie spezifische Zeilen manuell (Bottom-Up) und sperren Sie diese, damit automatische Anpassungen sie nicht beeinflussen."
+          ]
+        },
+        "execution": {
+          "title": "Phase 3: Validierung und Ausführung",
+          "description": "Finalisieren Sie die Anpassungen und lösen Sie den Ausführungsworkflow aus.",
+          "steps": [
+            "Öffnen Sie eine Mitarbeiterzeile, um deren Vergütungsprofil Vorher & Nachher anzuzeigen.",
+            "Verwenden Sie 'Szenario duplizieren', um Alternativen zu testen, und 'Vergleichen', um unterschiedliche Budgetauswirkungen zu sehen.",
+            "Beheben Sie alle Budget- oder Richtlinienwarnungen, die oben auf dem Workbench angezeigt werden.",
+            "Wenn Sie bereit sind, lösen Sie 'Ausführung starten' (Run Execution) aus, um die genehmigten Erhöhungen zu finalisieren."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Gehe zu Szenarien",
+        "go_to_results": "Ergebnisse öffnen",
+        "go_to_workbench": "Execution Workbench öffnen"
+      },
+      "notes": {
+        "safe_changes": "Nur gesperrte Zuweisungen sind vor automatischen Anpassungen wie 'An Budget anpassen' geschützt."
+      }
+    }
+  }
+}

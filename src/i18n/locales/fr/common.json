@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "back_to_workspace": "Retour au Workspace"
+  },
   "sidebar": {
     "strategy": "Stratégie",
     "scenarios": "Scénarios",
@@ -19,13 +22,15 @@
     "secure_engine": "Moteur d'Intelligence Sécurisé",
     "approvals_section": "Approbations",
     "my_plan": "Mon Plan",
-    "inbox": "Boîte d'approbations"
+    "inbox": "Boîte d'approbations",
+    "resources": "Ressources",
+    "take_tour": "Lancer la visite"
   },
   "header": {
     "verified_admin": "Administrateur Vérifié",
     "sign_out": "Déconnexion Sécurisée",
     "quick_actions": "Actions Rapides",
-    "search_placeholder": "Rechercher des scénarios, talents o audit..."
+    "search_placeholder": "Rechercher des scénarios, talents ou audit..."
   },
   "dashboard": {
     "title": "Tableau de Bord Stratégique",
@@ -224,6 +229,94 @@
       "discard": "Annuler",
       "privacy": "Confidentialité de l'Infrastructure",
       "privacy_desc": "La couche RLS garantit la séparation des données."
+    },
+  "pages": {
+    "job_description": {
+      "landing": {
+        "actions": {
+          "back_to_workspace": "Retour au Workspace",
+          "coming_soon": "Bientôt disponible"
+        },
+        "hero": {
+          "badge": "Concept Actif",
+          "title": "ST. Intelligence des Descriptions de Poste",
+          "subtitle": "Centralisez et standardisez les descriptions de poste de votre organisation. Utilisez l'IA pour rédiger, évaluer et mapper les compétences aux rôles dans un environnement sécurisé et unifié.",
+          "strategy_text": "Architecture Stratégique et Évaluation"
+        },
+        "capabilities": {
+          "title": "Fonctions du Module",
+          "ai_drafting": {
+            "title": "Rédaction assistée par IA",
+            "desc": "Générez des descriptions structurées à partir de zéro ou de modèles."
+          },
+          "competency_mapping": {
+            "title": "Mapping des Compétences",
+            "desc": "Mappez les compétences et exigences directement aux profils de rôle."
+          },
+          "version_control": {
+            "title": "Gouvernance de Bibliothèque",
+            "desc": "Un seul système d'enregistrement pour tous les rôles et versions."
+          },
+          "org_chart_alignment": {
+            "title": "Alignement Organique",
+            "desc": "Assurez-vous que les rôles sont correctement positionnés dans la hiérarchie."
+          },
+          "multilingual_support": {
+            "title": "Prêt pour l'International",
+            "desc": "Support complet pour les cadres et langues internationales."
+          },
+          "professional_export": {
+            "title": "Exportation Directe",
+            "desc": "Générez des PDFs ou documents professionnels instantanément."
+          }
+        }
+      },
+      "repository": {
+        "title": "Référentiel des Descriptions de Poste",
+        "subtitle": "Bibliothèque institutionnelle des fonctions et des profils.",
+        "repository": {
+          "title": "Référentiel Privé",
+          "create_new": "Créer un profil",
+          "search_placeholder": "Rechercher par titre, code ou famille...",
+          "empty_state": "Aucun profil de poste trouvé dans le référentiel de votre organisation.",
+          "col_profile": "Profil de Poste",
+          "col_family": "Famille et Niveau",
+          "col_status": "Statut",
+          "status_draft": "Brouillon",
+          "status_active": "Actif",
+          "status_archived": "Archivé"
+        }
+      },
+      "builder": {
+        "title": "Constructeur de Profils de Poste",
+        "save_draft": "Enregistrer le brouillon",
+        "publish": "Publier le profil",
+        "sections": {
+          "identity": "Identité et Informations Clés",
+          "scope": "Portée et Impact",
+          "responsibilities": "Responsabilités",
+          "requirements": "Exigences",
+          "stakeholders": "Parties Prenantes",
+          "restricted": "Restreint (RH/Comp)"
+        },
+        "fields": {
+          "job_title": "Titre du Poste",
+          "reference_code": "Code de Référence",
+          "career_function": "Fonction de Carrière",
+          "job_family": "Famille de Postes",
+          "career_level": "Niveau de Carrière",
+          "job_purpose": "Objectif du Poste",
+          "team_size": "Taille de l'Équipe",
+          "education": "Éducation",
+          "experience": "Expérience Pertinente",
+          "essential": "Essentiel",
+          "time_percent": "% de Temps"
+        },
+        "validations": {
+          "total_time_error": "La somme des pourcentages de temps doit être exactement de 100%. Actuel : {{total}}%",
+          "required_fields": "Veuillez remplir tous les champs d'identité obligatoires."
+        }
+      }
     }
   },
   "merit": {
@@ -343,7 +436,8 @@
     "running": "Exécution en cours...",
     "employee": "Employé",
     "search": "Rechercher",
-    "export": "Exporter"
+    "export": "Exporter",
+    "help": "Aide"
   },
   "plan_status": {
     "draft": "Brouillon",
@@ -681,13 +775,18 @@
         "title": "Bonus Calculations",
         "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
       },
+      "job_description": {
+        "title": "Gestion des Descriptions de Poste",
+        "desc": "Créez, standardisez et gouvernez les descriptions de poste avec une rédaction assistée par IA et un alignement des compétences.",
+        "status": "CONCEPT"
+      },
       "badges": {
-        "active": "Active",
+        "active": "Actif",
         "concept": "Concept"
       },
       "actions": {
-        "launch": "Launch Module",
-        "preview": "Preview Roadmap"
+        "launch": "Lancer le Module",
+        "preview": "Aperçu de la Roadmap"
       }
     }
   },
@@ -716,7 +815,35 @@
       "no_structures": "Aucune structure publiée.",
       "start_modeling": "Créer un Scénario",
       "manage_imports": "Gérer les Données",
-      "market_coverage": "Couverture de Marché"
+      "market_coverage": "Couverture de Marché",
+      "active_resolution": "Résolution active",
+      "resolution_desc": "Teste quelle structure publiée s’applique pour un pays, un type de base et une date.",
+      "target_country": "Pays cible",
+      "as_of_date": "Date de référence",
+      "btn_resolve": "Tester la résolution",
+      "resolving": "Résolution...",
+      "match_found": "Correspondance trouvée",
+      "version": "Version",
+      "bands_loaded": "Bandes chargées",
+      "back_dashboard": "Retour au Tableau de Bord"
+    },
+    "labels": {
+      "grades": "niveaux",
+      "deployed": "Déployé",
+      "source_scenario": "Scénario source",
+      "hash": "Hash",
+      "run_hash": "Empreinte Exécution",
+      "internal_grade": "Niveau Interne",
+      "market_mid_aged": "Médiane Marché",
+      "proposed_min": "Min Proposé",
+      "proposed_mid": "Médiane Proposée",
+      "proposed_max": "Max Proposé",
+      "spread": "Écart",
+      "explainability": "Explicabilité",
+      "id": "ID",
+      "bands": "Fourchettes",
+      "vendor_level_code": "Code Niveau Frn.",
+      "actions": "Actions"
     },
     "imports": {
       "title": "Import de Données",
@@ -727,14 +854,33 @@
       "error": "Erreur de format CSV.",
       "history": "Historique",
       "empty": "Aucune donnée importée.",
-      "btn_upload": "Télécharger Fichier"
+      "btn_upload": "Télécharger Fichier",
+      "scope_placeholder": "Ex : Analyse Comparative Régionale 2024",
+      "empty_error": "Le fichier CSV est vide ou des données sont manquantes.",
+      "required_columns_hint": "Seuls les fichiers .csv sont supportés. Assurez-vous que les colonnes requises sont incluses.",
+      "change_file": "Changer le Fichier",
+      "upload_another": "En télécharger un autre"
     },
     "mappings": {
-      "title": "Correspondances",
-      "desc": "Lier les niveaux externes/internes.",
-      "add": "Ajouter",
-      "btn_save": "Sauvegarder",
-      "empty_msg": "Aucune règle."
+      "title": "Configurations de Mappage",
+      "subtitle": "Définissez les règles d'interconnexion entre les niveaux techniques des fournisseurs externes et les grades internes de l'entreprise.",
+      "empty_msg": "Aucune règle de mappage pour le moment. Ajoutez-en une pour commencer.",
+      "columns": {
+        "provider": "Fournisseur",
+        "country_code": "Pays (ISO)",
+        "vendor_level_code": "Code Niveau Fournisseur",
+        "internal_grade": "Grade Interne",
+        "actions": "Actions"
+      },
+      "buttons": {
+        "add_rule": "Ajouter une Règle",
+        "save_mappings": "Sauvegarder les Mappages"
+      },
+      "placeholders": {
+        "country_code": "ex : FRA, USA, MEX",
+        "vendor_level_code": "ex : P3, 50, M2",
+        "internal_grade": "ex : 14, 15, 16"
+      }
     },
     "wizard": {
       "step1": {
@@ -752,7 +898,13 @@
         "weights": "Pondérations (%)",
         "aging_policy": "Politique de Vieillissement",
         "quality_policy": "Qualité",
-        "range_policy": "Politique de Fourchette"
+        "range_policy": "Politique de Fourchette",
+        "mode_global": "Pondération Globale",
+        "mode_grade": "Par Niveau",
+        "weight_label": "Poids",
+        "total_sum": "Somme Totale",
+        "must_equal_1": "(doit être 1.00)",
+        "sum": "Somme"
       },
       "step3": {
         "title": "Simulation",
@@ -762,7 +914,8 @@
       "common": {
         "next": "Continuer",
         "back": "Retour",
-        "save": "Sauvegarder"
+        "save": "Enregistrer le Brouillon",
+        "to": "à"
       }
     },
     "workbench": {
@@ -781,7 +934,8 @@
       "invalidDate": "Date de fin non valide."
     },
     "errors": {
-      "unauthorized": "Erreur : Jeton invalide. Accès refusé."
+      "unauthorized": "Erreur de Sécurité : Jeton manquant ou invalide. L'accès non vérifié au moteur est strictement interdit.",
+      "save_failed": "Échec de l'enregistrement du scénario. Veuillez vérifier les données et réessayer."
     },
     "actions": {
       "publish": "Publier",

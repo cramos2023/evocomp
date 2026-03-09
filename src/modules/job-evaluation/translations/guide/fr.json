@@ -1,0 +1,88 @@
+{
+  "title": "Guide d'Architecture et d'Évaluation",
+  "subtitle": "Système analytique pour la classification des emplois et le design organisationnel.",
+  "back_to_dashboard": "Retour à Architecture et Évaluation",
+  "view_full_guide": "Afficher l'Intégration Complète",
+  "phases": {
+    "orgContext": {
+      "title": "Phase 1 : Configurer le contexte organisationnel",
+      "description": "Configurez l'environnement et les paramètres de votre évaluation.",
+      "steps": {
+        "configureMarket": {
+          "title": "Étape 1 : Définir le Marché",
+          "summary": "Sélectionnez le pays et la taille de l'organisation pour donner du contexte.",
+          "bullets": [
+            "Ouvrez la barre latérale des Filtres Dynamiques.",
+            "Choisissez le Pays cible (ex: USA, Argentine).",
+            "Sélectionnez la Taille de l'Org (ex: Entreprise, PME).",
+            "Notez comment les échelles de dimension s'adaptent."
+          ],
+          "cta": "Configurer les Filtres",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Étape 2 : Définir le Profil de Carrière",
+          "summary": "Identifiez la nature fonctionnelle du poste.",
+          "bullets": [
+             "Sélectionnez la Filière Métier (Management, Professionnel ou Support).",
+             "Spécifiez la Fonction et la Famille d'Emplois.",
+             "Cela garantit des comparaisons cohérentes."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Phase 2 : Évaluer les facteurs du poste",
+      "description": "Évaluez le poste à travers les 12 dimensions clés.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Étape 1 : Évaluer les Dimensions",
+          "summary": "Utilisez la matrice interactive pour attribuer des niveaux à chaque critère.",
+          "bullets": [
+            "Sélectionnez le niveau pour chacune des 12 lignes (Impact, Connaissance, etc.).",
+            "Examinez les définitions à l'aide des icônes 'Info'.",
+            "Choisissez le niveau qui décrit le mieux les exigences du poste.",
+            "Utilisez les boutons 'Show Matrix' au-dessus du tableau pour référence."
+          ],
+          "cta": "Ouvrir le Calculateur",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Étape 2 : Calibrer les Résultats",
+          "summary": "Assurez la cohérence entre les différents rôles.",
+          "bullets": [
+            "Comparez les évaluations entre des postes similaires côte à côte.",
+            "Évitez de gonfler les niveaux pour maintenir l'équité interne.",
+            "Utilisez la visualisation matricielle pour voir la distribution."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Phase 3 : Revoir le score et la classification",
+      "description": "Finalisez la classification et comparez avec les données du marché.",
+      "steps": {
+        "validateGrade": {
+          "title": "Étape 1 : Confirmer le Grade du Poste",
+          "summary": "Examinez le score numérique final et le grade qui en résulte.",
+          "bullets": [
+            "Vérifiez la colonne 'Total Points' pour la somme ponderée.",
+            "La colonne 'Position Grade' affiche la classification finale (ex: G14).",
+            "Vérifiez que le résultat semble correct pour l'organisation."
+          ],
+          "cta": "Voir les Résultats",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Étape 2 : Enregistrer le Travail",
+          "summary": "Enregistrez votre évaluation pour référence future.",
+          "bullets": [
+            "Cliquez sur 'Save Matrix' pour enregistrer votre progression.",
+            "Utilisez 'Load Matrix' pour récupérer des sessions précédentes.",
+            "Exportez la matrice finale pour la documentation."
+          ]
+        }
+      }
+    }
+  }
+}

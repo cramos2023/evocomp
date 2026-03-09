@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../../lib/supabaseClient';
+import { invokePaybandEngine } from '../../../services/paybandEngineApi';
 import { Play, CheckCircle2, AlertTriangle, ArrowLeft, Loader2, Info, ArrowRight, ShieldCheck, Layers } from 'lucide-react';
 
 export default function ScenarioWorkbench() {
@@ -38,18 +39,9 @@ export default function ScenarioWorkbench() {
      setIsRunning(true);
      setErrorStatus(null);
      try {
-        const { data, error } = await supabase.functions.invoke('payband-engine', {
-           body: { action: 'run_payband_scenario', payload: { scenario_id: scenarioId } }
+        const data = await invokePaybandEngine('run_payband_scenario', {
+           scenario_id: scenarioId
         });
-
-        if (error) {
-           let msg = error.message;
-           if (error.context && typeof error.context.text === 'function') {
-              msg = await error.context.text();
-           }
-           throw new Error(msg);
-        }
-
         setRunData(data);
         await fetchScenario(); // refresh status
      } catch (err: any) {
@@ -62,21 +54,12 @@ export default function ScenarioWorkbench() {
   const handlePublish = async () => {
      if (!runData?.run_id) return;
      if (!confirm(t('common.confirm'))) return;
-
+ 
      setIsPublishing(true);
      try {
-        const { data, error } = await supabase.functions.invoke('payband-engine', {
-           body: { action: 'publish_version', payload: { run_id: runData.run_id } }
+        const data = await invokePaybandEngine('publish_version', {
+           run_id: runData.run_id
         });
-
-        if (error) {
-           let msg = error.message;
-           if (error.context && typeof error.context.text === 'function') {
-              msg = await error.context.text();
-           }
-           throw new Error(msg);
-        }
-
         setPublishedVersionId(data.version_id);
         await fetchScenario();
      } catch (err: any) {

@@ -1,0 +1,88 @@
+{
+  "title": "Architecture & Evaluation Guide",
+  "subtitle": "Analytical system for job classification and organizational design.",
+  "back_to_dashboard": "Back to Architecture & Evaluation",
+  "view_full_guide": "View Full Onboarding",
+  "phases": {
+    "orgContext": {
+      "title": "Phase 1: Set the organizational context",
+      "description": "Configure the environment and parameters for your evaluation.",
+      "steps": {
+        "configureMarket": {
+          "title": "Step 1: Set the Market",
+          "summary": "Select the country and organizational size to provide context.",
+          "bullets": [
+            "Open the Dynamic Filters sidebar.",
+            "Choose the target Country (e.g., USA, Brazil).",
+            "Select the Org Size (e.g., Enterprise, Mid-market).",
+            "Notice how the dimension scales adapt to these settings."
+          ],
+          "cta": "Configure Filters",
+          "anchor": "org-context"
+        },
+        "setStream": {
+          "title": "Step 2: Define Career Profile",
+          "summary": "Identify the functional nature of the role.",
+          "bullets": [
+             "Select the Career Stream (Management, Professional, or Support).",
+             "Specify the Career Function and Job Family.",
+             "This ensures you are comparing roles accurately."
+          ]
+        }
+      }
+    },
+    "evaluation": {
+      "title": "Phase 2: Evaluate the role factors",
+      "description": "Evaluate the position across the 12 key dimensions.",
+      "steps": {
+        "scoreDimensions": {
+          "title": "Step 1: Grade Dimensions",
+          "summary": "Use the interactive matrix to assign levels for each criterion.",
+          "bullets": [
+            "Select the level for each of the 12 rows (Impact, Knowledge, etc.).",
+            "Review the definitions for each dimension using the 'Info' icons.",
+            "Choose the level that best describes the role's requirements.",
+            "Use the 'Show Matrix' buttons above the table for reference."
+          ],
+          "cta": "Open Calculator",
+          "anchor": "evaluation-workspace"
+        },
+        "reviewCalibration": {
+          "title": "Step 2: Calibrate Results",
+          "summary": "Ensure consistency across different roles.",
+          "bullets": [
+            "Compare evaluations between similar positions side-by-side.",
+            "Check for 'grade drift' where levels might be inflated.",
+            "Use the matrix visualization to see the distribution."
+          ]
+        }
+      }
+    },
+    "results": {
+      "title": "Phase 3: Review the score and classification",
+      "description": "Finalize the classification and compare with market data.",
+      "steps": {
+        "validateGrade": {
+          "title": "Step 1: Confirm Position Grade",
+          "summary": "Review the final numerical score and resulting grade.",
+          "bullets": [
+            "Check the 'Total Points' column for the weighted sum.",
+            "The 'Position Grade' shows the final classification (e.g., G14).",
+            "Verify that the result feels right for the organization."
+          ],
+          "cta": "Check Results",
+          "anchor": "evaluation-results"
+        },
+        "marketAlignment": {
+          "title": "Step 2: Save Work",
+          "summary": "Store your evaluation for future reference.",
+          "bullets": [
+            "Click 'Save Matrix' to store your progress.",
+            "Load previous calculations using 'Load Matrix'.",
+            "Export the final matrix for documentation."
+          ]
+        }
+      }
+    }
+  }
+}

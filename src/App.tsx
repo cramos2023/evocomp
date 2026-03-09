@@ -38,6 +38,7 @@ const ApprovalsInboxPage = React.lazy(() =>
 )
 const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'))
 const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
+const JobDescriptionPage = React.lazy(() => import('./pages/JobDescriptionPage'))
 
 // --- Pay Bands Builder Phase 3 ---
 const ActiveStructuresView = React.lazy(() => import('./pages/workspace/paybands/ActiveStructuresView'))
@@ -45,6 +46,10 @@ const MarketDataUploader = React.lazy(() => import('./pages/workspace/paybands/M
 const MappingsUI = React.lazy(() => import('./pages/workspace/paybands/MappingsUI'))
 const ScenarioOptionsWizard = React.lazy(() => import('./pages/workspace/paybands/ScenarioOptionsWizard'))
 const ScenarioWorkbench = React.lazy(() => import('./pages/workspace/paybands/ScenarioWorkbench'))
+const PayBandsGuidePage = React.lazy(() => import('./pages/workspace/paybands/PayBandsGuidePage'))
+const ScenariosGuidePage = React.lazy(() => import('./pages/ScenariosGuidePage'))
+const JobEvaluationGuidePage = React.lazy(() => import('./modules/job-evaluation/pages/JobEvaluationGuidePage'))
+
 const Layout = ({ children, profile, onStartTour }: { children: React.ReactNode, profile: any, onStartTour?: () => void }) => (
   <div className="flex bg-[rgb(var(--surface-main))] min-h-screen transition-colors duration-500 text-[rgb(var(--text-primary))] font-sans font-medium">
     <Sidebar onStartTour={onStartTour} />
@@ -151,6 +156,22 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/workspace/job-evaluation/guide" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceToolLayout profile={profile}>
+                <JobEvaluationGuidePage />
+              </WorkspaceToolLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/workspace/job-description" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceToolLayout profile={profile}>
+                <JobDescriptionPage />
+              </WorkspaceToolLayout>
+            </ProtectedRoute>
+          } />
+
           <Route path="/workspace/paybands/*" element={
             <ProtectedRoute session={session} profile={profile}>
               <WorkspaceToolLayout profile={profile}>
@@ -160,6 +181,7 @@ function App() {
                   <Route path="mappings" element={<MappingsUI />} />
                   <Route path="builder/new" element={<ScenarioOptionsWizard />} />
                   <Route path="builder/:id" element={<ScenarioWorkbench />} />
+                  <Route path="guide" element={<PayBandsGuidePage />} />
                 </Routes>
               </WorkspaceToolLayout>
             </ProtectedRoute>
@@ -181,6 +203,7 @@ function App() {
                     } />
                     <Route path="pay-bands" element={<PayBandsPage />} />
                     <Route path="comp/scenarios" element={<ScenariosPage />} />
+                    <Route path="comp/scenarios/guide" element={<ScenariosGuidePage />} />
                     <Route path="comp/scenarios/:id/results" element={<ScenarioResultsPage />} />
                     <Route path="comp/scenarios/:scenarioId/execute" element={<ExecutionWorkbenchPage />} />
                     <Route path="comp/cycles" element={

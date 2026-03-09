@@ -6,8 +6,9 @@ import SidebarFilter from "@/modules/job-evaluation/components/filters/SidebarFi
 import { Toaster } from "@/modules/job-evaluation/components/ui/toaster";
 import { FilterState } from "@/modules/job-evaluation/components/filters/types";
 import { Position } from "@/modules/job-evaluation/types/position";
-import { FileDown, RefreshCw, X, Loader2, ArrowLeft } from "lucide-react";
+import { FileDown, RefreshCw, X, Loader2, ArrowLeft, HelpCircle } from "lucide-react";
 import { jobEvaluationApi, EvaluationRunMeta } from "@/modules/job-evaluation/services/jobEvaluationApi";
+import JobEvaluationGuideDrawer from "@/modules/job-evaluation/components/JobEvaluationGuideDrawer";
 
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +28,15 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [savedRuns, setSavedRuns] = useState<EvaluationRunMeta[]>([]);
   const [isLoadingRuns, setIsLoadingRuns] = useState(false);
+
+  // Guide state
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [activeGuidePhase, setActiveGuidePhase] = useState<string | undefined>(undefined);
+
+  const openGuide = (phase?: string) => {
+    setActiveGuidePhase(phase);
+    setIsGuideOpen(true);
+  };
   
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
@@ -88,7 +98,7 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
   return (
     <div className="p-10 max-w-[1600px] mx-auto space-y-12 animate-in fade-in duration-700">
       {/* Back to Workspace Link */}
-      <div className="animate-in fade-in slide-in-from-top-4 duration-700">
+      <div className="flex justify-between items-center animate-in fade-in slide-in-from-top-4 duration-700">
         <Link 
           to="/workspace" 
           className="inline-flex items-center gap-2 text-[rgb(var(--text-muted))] hover:text-[rgb(var(--primary))] transition-colors font-bold text-xs uppercase tracking-widest group"
@@ -98,6 +108,15 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
           </div>
           {t("page.back_to_workspace")}
         </Link>
+
+        {/* Support Hub Main Trigger */}
+        <button
+          onClick={() => openGuide()}
+          className="flex items-center gap-3 bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] hover:border-indigo-400 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-[rgb(var(--text-secondary))] hover:text-indigo-600 transition-all shadow-sm group"
+        >
+          <HelpCircle className="w-4 h-4 text-indigo-500 group-hover:scale-110 transition-transform" />
+          <span>{t("header.help", { defaultValue: "Guía de Apoyo" })}</span>
+        </button>
       </div>
 
       {/* Header Section */}
@@ -133,7 +152,14 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
       {/* Main Evaluator Section */}
       <div className="flex flex-col xl:flex-row gap-8 items-start">
         {/* Sidebar Filter */}
-        <div className="w-full xl:w-[320px] xl:sticky xl:top-8 shrink-0">
+        <div id="org-context" className="w-full xl:w-[320px] xl:sticky xl:top-8 shrink-0 relative group/section">
+          <button
+            onClick={() => openGuide("orgContext")}
+            className="absolute -top-1 -right-1 p-1 bg-indigo-50 text-indigo-400 hover:text-indigo-600 rounded-full border border-indigo-100 opacity-0 group-hover/section:opacity-100 transition-all z-10"
+            title="Ayuda con el contexto"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+          </button>
           <SidebarFilter 
             onFilterChange={handleFilterChange} 
             isOpen={true}
@@ -143,12 +169,30 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
         </div>
         
         {/* Main Content */}
-        <div className="flex-1 w-full min-w-0 bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] p-8">
+        <div id="evaluation-workspace" className="flex-1 w-full min-w-0 bg-[rgb(var(--bg-surface))] border border-[rgb(var(--border))] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] p-8 relative group/section">
+          <button
+            onClick={() => openGuide("evaluation")}
+            className="absolute top-4 right-4 p-1.5 bg-indigo-50 text-indigo-400 hover:text-indigo-600 rounded-full border border-indigo-100 opacity-0 group-hover/section:opacity-100 transition-all z-10 shadow-sm"
+            title="Ayuda con la evaluación"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
           <EvaluationTable 
             initialRows={positionCount}
             filters={filters}
             onPositionsChange={handlePositionsChange}
           />
+          
+          {/* Results Anchor Trigger */}
+          <div id="evaluation-results" className="mt-8 pt-8 border-t border-dashed border-[rgb(var(--border))] relative group/results">
+            <button
+              onClick={() => openGuide("results")}
+              className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100 text-[10px] font-black uppercase tracking-tighter opacity-0 group-hover/results:opacity-100 transition-all flex items-center gap-2 shadow-sm"
+            >
+              <HelpCircle className="w-3 h-3" />
+              <span>¿Cómo interpretar los resultados?</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -195,6 +239,12 @@ const JobEvaluationPage: React.FC<JobEvaluationPageProps> = ({ profile }) => {
         </div>
       )}
       <Toaster />
+
+      <JobEvaluationGuideDrawer 
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+        initialPhase={activeGuidePhase as any}
+      />
     </div>
   );
 };

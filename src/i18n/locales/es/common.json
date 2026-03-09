@@ -22,7 +22,9 @@
     "secure_engine": "Motor de Inteligencia Seguro",
     "approvals_section": "Aprobaciones",
     "my_plan": "Mi Plan",
-    "inbox": "Bandeja de Aprobaciones"
+    "inbox": "Bandeja de Aprobaciones",
+    "resources": "Recursos",
+    "take_tour": "Iniciar Recorrido"
   },
   "header": {
     "verified_admin": "Administrador Verificado",
@@ -228,6 +230,94 @@
       "discard": "Descartar Cambios",
       "privacy": "Privacidad de Infraestructura",
       "privacy_desc": "La capa RLS garantiza la separación de datos."
+    },
+  "pages": {
+    "job_description": {
+      "landing": {
+        "actions": {
+          "back_to_workspace": "Volver al Workspace",
+          "coming_soon": "Próximamente"
+        },
+        "hero": {
+          "badge": "Concepto Activo",
+          "title": "ST. Inteligencia de Perfiles de Puesto",
+          "subtitle": "Centralice y estandarice las descripciones de cargo de su organización. Use IA para redactar, evaluar y mapear competencias a roles en un entorno seguro y unificado.",
+          "strategy_text": "Arquitectura Estratégica y Evaluación"
+        },
+        "capabilities": {
+          "title": "Funciones del Módulo",
+          "ai_drafting": {
+            "title": "Redacción con IA",
+            "desc": "Genere descripciones estructuradas desde cero o plantillas."
+          },
+          "competency_mapping": {
+            "title": "Mapeo de Competencias",
+            "desc": "Mapee habilidades y requisitos directamente a roles."
+          },
+          "version_control": {
+            "title": "Gobernanza de Biblioteca",
+            "desc": "Un solo sistema de registro para todos los roles y versiones."
+          },
+          "org_chart_alignment": {
+            "title": "Alineación de Org",
+            "desc": "Asegure que los roles estén correctamente posicionados en la jerarquía."
+          },
+          "multilingual_support": {
+            "title": "Listo para el Mundo",
+            "desc": "Soporte completo para marcos internacionales e idiomas."
+          },
+          "professional_export": {
+            "title": "Exportación Directa",
+            "desc": "Genere PDFs o documentos profesionales al instante."
+          }
+        }
+      },
+      "repository": {
+        "title": "Repositorio de Descripciones",
+        "subtitle": "Biblioteca institucional de roles y perfiles.",
+        "repository": {
+          "title": "Repositorio Privado",
+          "create_new": "Crear Nuevo Perfil",
+          "search_placeholder": "Buscar por título, código o familia...",
+          "empty_state": "No se encontraron perfiles de puesto en el repositorio de su organización.",
+          "col_profile": "Perfil de Puesto",
+          "col_family": "Familia y Nivel",
+          "col_status": "Estado",
+          "status_draft": "Borrador",
+          "status_active": "Activa",
+          "status_archived": "Archivada"
+        }
+      },
+      "builder": {
+        "title": "Constructor de Perfiles",
+        "save_draft": "Guardar Borrador",
+        "publish": "Publicar Perfil",
+        "sections": {
+          "identity": "Identidad e Información Core",
+          "scope": "Alcance e Impacto",
+          "responsibilities": "Responsabilidades",
+          "requirements": "Requisitos",
+          "stakeholders": "Stakeholders y Aliados",
+          "restricted": "Restringido (RH/Comp)"
+        },
+        "fields": {
+          "job_title": "Título del Puesto",
+          "reference_code": "Código de Referencia",
+          "career_function": "Función de Carrera",
+          "job_family": "Familia de Puestos",
+          "career_level": "Nivel de Carrera",
+          "job_purpose": "Propósito del Puesto",
+          "team_size": "Tamaño del Equipo",
+          "education": "Educación",
+          "experience": "Experiencia Relevante",
+          "essential": "Esencial",
+          "time_percent": "% de Tiempo"
+        },
+        "validations": {
+          "total_time_error": "La suma del porcentaje de tiempo debe ser exactamente 100%. Actual: {{total}}%",
+          "required_fields": "Por favor, complete todos los campos de identidad obligatorios."
+        }
+      }
     }
   },
   "merit": {
@@ -346,8 +436,9 @@
     "back_to_scenarios": "Volver a Escenarios",
     "running": "Ejecutando...",
     "employee": "Empleado",
-    "search": "Buscar...",
-    "export": "Exportar"
+    "search": "Buscar",
+    "export": "Exportar",
+    "help": "Ayuda"
   },
   "plan_status": {
     "draft": "Borrador",
@@ -681,6 +772,10 @@
         "title": "Cálculo de Bonos",
         "desc": "Pronostica, modela y distribuye compensación variable basada en métricas de desempeño complejas."
       },
+      "job_description": {
+        "title": "Gestión de Descripciones de Puesto",
+        "desc": "Cree, estandarice y gobierne las descripciones de puesto con redacción asistida por IA y alineación de competencias."
+      },
       "badges": {
         "active": "Activo",
         "concept": "Concepto"
@@ -716,7 +811,35 @@
       "no_structures": "Aún no hay estructuras publicadas.",
       "start_modeling": "Crear Escenario",
       "manage_imports": "Gestionar Datos",
-      "market_coverage": "Cobertura de Mercado"
+      "market_coverage": "Cobertura de Mercado",
+      "active_resolution": "Resolución activa",
+      "resolution_desc": "Prueba qué estructura publicada resuelve para un país, tipo de base y fecha.",
+      "target_country": "País objetivo",
+      "as_of_date": "Fecha de referencia",
+      "btn_resolve": "Probar resolución",
+      "resolving": "Resolviendo...",
+      "match_found": "Coincidencia encontrada",
+      "version": "Versión",
+      "bands_loaded": "Bandas cargadas",
+      "back_dashboard": "Volver al Panel"
+    },
+    "labels": {
+      "grades": "grados",
+      "deployed": "Desplegado",
+      "source_scenario": "Escenario origen",
+      "hash": "Hash",
+      "run_hash": "Hash de Ejecución",
+      "internal_grade": "Grado Interno",
+      "market_mid_aged": "Media de Mercado",
+      "proposed_min": "Min Propuesto",
+      "proposed_mid": "Medio Propuesto",
+      "proposed_max": "Max Propuesto",
+      "spread": "Rango",
+      "explainability": "Explicabilidad",
+      "id": "ID",
+      "bands": "Bandas",
+      "vendor_level_code": "Código Nivel Proveedor",
+      "actions": "Acciones"
     },
     "imports": {
       "title": "Carga de Datos de Mercado",
@@ -727,14 +850,33 @@
       "error": "Error al leer datos. Revisa el formato CSV.",
       "history": "Historial de Importaciones",
       "empty": "Aún no se han importado datos.",
-      "btn_upload": "Subir Benchmark"
+      "btn_upload": "Subir Benchmark",
+      "scope_placeholder": "Ej: Benchmarking Regional 2024",
+      "empty_error": "El archivo CSV está vacío o le faltan datos.",
+      "required_columns_hint": "Solo se permiten archivos .csv. Asegúrese de incluir las columnas requeridas.",
+      "change_file": "Cambiar Archivo",
+      "upload_another": "Subir Otro"
     },
     "mappings": {
-      "title": "Mapeos de Proveedor",
-      "desc": "Vincula niveles de mercado externos con grados internos.",
-      "add": "Agregar Regla",
-      "btn_save": "Guardar Mapeos",
-      "empty_msg": "No hay reglas de mapeo definidas."
+      "title": "Configuraciones de Mapeo",
+      "subtitle": "Defina reglas de interconexión entre niveles técnicos de proveedores externos y sus grados corporativos internos.",
+      "empty_msg": "Aún no hay reglas de mapeo. Agrega una para comenzar.",
+      "columns": {
+        "provider": "Proveedor",
+        "country_code": "País (ISO)",
+        "vendor_level_code": "Código Nivel Proveedor",
+        "internal_grade": "Grado Interno",
+        "actions": "Acciones"
+      },
+      "buttons": {
+        "add_rule": "Agregar Regla",
+        "save_mappings": "Guardar Mappings"
+      },
+      "placeholders": {
+        "country_code": "ex: MEX, USA, BRA",
+        "vendor_level_code": "ex: P3, 50, M2",
+        "internal_grade": "ex: 14, 15, 16"
+      }
     },
     "wizard": {
       "step1": {
@@ -752,7 +894,13 @@
         "weights": "Ponderación de Proveedores (%)",
         "aging_policy": "Política de Envejecimiento (Aging)",
         "quality_policy": "Controles de Calidad",
-        "range_policy": "Diseño de Rango (Min/Max)"
+        "range_policy": "Diseño de Rango (Min/Max)",
+        "mode_global": "Modo Global",
+        "mode_grade": "Por Grado",
+        "weight_label": "Peso",
+        "total_sum": "Suma Total",
+        "must_equal_1": "(debe ser 1.00)",
+        "sum": "Suma"
       },
       "step3": {
         "title": "Resumen y Simulación",
@@ -762,7 +910,8 @@
       "common": {
         "next": "Continuar",
         "back": "Atrás",
-        "save": "Guardar Borrador"
+        "save": "Guardar Borrador",
+        "to": "a"
       }
     },
     "workbench": {
@@ -781,7 +930,8 @@
       "invalidDate": "La fecha de fin debe ser posterior a la fecha de inicio."
     },
     "errors": {
-      "unauthorized": "Error de Seguridad: Token nulo o inválido. El acceso no verificado al motor está estrictamente prohibido."
+      "unauthorized": "Error de Seguridad: Token nulo o inválido. El acceso no verificado al motor está estrictamente prohibido.",
+      "save_failed": "Error al guardar el escenario. Por favor revise los datos y vuelva a intentarlo."
     },
     "actions": {
       "publish": "Publicar",

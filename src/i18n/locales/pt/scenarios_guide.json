@@ -1,0 +1,65 @@
+{
+  "view_full_guide": "Ver Guia Imersivo",
+  "back_to_scenarios": "Voltar para Cenários",
+  "scenarios": {
+    "guide": {
+      "title": "Cenários de Remuneração",
+      "subtitle": "Modele, distribua e execute ações salariais.",
+      "glossary_title": "Conceitos-Chave e Glossário",
+      "quickStart": "Entenda como modelar cenários passo a passo.",
+      "micro_help": {
+        "scenarios": "Explore como criar, testar e executar cenários de remuneração com confiança.",
+        "results": "Reveja os resultados, aplique diretrizes ou ajuste ao orçamento de forma recursiva.",
+        "execution": "Finalize as percentagens de mérito. As linhas bloqueadas estão protegidas de ajustes."
+      },
+      "glossary": {
+        "snapshot": "Corte de Dados (Snapshot): A população exata de funcionários que entra no modelo.",
+        "compa_ratio": "Compa-Ratio: Posição do funcionário vs. o ponto médio da faixa salarial. Mede a competitividade do salário.",
+        "step_factor": "Intensidade de Distribuição (Step Factor): Fator matemático que define de forma agressiva o prêmio para os 'high performers'.",
+        "top_down": "Alocação Top-Down: Distribuição automática do orçamento baseada em diretrizes.",
+        "bottom_up": "Alocação Bottom-Up: Ajustes manuais ao nível do funcionário realizados por gestores."
+      },
+      "phases": {
+        "createScenario": {
+          "title": "Fase 1: Criar Modelo de Cenário",
+          "description": "Inicialize um cenário usando um snapshot e defina o orçamento e as regras de distribuição.",
+          "steps": [
+            "Inicie um novo cenário a partir do botão no canto superior direito.",
+            "Selecione um corte de dados (Snapshot) e defina o orçamento aprovado.",
+            "Estabeleça a intensidade de distribuição (Step Factor) e os limites de competitividade.",
+            "Reveja a matriz gerada que recomenda aumentos máximos antes de criar o cenário."
+          ]
+        },
+        "resultsAndAdjustments": {
+          "title": "Fase 2: Distribuir e Ajustar",
+          "description": "Calcule resultados e distribua o orçamento.",
+          "steps": [
+            "Execute o motor de cálculo para processar os funcionários de acordo com as suas regras.",
+            "Reveja a reserva orçamental nos cartões de métricas superiores.",
+            "Utilize a ação automática 'Aplicar Diretrizes' (Top-Down) para atribuir a percentagem máxima recomendada.",
+            "Se exceder o orçamento, reduza proporcionalmente todos os valores utilizando 'Ajustar ao Orçamento'.",
+            "Edite manualmente linhas específicas (Bottom-Up) e bloqueie-as para que os ajustes automáticos não as afetem."
+          ]
+        },
+        "execution": {
+          "title": "Fase 3: Validação e Execução",
+          "description": "Finalize os ajustes e ative o fluxo de execução.",
+          "steps": [
+            "Abra a linha de um funcionário para ver o seu perfil de remuneração Antes e Depois.",
+            "Utilize 'Duplicar Cenário' para testar alternativas e 'Comparar' para ver diferentes impactos orçamentais.",
+            "Corrija quaisquer avisos de orçamento ou diretrizes apresentados no início do workbench.",
+            "Quando estiver pronto, ative 'Executar' (Run Execution) para finalizar os aumentos aprovados."
+          ]
+        }
+      },
+      "ctas": {
+        "go_to_scenarios": "Ir para Cenários",
+        "go_to_results": "Abrir Resultados",
+        "go_to_workbench": "Abrir Execution Workbench"
+      },
+      "notes": {
+        "safe_changes": "Apenas as alocações bloqueadas estão protegidas de ajustes automáticos como 'Ajustar ao Orçamento'."
+      }
+    }
+  }
+}

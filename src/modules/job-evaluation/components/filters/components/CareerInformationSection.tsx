@@ -9,6 +9,7 @@ import {
   SelectValue 
 } from "@/modules/job-evaluation/components/ui/select";
 import { FilterState } from "../types";
+import { normalizeOptionKey } from "@/modules/job-evaluation/utils/translationUtils";
 
 interface CareerInformationSectionProps {
   filters: FilterState;
@@ -41,7 +42,7 @@ const CareerInformationSection: React.FC<CareerInformationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("directReports").map((option) => (
               <SelectItem key={option.toString()} value={option.toString()}>
-                {option.toString()}
+                {t(`options.${normalizeOptionKey(option)}`, option.toString())}
               </SelectItem>
             ))}
           </SelectContent>
@@ -62,7 +63,7 @@ const CareerInformationSection: React.FC<CareerInformationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("careerStream").map((stream) => (
               <SelectItem key={stream.toString()} value={stream.toString()}>
-                {stream.toString()}
+                {t(`options.${normalizeOptionKey(stream)}`, stream.toString())}
               </SelectItem>
             ))}
           </SelectContent>
@@ -82,7 +83,7 @@ const CareerInformationSection: React.FC<CareerInformationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("careerFunction").map((func) => (
               <SelectItem key={func.toString()} value={func.toString()}>
-                {func.toString()}
+                {t(`options.${normalizeOptionKey(func)}`, func.toString())}
               </SelectItem>
             ))}
           </SelectContent>
@@ -103,7 +104,7 @@ const CareerInformationSection: React.FC<CareerInformationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("jobFamily").map((family) => (
               <SelectItem key={family.toString()} value={family.toString()}>
-                {family.toString()}
+                {t(`options.${normalizeOptionKey(family)}`, family.toString())}
               </SelectItem>
             ))}
           </SelectContent>
@@ -124,7 +125,7 @@ const CareerInformationSection: React.FC<CareerInformationSectionProps> = ({
             <SelectItem value="none">None</SelectItem>
             {getAvailableOptions("careerLevel").map((level) => (
               <SelectItem key={level.toString()} value={level.toString()}>
-                {level.toString()}
+                {t(`options.${normalizeOptionKey(level)}`, level.toString())}
               </SelectItem>
             ))}
           </SelectContent>

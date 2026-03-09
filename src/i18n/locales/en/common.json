@@ -22,7 +22,9 @@
     "secure_engine": "Secure Intelligence Engine",
     "approvals_section": "Approvals",
     "my_plan": "My Plan",
-    "inbox": "Approvals Inbox"
+    "inbox": "Approvals Inbox",
+    "resources": "Resources",
+    "take_tour": "Take a Tour"
   },
   "header": {
     "verified_admin": "Verified Admin",
@@ -228,6 +230,94 @@
       "discard": "Discard Changes",
       "privacy": "Infrastructure Privacy",
       "privacy_desc": "Zero-trust RLS layer ensures data separation."
+    },
+  "pages": {
+    "job_description": {
+      "landing": {
+        "actions": {
+          "back_to_workspace": "Back to Workspace",
+          "coming_soon": "Coming Soon"
+        },
+        "hero": {
+          "badge": "Active Concept",
+          "title": "ST. Job Description Intelligence",
+          "subtitle": "Centralize and standardize your organization's job descriptions. Use AI to draft, evaluate, and map competencies to roles in a secure, unified environment.",
+          "strategy_text": "Strategic Architecture & Evaluation"
+        },
+        "capabilities": {
+          "title": "Module Features",
+          "ai_drafting": {
+            "title": "AI-Powered Drafting",
+            "desc": "Generate structured descriptions from scratch or templates."
+          },
+          "competency_mapping": {
+            "title": "Competency Mapping",
+            "desc": "Map skills and requirements directly to role profiles."
+          },
+          "version_control": {
+            "title": "Library Governance",
+            "desc": "One system of record for all roles and versions."
+          },
+          "org_chart_alignment": {
+            "title": "Org Chart Alignment",
+            "desc": "Ensure roles are correctly positioned within the hierarchy."
+          },
+          "multilingual_support": {
+            "title": "Global Ready",
+            "desc": "Full support for international frameworks and languages."
+          },
+          "professional_export": {
+            "title": "One-Click Export",
+            "desc": "Generate professional PDFs or documents instantly."
+          }
+        }
+      },
+      "repository": {
+        "title": "Job Description Repository",
+        "subtitle": "Institutional library of roles and profiles.",
+        "repository": {
+          "title": "Private Repository",
+          "create_new": "Create New Profile",
+          "search_placeholder": "Search by title, code or family...",
+          "empty_state": "No job profiles found in your organization's repository.",
+          "col_profile": "Job Profile",
+          "col_family": "Family & Level",
+          "col_status": "Status",
+          "status_draft": "Draft",
+          "status_active": "Active",
+          "status_archived": "Archived"
+        }
+      },
+      "builder": {
+        "title": "Job Profile Builder",
+        "save_draft": "Save Draft",
+        "publish": "Publish Profile",
+        "sections": {
+          "identity": "Identity & Core Info",
+          "scope": "Scope & Impact",
+          "responsibilities": "Responsibilities",
+          "requirements": "Requirements",
+          "stakeholders": "Stakeholders & Aliases",
+          "restricted": "Restricted (HR/Comp)"
+        },
+        "fields": {
+          "job_title": "Job Title",
+          "reference_code": "Reference Job Code",
+          "career_function": "Career Function",
+          "job_family": "Job Family",
+          "career_level": "Career Level",
+          "job_purpose": "Job Purpose",
+          "team_size": "Team Size",
+          "education": "Education",
+          "experience": "Relevant Experience",
+          "essential": "Essential",
+          "time_percent": "% of Time"
+        },
+        "validations": {
+          "total_time_error": "The sum of percentage of time must be exactly 100%. Current: {{total}}%",
+          "required_fields": "Please fill in all required identity fields."
+        }
+      }
     }
   },
   "merit": {
@@ -347,7 +437,8 @@
     "running": "Running...",
     "employee": "Employee",
     "search": "Search",
-    "export": "Export"
+    "export": "Export",
+    "help": "Help"
   },
   "plan_status": {
     "draft": "Draft",
@@ -681,6 +772,10 @@
         "title": "Bonus Calculations",
         "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
       },
+      "job_description": {
+        "title": "Job Description Management",
+        "desc": "Create, standardize, and govern job descriptions with AI-powered drafting and competency alignment."
+      },
       "badges": {
         "active": "Active",
         "concept": "Concept"
@@ -716,7 +811,35 @@
       "no_structures": "No pay structures published yet.",
       "start_modeling": "Create Scenario",
       "manage_imports": "Manage Data",
-      "market_coverage": "Market Data Coverage"
+      "market_coverage": "Market Data Coverage",
+      "active_resolution": "Active resolution",
+      "resolution_desc": "Test which published structure resolves for a country, basis type and date.",
+      "target_country": "Target country",
+      "as_of_date": "As-of date",
+      "btn_resolve": "Test resolution",
+      "resolving": "Resolving...",
+      "match_found": "Match found",
+      "version": "Version",
+      "bands_loaded": "Bands loaded",
+      "back_dashboard": "Back to Dashboard"
+    },
+    "labels": {
+      "grades": "grades",
+      "deployed": "Deployed",
+      "source_scenario": "Source scenario",
+      "hash": "Hash",
+      "run_hash": "Run Hash",
+      "internal_grade": "Internal Grade",
+      "market_mid_aged": "Market Mid (Aged)",
+      "proposed_min": "Proposed Min",
+      "proposed_mid": "Proposed Mid",
+      "proposed_max": "Proposed Max",
+      "spread": "Spread",
+      "explainability": "Explainability",
+      "id": "ID",
+      "bands": "Bands",
+      "vendor_level_code": "Vendor Level Code",
+      "actions": "Actions"
     },
     "imports": {
       "title": "Market Data Uploader",
@@ -727,14 +850,33 @@
       "error": "Failed to parse market data. Check the CSV format.",
       "history": "Import History",
       "empty": "No market data imported yet.",
-      "btn_upload": "Upload Benchmark"
+      "btn_upload": "Upload Benchmark",
+      "scope_placeholder": "e.g. Regional Benchmarking 2024",
+      "empty_error": "The CSV file is empty or missing data.",
+      "required_columns_hint": "Only .csv files are supported. Ensure required columns are included.",
+      "change_file": "Change File",
+      "upload_another": "Upload Another"
     },
     "mappings": {
-      "title": "Provider Mapping",
-      "desc": "Map external vendor levels to internal job grades.",
-      "add": "Add Rule",
-      "btn_save": "Save Mappings",
-      "empty_msg": "No mapping rules defined."
+      "title": "Mapping Configurations",
+      "subtitle": "Define interconnection rules between external provider technical levels and internal corporate grades.",
+      "empty_msg": "No mapping rules yet. Add one to get started.",
+      "columns": {
+        "provider": "Provider",
+        "country_code": "Country (ISO)",
+        "vendor_level_code": "Vendor Level Code",
+        "internal_grade": "Internal Grade",
+        "actions": "Actions"
+      },
+      "buttons": {
+        "add_rule": "Add Rule",
+        "save_mappings": "Save Mappings"
+      },
+      "placeholders": {
+        "country_code": "ex: USA, MEX, BRA",
+        "vendor_level_code": "ex: P3, 50, M2",
+        "internal_grade": "ex: 14, 15, 16"
+      }
     },
     "wizard": {
       "step1": {
@@ -752,7 +894,13 @@
         "weights": "Provider Weightings (%)",
         "aging_policy": "Aging Policy",
         "quality_policy": "Data Quality Controls",
-        "range_policy": "Range Design Policy"
+        "range_policy": "Range Design Policy",
+        "mode_global": "Global Weighting",
+        "mode_grade": "By Grade",
+        "weight_label": "Weight",
+        "total_sum": "Total Sum",
+        "must_equal_1": "(must equal 1.00)",
+        "sum": "Sum"
       },
       "step3": {
         "title": "Summary & Simulation",
@@ -762,7 +910,8 @@
       "common": {
         "next": "Continue",
         "back": "Back",
-        "save": "Save Draft"
+        "save": "Save Draft",
+        "to": "to"
       }
     },
     "workbench": {
@@ -781,7 +930,8 @@
       "invalidDate": "End date must be after Start date."
     },
     "errors": {
-      "unauthorized": "Security Error: Missing or invalid authentication token. Direct unverified engine access is strictly prohibited."
+      "unauthorized": "Security Error: Missing or invalid authentication token. Direct unverified engine access is strictly prohibited.",
+      "save_failed": "Failed to save scenario. Please check the data and try again."
     },
     "actions": {
       "publish": "Publish",

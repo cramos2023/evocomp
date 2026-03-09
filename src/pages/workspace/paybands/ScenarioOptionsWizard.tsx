@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../../lib/supabaseClient';
-import { ArrowRight, ArrowLeft, CheckCircle2, ChevronRight, Save, Layers, Settings2, ShieldCheck, Loader2, AlertTriangle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle2, ChevronRight, Save, Layers, Settings2, ShieldCheck, Loader2, AlertTriangle, HelpCircle } from 'lucide-react';
+import PayBandsGuideDrawer from '../../../components/paybands/PayBandsGuideDrawer';
 
 export default function ScenarioOptionsWizard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Guide Drawer State
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   // Wizard state
   const [currentStep, setCurrentStep] = useState(1);
@@ -116,6 +120,7 @@ export default function ScenarioOptionsWizard() {
            pricing_date: pricingDate,
            structure_effective_start: effStart,
            structure_effective_end: effEnd,
+           vendor_weights_json: { MERCER: 1, WTW: 0, THIRD: 0 },
            status: 'DRAFT',
            tenant_id: tenantId
         };
@@ -197,9 +202,10 @@ export default function ScenarioOptionsWizard() {
         
         // Redirect to Workbench
         navigate(`/workspace/paybands/builder/${scenarioId}`);
-     } catch (err: any) {
-        setStepError(err.message);
-        setIsProcessing(false);
+      } catch (err: any) {
+         console.error("Error saving Step 3:", err);
+         setStepError(t('paybands.errors.save_failed'));
+         setIsProcessing(false);
      }
   };
 
@@ -207,6 +213,11 @@ export default function ScenarioOptionsWizard() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <PayBandsGuideDrawer 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+        initialPhase="buildScenario" 
+      />
       
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
@@ -216,6 +227,12 @@ export default function ScenarioOptionsWizard() {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{t('paybands.dashboard.start_modeling')}</h1>
           <p className="text-slate-500 font-bold mt-2">{t('paybands.wizard.step1.desc')}</p>
         </div>
+        <button 
+           onClick={() => setIsGuideOpen(true)}
+           className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 dark:text-indigo-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"
+        >
+          <HelpCircle className="w-4 h-4" /> {t('common.help', { defaultValue: 'Help' })}
+        </button>
       </div>
 
       <div className="flex items-center justify-between px-6 pb-6">
@@ -278,9 +295,9 @@ export default function ScenarioOptionsWizard() {
                   <div className="space-y-2">
                      <label className="text-xs font-bold text-slate-500 uppercase">{t('paybands.wizard.step1.effective_dates')}</label>
                      <div className="flex items-center gap-2">
-                        <input required type="date" value={effStart} onChange={e=>setEffStart(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none" />
+                        <input required type="date" value={effStart} onChange={e=>setEffStart(e.target.value)} className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none" />
                         <span className="text-slate-400 font-bold">{t('paybands.wizard.common.to')}</span>
-                        <input required type="date" value={effEnd} onChange={e=>setEffEnd(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none" />
+                        <input required type="date" value={effEnd} onChange={e=>setEffEnd(e.target.value)} className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none" />
                      </div>
                   </div>
                </div>
@@ -310,7 +327,7 @@ export default function ScenarioOptionsWizard() {
                      <p className="text-sm font-semibold text-slate-500">{t('paybands.wizard.step2.desc')}</p>
                      <div className="flex gap-6">
                         {['MERCER', 'WTW', 'THIRD'].map(prov => (
-                           <div key={prov} className="flex-1 space-y-2">
+                           <div key={prov} className="flex-1 min-w-0 space-y-2">
                               <label className="text-xs font-bold text-slate-500 uppercase">{prov} {t('paybands.wizard.step2.weight_label')}</label>
                               <div className="relative">
                                  <input 
