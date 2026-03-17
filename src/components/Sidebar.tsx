@@ -4,7 +4,8 @@ import {
   Users, Database, Calculator, ClipboardCheck, 
   BarChart3, ShieldCheck, Settings, Layers, 
   FileUp, History, Sparkles, ChevronRight, Inbox,
-  HelpCircle
+  HelpCircle, LayoutGrid, Search, Activity, Cpu,
+  Briefcase
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { approvalsApi } from '../services/approvalsApi';
@@ -52,25 +53,35 @@ const Sidebar = ({ onStartTour }: { onStartTour?: () => void }) => {
 
   const sections: SidebarSection[] = [
     {
-      title: t('sidebar.strategy'),
+      title: t('workspace_hub.pillars.design.title'),
       items: [
-        { name: t('dashboard.title'), icon: Sparkles, href: '/app' },
-        { name: t('sidebar.scenarios'), icon: Calculator, href: '/app/comp/scenarios' },
-        ...(isAdmin ? [
-          { name: t('sidebar.cycles'), icon: Layers, href: '/app/comp/cycles' },
-        ] : []),
-        { name: t('sidebar.pay_bands'), icon: BarChart3, href: '/app/pay-bands' },
+        { name: t('workspace_hub.modules.job_profiles.title'), icon: Briefcase, href: '/workspace/job-description/profiles' },
+        { name: t('workspace_hub.modules.m3.title'), icon: LayoutGrid, href: '/workspace/job-evaluation' },
+        { name: t('workspace_hub.modules.m2.title'), icon: BarChart3, href: '/app/pay-bands' },
       ]
     },
     {
-      title: t('sidebar.intelligence'),
+      title: t('workspace_hub.pillars.diagnose.title'),
       items: [
-        { name: t('sidebar.reports'), icon: ShieldCheck, href: '/app/reports' },
-        { 
-          name: t('sidebar.approvals'), 
-          icon: ClipboardCheck, 
-          href: isAdmin || visibility.hasInbox ? '/app/approvals/inbox' : '/app/approvals/my-plan' 
-        },
+        { name: t('sidebar.intelligence'), icon: ShieldCheck, href: '/app/reports' },
+        { name: t('workspace_hub.modules.risk_radar.title'), icon: Activity, href: '#' },
+        { name: t('workspace_hub.modules.market_alignment.title'), icon: Search, href: '#' },
+      ]
+    },
+    {
+      title: t('workspace_hub.pillars.simulate.title'),
+      items: [
+        { name: t('workspace_hub.modules.m1.title'), icon: Calculator, href: '/app/comp/scenarios' },
+        ...(isAdmin ? [
+          { name: t('sidebar.cycles'), icon: Layers, href: '/app/comp/cycles' },
+        ] : []),
+        { name: t('workspace_hub.modules.simulation_workbench.title'), icon: LayoutGrid, href: '#' },
+      ]
+    },
+    {
+      title: t('workspace_hub.pillars.consult.title'),
+      items: [
+        { name: t('workspace_hub.modules.ai_consultant.title'), icon: Cpu, href: '#' },
       ]
     },
     {

@@ -75,3 +75,4 @@ i18n
   });
 
 export default i18n;
+// Cache-buster: 2026-03-11T06:33:00Z - Forcing HMR JSON reload for IT/DE

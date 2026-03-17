@@ -1,6 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, Calculator, BarChart3, Layers, DollarSign, Activity, ChevronRight, Sparkles, FileText } from 'lucide-react';
+import { 
+  LogOut, Calculator, BarChart3, Layers, DollarSign, 
+  Activity, ChevronRight, Sparkles, FileText, 
+  TrendingUp, AlertCircle, PlayCircle, Cpu, 
+  Search, Briefcase, LayoutGrid, ShieldCheck
+} from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import gsap from 'gsap';
 import { useTranslation } from 'react-i18next';
@@ -42,49 +47,63 @@ export default function WorkspaceHome({ profile }: { profile: any }) {
     navigate('/', { replace: true });
   };
 
-  const modules = [
+  const pillars = [
     {
-      title: t('workspace_hub.modules.m1.title'),
-      description: t('workspace_hub.modules.m1.desc'),
+      id: 'design',
+      title: t('workspace_hub.pillars.design.title'),
+      description: t('workspace_hub.pillars.design.desc'),
+      icon: Briefcase,
+      color: 'emerald',
+      modules: [
+        { title: t('workspace_hub.modules.job_profiles.title'), icon: FileText, link: '/workspace/job-description/profiles', status: 'Active' },
+        { title: t('workspace_hub.modules.m3.title'), icon: LayoutGrid, link: '/workspace/job-evaluation', status: 'Active' },
+        { title: t('workspace_hub.modules.m2.title'), icon: BarChart3, link: '/app/pay-bands', status: 'Active' },
+      ]
+    },
+    {
+      id: 'diagnose',
+      title: t('workspace_hub.pillars.diagnose.title'),
+      description: t('workspace_hub.pillars.diagnose.desc'),
+      icon: ShieldCheck,
+      color: 'blue',
+      modules: [
+        { title: t('sidebar.intelligence'), icon: BarChart3, link: '/app/reports', status: 'Active' },
+        { title: t('workspace_hub.modules.risk_radar.title'), icon: Activity, link: '#', status: 'Concept' },
+        { title: t('workspace_hub.modules.market_alignment.title'), icon: Search, link: '#', status: 'Concept' },
+      ]
+    },
+    {
+      id: 'simulate',
+      title: t('workspace_hub.pillars.simulate.title'),
+      description: t('workspace_hub.pillars.simulate.desc'),
       icon: Calculator,
-      status: 'Active',
-      link: '/app/comp/scenarios'
+      color: 'orange',
+      modules: [
+        { title: t('workspace_hub.modules.m1.title'), icon: Calculator, link: '/app/comp/scenarios', status: 'Active' },
+        { title: t('workspace_hub.modules.simulation_workbench.title'), icon: LayoutGrid, link: '#', status: 'Concept' },
+        { title: t('workspace_hub.modules.scenario_comparison.title'), icon: Layers, link: '#', status: 'Concept' },
+      ]
     },
     {
-      title: t('workspace_hub.modules.m2.title'),
-      description: t('workspace_hub.modules.m2.desc'),
-      icon: BarChart3,
-      status: 'Active',
-      link: '/workspace/paybands'
-    },
-    {
-      title: t('workspace_hub.modules.m3.title'),
-      description: t('workspace_hub.modules.m3.desc'),
-      icon: Layers,
-      status: 'Active',
-      link: '/workspace/job-evaluation'
-    },
-    {
-      title: t('workspace_hub.modules.m4.title'),
-      description: t('workspace_hub.modules.m4.desc'),
-      icon: DollarSign,
-      status: 'Coming Soon',
-      link: '#'
-    },
-    {
-      title: t('workspace_hub.modules.m5.title'),
-      description: t('workspace_hub.modules.m5.desc'),
-      icon: Activity,
-      status: 'Coming Soon',
-      link: '#'
-    },
-    {
-      title: t('workspace_hub.modules.job_description.title'),
-      description: t('workspace_hub.modules.job_description.desc'),
-      icon: FileText,
-      status: 'Active',
-      link: '/workspace/job-description'
+      id: 'consult',
+      title: t('workspace_hub.pillars.consult.title'),
+      description: t('workspace_hub.pillars.consult.desc'),
+      icon: Cpu,
+      color: 'purple',
+      isCenterpiece: true,
+      modules: [
+        { title: t('workspace_hub.modules.ai_consultant.title'), icon: Sparkles, link: '#', status: 'Active' },
+        { title: t('workspace_hub.modules.ai_reasoning.explain_mode'), icon: FileText, link: '#', status: 'Concept' },
+        { title: t('workspace_hub.modules.ai_reasoning.recommend_mode'), icon: TrendingUp, link: '#', status: 'Concept' },
+      ]
     }
+  ];
+
+  const executiveMetrics = [
+    { label: t('workspace_hub.executive_summary.payroll'), value: '$142.5M', trend: '+2.1%', icon: DollarSign },
+    { label: t('workspace_hub.executive_summary.market_alignment'), value: '92.4%', trend: 'Optimum', icon: Search },
+    { label: t('workspace_hub.executive_summary.equity_risk'), value: t('common.risk_levels.medium'), trend: '-5%', icon: AlertCircle, color: 'text-orange-400' },
+    { label: t('workspace_hub.executive_summary.active_scenarios'), value: '4', trend: t('workspace_hub.modules.badges.active'), icon: PlayCircle },
   ];
 
   const availableLangs = ['en', 'es', 'pt', 'it', 'fr', 'de'];
@@ -143,66 +162,150 @@ export default function WorkspaceHome({ profile }: { profile: any }) {
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        <div className="mb-20 stagger-fade max-w-4xl">
-          <h2 className="text-5xl sm:text-7xl font-bold font-outfit tracking-tighter mb-8 !text-white leading-[1.1]">
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        {/* Welcome Header */}
+        <div className="mb-16 stagger-fade max-w-4xl">
+          <h2 className="text-4xl sm:text-6xl font-bold font-outfit tracking-tighter mb-6 !text-white leading-[1.1]">
             {t('workspace_hub.hero.welcome')}<span className="font-serif italic font-normal text-[#CC5833]">{t('workspace_hub.hero.highlight')}</span>
           </h2>
-          <p className="text-xl sm:text-2xl !text-white/40 leading-relaxed max-w-2xl font-light">
+          <p className="text-lg sm:text-xl !text-white/40 leading-relaxed max-w-2xl font-light">
             {t('workspace_hub.hero.desc')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {modules.map((mod, i) => {
-            const isClickable = mod.status === 'Active';
-            return (
-              <Link 
-                key={i} 
-                to={mod.link}
-                className={`stagger-fade group relative rounded-[2.5rem] border border-white/10 overflow-hidden bg-white/[0.04] backdrop-blur-md transition-all duration-700 hover:bg-white/[0.08] hover:border-white/30 hover:-translate-y-3 ${isClickable ? 'cursor-pointer' : 'cursor-default opacity-40 grayscale shadow-none'}`}
-                onClick={(e) => {
-                  if (!isClickable) e.preventDefault();
-                }}
-              >
-                {/* Visual Highlight for Active */}
-                {isClickable && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent opacity-30 group-hover:opacity-60 transition-opacity duration-1000" />
-                )}
-                
-                <div className="p-10 h-full flex flex-col relative z-20">
-                  <div className="flex items-start justify-between mb-12">
-                    <div className={`w-14 h-14 rounded-3xl flex items-center justify-center border shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-3 ${
-                      isClickable 
-                        ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
-                        : 'bg-white/10 border-white/20 text-white/50'
-                    }`}>
-                      <mod.icon className="w-7 h-7" />
-                    </div>
-                    {isClickable ? (
-                      <div className="bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-mono font-bold uppercase tracking-widest px-4 py-1.5 rounded-full !text-emerald-400 shadow-lg shadow-emerald-500/10">
-                        {t('workspace_hub.modules.badges.active')}
-                      </div>
-                    ) : (
-                      <div className="bg-white/5 border border-white/10 text-[10px] font-mono font-bold uppercase tracking-widest px-4 py-1.5 rounded-full !text-white/20">
-                        {t('workspace_hub.modules.badges.concept')}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold font-outfit mb-4 !text-white group-hover:!text-emerald-400 transition-colors uppercase tracking-tight">{mod.title}</h3>
-                  <p className="text-base !text-white/30 leading-relaxed mb-12 flex-1 group-hover:!text-white/60 transition-colors">
-                    {mod.description}
-                  </p>
-                  
-                  <div className={`mt-auto flex items-center gap-2 text-sm font-bold font-outfit tracking-wider transition-all duration-700 ${isClickable ? 'text-[#CC5833] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0' : '!text-white/10'}`}>
-                    {isClickable ? t('workspace_hub.modules.actions.launch') : t('workspace_hub.modules.actions.preview')}
-                    {isClickable && <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
-                  </div>
+        {/* Executive Metrics Overview */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 stagger-fade">
+          {executiveMetrics.map((metric, i) => (
+            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 backdrop-blur-sm hover:bg-white/[0.05] transition-colors group">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 text-emerald-400 group-hover:scale-110 transition-transform">
+                  <metric.icon className="w-5 h-5" />
                 </div>
+                <span className={`text-[10px] font-mono font-bold tracking-widest uppercase ${metric.trend.includes('+') ? 'text-emerald-400' : metric.trend.includes('-') ? 'text-orange-400' : 'text-blue-400'}`}>
+                  {metric.trend}
+                </span>
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.2em] font-black text-white/40 mb-1">{metric.label}</p>
+              <p className={`text-3xl font-bold font-outfit !text-white ${metric.color || ''}`}>{metric.value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Four Pillars Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          {pillars.map((pillar, i) => (
+            <div 
+              key={pillar.id}
+              className={`stagger-fade group relative rounded-[3rem] border border-white/10 overflow-hidden bg-white/[0.02] backdrop-blur-xl transition-all duration-700 hover:border-white/20 p-8 sm:p-12 ${pillar.isCenterpiece ? 'lg:col-span-2 border-emerald-500/20 bg-emerald-500/[0.02]' : ''}`}
+            >
+              {/* Pillar Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-10">
+                <div className={`w-16 h-16 rounded-[2rem] flex items-center justify-center border shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-3 ${
+                  pillar.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
+                  pillar.color === 'blue' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' :
+                  pillar.color === 'orange' ? 'bg-orange-500/10 border-orange-500/20 text-orange-400' :
+                  'bg-purple-500/10 border-purple-500/20 text-purple-400'
+                }`}>
+                  <pillar.icon className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold font-outfit !text-white mb-2">{pillar.title}</h3>
+                  <p className="text-sm !text-white/40 max-w-sm">{pillar.description}</p>
+                </div>
+              </div>
+
+              {/* Pillar Modules */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {pillar.modules.map((mod, j) => {
+                  const isActive = mod.status === 'Active';
+                  return (
+                    <Link
+                      key={j}
+                      to={isActive ? mod.link : '#'}
+                      className={`p-6 rounded-[2rem] border transition-all duration-300 flex flex-col gap-4 group/mod ${
+                        isActive 
+                          ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30 cursor-pointer' 
+                          : 'bg-transparent border-dashed border-white/5 opacity-40 grayscale cursor-default'
+                      }`}
+                      onClick={(e) => !isActive && e.preventDefault()}
+                    >
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${isActive ? 'bg-white/5 text-white/60 group-hover/mod:text-emerald-400' : 'bg-white/5 text-white/20'}`}>
+                        <mod.icon className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold font-outfit !text-white mb-1 group-hover/mod:!text-emerald-400 transition-colors">{mod.title}</p>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[9px] font-mono tracking-widest uppercase py-0.5 px-2 rounded-full border ${
+                            isActive ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-white/5 border-white/10 text-white/40'
+                          }`}>
+                            {isActive ? t('workspace_hub.modules.badges.active') : t('workspace_hub.modules.badges.concept')}
+                          </span>
+                        </div>
+                      </div>
+                      {isActive && <ChevronRight className="w-4 h-4 text-white/20 group-hover/mod:text-emerald-400 group-hover/mod:translate-x-1 transition-all" />}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Lower Panels: Insights & Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 stagger-fade">
+          {/* Critical Insights */}
+          <div className="lg:col-span-1 bg-white/[0.02] border border-white/10 rounded-[3rem] p-8 backdrop-blur-xl">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold font-outfit !text-white flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-orange-400" />
+                {t('workspace_hub.insights.title')}
+              </h3>
+            </div>
+            <div className="space-y-4">
+              <div className="p-5 rounded-2xl bg-orange-500/5 border border-orange-500/10 group cursor-default">
+                <p className="text-xs font-mono text-orange-400 uppercase tracking-widest mb-2 font-bold">{t('workspace_hub.insights.priority_high')}</p>
+                <p className="text-sm !text-white/80 leading-relaxed font-bold">
+                  {t('workspace_hub.insights.compression', { hierarchy: 'Engineering' })}
+                </p>
+              </div>
+              <div className="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/10">
+                <p className="text-xs font-mono text-blue-400 uppercase tracking-widest mb-2 font-bold">{t('workspace_hub.insights.internal_audit')}</p>
+                <p className="text-sm !text-white/80 leading-relaxed font-bold">
+                  {t('workspace_hub.insights.below_midpoint', { count: 12 })}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Active Scenarios */}
+          <div className="lg:col-span-2 bg-white/[0.02] border border-white/10 rounded-[3rem] p-8 backdrop-blur-xl">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold font-outfit !text-white flex items-center gap-3">
+                <PlayCircle className="w-5 h-5 text-emerald-400" />
+                {t('workspace_hub.scenarios.title')}
+              </h3>
+              <Link to="/app/comp/scenarios" className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#CC5833] hover:text-emerald-400 transition-colors">
+                {t('dashboard.explore_all')}
               </Link>
-            );
-          })}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { name: 'Merit Review Q1 - Americas', status: t('plan_status.in_review'), date: t('common.time.hours_ago', { count: 2 }) },
+                { name: 'Equity Equalization 2026', status: t('plan_status.draft'), date: t('common.time.hours_ago', { count: 5 }) }
+              ].map((scenario, idx) => (
+                <div key={idx} className="p-5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer group">
+                  <div>
+                    <p className="text-sm font-bold !text-white mb-1 group-hover:text-emerald-400 transition-colors">{scenario.name}</p>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">{scenario.date}</span>
+                      <span className="text-[9px] font-mono text-emerald-400 uppercase tracking-widest font-black">{scenario.status}</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>

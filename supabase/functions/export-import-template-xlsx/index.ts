@@ -73,7 +73,7 @@ serve(async (req: Request) => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 15);
     const filename = `evocomp_import_template_v2_${timestamp}.xlsx`;
 
-    return new Response(xlsxBytes, {
+    return new Response(xlsxBytes as any, {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

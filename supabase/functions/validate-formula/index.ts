@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { parse } from "npm:mathjs@12.4.1";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { parse } from "https://esm.sh/mathjs@12.4.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,7 +22,7 @@ serve(async (req) => {
     // We use it for user-context DB queries if present; otherwise fall back to service role.
 
     const body = await req.json();
-    const { formula_dsl, tenant_id, scenario_id, column_key, dataset_id } = body;
+    const { formula_dsl, tenant_id: _tenant_id, scenario_id: _scenario_id, column_key, dataset_id } = body;
     
     if (!formula_dsl || typeof formula_dsl !== 'string' || !column_key) {
       return new Response(JSON.stringify({ 
@@ -61,10 +61,11 @@ serve(async (req) => {
     let astNode;
     try {
       astNode = parse(parseable_dsl);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const err = e as Error;
       return new Response(JSON.stringify({ 
         status: 'invalid', 
-        errors: [{ message: `Syntax Error: ${e.message}` }] 
+        errors: [{ message: `Syntax Error: ${err.message}` }] 
       }), { 
         status: 200, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -74,7 +75,7 @@ serve(async (req) => {
     // 4. AST Validation: Check against dangerous structures
     const validationErrors: { message: string }[] = [];
     
-    astNode.traverse((node: any) => {
+    (astNode as any).traverse((node: any) => {
       // Disallow assignment nodes to prevent mutation attempts
       if (node.isAssignmentNode) {
         validationErrors.push({ message: 'Assignments are not allowed in formulas.' });
@@ -130,24 +131,8 @@ serve(async (req) => {
       const visited = new Set<string>();
       const recursionStack = new Set<string>();
 
-      function dfs(node: string): boolean {
-        if (recursionStack.has(node)) return true;
-        if (visited.has(node)) return false;
-
-        visited.add(node);
-        recursionStack.add(node);
-
-        const deps = graph.get(node) || [];
-        for (const dep of deps) {
-          if (dfs(dep)) return true;
-        }
-
-        recursionStack.delete(node);
-        return false;
-      }
-
       for (const node of graph.keys()) {
-        if (dfs(node)) {
+        if (dfs(node, graph, visited, recursionStack)) {
            return new Response(JSON.stringify({ 
              status: 'invalid', 
              errors: [{ message: `Circular dependency detected involving column '${node}'. Please check formulas.` }] 
@@ -169,13 +154,30 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
     });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     return new Response(JSON.stringify({ 
       status: 'invalid', 
-      errors: [{ message: `Server error: ${err.message}` }]
+      errors: [{ message: `Server error: ${error.message}` }]
     }), { 
       status: 500, 
       headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
     });
   }
 });
+
+function dfs(node: string, graph: Map<string, string[]>, visited: Set<string>, recursionStack: Set<string>): boolean {
+  if (recursionStack.has(node)) return true;
+  if (visited.has(node)) return false;
+
+  visited.add(node);
+  recursionStack.add(node);
+
+  const deps = graph.get(node) || [];
+  for (const dep of deps) {
+    if (dfs(dep, graph, visited, recursionStack)) return true;
+  }
+
+  recursionStack.delete(node);
+  return false;
+}

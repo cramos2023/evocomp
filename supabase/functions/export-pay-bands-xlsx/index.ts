@@ -112,7 +112,7 @@ serve(async (req: Request) => {
     const safeTs = ts.replace(/[:.]/g, '-').slice(0, 15);
     const filename = `evocomp_pay_bands_${safeTs}.xlsx`;
 
-    return new Response(xlsxBytes, {
+    return new Response(xlsxBytes as any, {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

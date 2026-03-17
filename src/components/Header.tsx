@@ -29,7 +29,7 @@ const Header = ({ profile }: HeaderProps) => {
   ];
 
   return (
-    <header className="h-20 bg-[rgb(var(--surface-shell))] border-b border-[rgb(var(--border))] px-8 flex items-center justify-between sticky top-0 z-40 transition-colors duration-500">
+    <header className="h-20 bg-[rgb(var(--surface-shell))] dark:bg-black/60 dark:backdrop-blur-2xl border-b border-[rgb(var(--border))] dark:border-white/10 px-8 flex items-center justify-between sticky top-0 z-50 transition-all duration-500">
       <div className="flex items-center gap-6 flex-1">
         <div className="relative w-full max-w-lg group">
           <div className="relative flex items-center gap-4 bg-[rgb(var(--bg-surface-2))] px-4 py-2.5 rounded-[var(--radius-btn)] border border-[rgb(var(--border))] group-focus-within:ring-[3px] group-focus-within:ring-[rgba(46,79,210,0.18)] group-focus-within:border-[rgb(var(--primary))] transition-all">

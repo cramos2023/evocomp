@@ -98,56 +98,46 @@
       "history": "Cronologia Generazione Recente"
     },
     "approvals": {
-      "title": "Governance & Approvazioni",
-      "subtitle": "Rivedi o rifiuta le proposte di scenari di compensi.",
-      "my_actions": "Le mie azioni",
-      "all_requests": "Tutte le richieste",
-      "queue_stats": "Statistiche Coda",
-      "wait_time": "Tempo di attesa (Ø)",
-      "pending_amount": "Importo in sospeso",
-      "guardrails": "Regole di Policy",
-      "guardrails_desc": "L'applicazione automatica di RLS garantisce la privacy.",
-      "filter_placeholder": "Filtra per scenario o proprietario...",
-      "table": {
-        "scenario": "Scenario Proposto",
-        "financials": "Dati Finanziari",
-        "status": "Stato"
-      }
+      "manager_workspace": "Area manager",
+      "no_active_plan": "Nessun piano di merito attivo trovato per il tuo account.",
+      "review_team_recs": "Rivedi le raccomandazioni di merito del tuo team e inviale per l'approvazione. Una volta inviato, il tuo piano sarà esaminato dal tuo approvatore.",
+      "cycle_progress": "Avanzamento del Ciclo",
+      "view_reports": "Visualizza report dettagliati sull'impatto del team",
+      "approver_inbox": "Centro approvazioni",
+      "approver_inbox_subtitle": "Rivedi le raccomandazioni e gestisci la governance gerarchica.",
+      "submit_for_approval": "Invia per approvazione",
+      "rejection_reason": "Motivo del rifiuto",
+      "reject_placeholder": "Fornire un motivo per il rifiuto...",
+      "provide_reason_title": "Azione richiesta: Motivo del rifiuto",
+      "approve": "Approva",
+      "reject": "Rifiuta",
+      "rejection_alert": "Questo piano è stato respinto. Rivedere il motivo di seguito e inviarlo di nuovo.",
+      "no_rejection_reason": "Nessun motivo specifico fornito.",
+      "total_applied": "Totale applicato",
+      "team_members": "Membri del team",
+      "empty_inbox": "Nessun piano in attesa di approvazione.",
+      "plan_details": "Dettagli del piano",
+      "last_action": "Ultima azione",
+      "by": "Da",
+      "on": "il"
     },
     "pay_bands": {
-      "title": "Fasce Salariali",
-      "subtitle": "Gestire intervalli di compensazione, punti medi e dispersione.",
-      "total": "Totale Fasce",
-      "avg_spread": "Dispersione Media",
-      "currency_policy": "Politica Valutaria Globale",
-      "currency_policy_desc": "La conversione valutaria si applica automaticamente.",
-      "bulk_upload": "Caricamento massivo CSV",
+      "filter_all": "Tutti",
+      "search_placeholder": "Cerca per livello...",
+      "results": "fasce",
+      "col_grade": "Livello",
+      "col_basis": "Tipo di Base",
+      "col_country": "Paese",
+      "col_currency": "Valuta",
+      "create_title": "Nuova Fascia Salariale",
+      "bulk_upload": "Caricamento di Massa CSV",
       "download_template": "Scarica Modello",
-      "create": "Crea Fascia",
+      "uploading": "Caricamento...",
       "upload_success": "{{count}} fasce caricate con successo.",
-      "upload_error": "Errore durante il caricamento. Controlla il formato CSV.",
-      "delete_confirm_title": "Sei sicuro di voler eliminare questa fascia retributiva?",
-      "delete_confirm_subtitle": "Questa azione non può essere annullata e rimuoverà permanentemente questo record.",
-      "delete_confirm_button": "Elimina fascia",
-      "fx_simulation": {
-        "title": "Simulazione di Conversione",
-        "subtitle": "Anteprima degli intervalli convertiti in un'altra valuta",
-        "convert_to": "Converti in:",
-        "col_grade_basis": "Grado / Base",
-        "col_source_currency": "Valuta di Origine",
-        "col_rate": "Tasso",
-        "col_min": "Minimo",
-        "col_mid": "Medio",
-        "col_max": "Massimo",
-        "no_data": "Nessun dato da convertire"
-      },
-      "table": {
-        "family": "Famiglia Professionale / Livello",
-        "currency": "Valuta",
-        "range": "INTERVALLO (MIN - MED - MAX)",
-        "spread": "DISPERSIONE"
-      },
-      "empty": "Nessuna fascia definita. Clicca \"Crea Fascia\" per iniziare."
+      "upload_error": "Errore di caricamento. Si prega di controllare il formato CSV.",
+      "all_years": "Tutti gli anni",
+      "all_months": "Tutti i mesi",
+      "current_period": "Periodo attuale"
     },
     "imports": {
       "title": "Database",
@@ -229,195 +219,855 @@
       "privacy": "Privacy Infrastruttura",
       "privacy_desc": "Lo strato RLS garantisce la separazione dei dati."
     },
-  "pages": {
+    "merit": {
+      "type_merit_review": "Revisione Meriti",
+      "type_general": "Generale",
+      "back": "Indietro",
+      "next": "Avanti",
+      "cancel": "Annulla",
+      "creating": "Creazione...",
+      "create_scenario": "Crea Scenario",
+      "builder_title": "Crea Scenario Revisione Meriti",
+      "builder_subtitle": "Configura base di compensi e budget.",
+      "step1_label": "Identità",
+      "step2_label": "Parametri",
+      "step3_label": "Anteprima",
+      "scenario_name": "Nome Scenario",
+      "scenario_name_placeholder": "Es: Revisione Q1 2026",
+      "select_snapshot": "Seleziona Snapshot",
+      "snapshot_placeholder": "— Seleziona —",
+      "base_currency": "Valuta di Base",
+      "comp_basis": "Base di Compensi",
+      "basis_base_salary": "Salario Base",
+      "basis_annual_target_cash": "Target Cash Annuale",
+      "basis_total_guaranteed": "Totale Garantito",
+      "basis_best_match": "Flessibile (Migliore Corrispondenza)",
+      "approved_budget_pct": "Budget Approvato (%)",
+      "budget_pct_hint": "Es: 20%",
+      "step_factor": "Fattore Step",
+      "thresholds": "Soglie",
+      "threshold_t1": "T1",
+      "threshold_t2": "T2",
+      "threshold_t3": "T3",
+      "fte_hours": "Ore FTE",
+      "matrix_preview_desc": "Anteprima linee guida.",
+      "matrix_note": "Budget {{budget}}, fattore {{step}}.",
+      "rating": "Valutazione",
+      "zone_below_min": "< Min",
+      "zone_below_mid": "Min–Mid",
+      "zone_above_mid": "Mid–Max",
+      "zone_above_max": "> Max",
+      "back_to_scenarios": "Torna agli Scenari",
+      "snapshot": "Snapshot",
+      "budget_pct_label": "Budget",
+      "run_number": "Esecuzione",
+      "run_scenario": "Esegui",
+      "generate_guidelines": "Genera Linee Guida",
+      "open_workbench": "Apri Workbench",
+      "mode_execution": "Esecuzione",
+      "mode_guidelines": "Linee Guida",
+      "running": "In corso...",
+      "no_runs_title": "Nessuna esecuzione",
+      "no_runs_subtitle": "Clicca su Esegui.",
+      "results_by_employee": "Risultati per Dipendente",
+      "employees": "dipendenti",
+      "no_results_in_run": "Nessun risultato.",
+      "baseline_total": "Riferimento",
+      "approved_budget": "Budget Approvato",
+      "applied_total": "Totale Applicato",
+      "remaining_budget": "Budget Rimanente",
+      "budget_status": "Stato Budget",
+      "budget_status_within": "Nel Budget",
+      "budget_status_over": "Fuori Budget",
+      "quality_report": "Rapporto Qualità Dati",
+      "qr_total": "Totale",
+      "qr_missing_band": "Senza Fascia",
+      "qr_invalid_rating": "Valutazione Invalida",
+      "qr_invalid_hours": "Ore Invalide",
+      "qr_missing_basis": "Base Mancante",
+      "qr_missing_variable": "Variabile Mancante",
+      "qr_missing_fx": "FX Mancante",
+      "qr_below_min": "Sotto il Minimo",
+      "qr_above_max": "Sopra Max",
+      "col_employee_id": "ID",
+      "col_rating": "Valut.",
+      "col_grade": "Grado",
+      "col_basis_amount": "Importo",
+      "col_band_mid": "Medio",
+      "col_compa_ratio": "Compa",
+      "col_zone": "Zona",
+      "col_guideline_pct": "% Linea Guida",
+      "col_applied_pct": "% Applicato",
+      "col_increase": "Aumento",
+      "col_new_amount": "Nuovo Importo",
+      "col_requested_pct": "% Richiesto",
+      "col_gross_increase": "Lordo",
+      "col_consolidated": "Consolidato",
+      "col_lump_sum": "Una Tantum",
+      "col_budget_spend": "Spesa Budg.",
+      "col_compa_after": "Compa Dopo",
+      "col_flags": "Indicatori",
+      "band_min": "Min",
+      "band_mid": "Mid",
+      "band_max": "Max",
+      "error_name_required": "Nome richiesto.",
+      "error_snapshot_required": "Seleziona snapshot.",
+      "error_grade_required": "Grado richiesto.",
+      "error_band_amounts_required": "Min/Mid/Max richiesti.",
+      "page_showing": "Mostrando",
+      "page_of": "di",
+      "page_prev": "Precedente",
+      "page_next": "Successivo",
+      "page_rows_per_page": "Righe per pagina"
+    },
+    "common": {
+      "optional": "opzionale",
+      "saving": "Salvataggio...",
+      "confirm": "Conferma",
+      "cancel": "Annulla",
+      "error": "Errore",
+      "success": "Successo",
+      "next_steps": "Passaggi successivi",
+      "configure": "Configura",
+      "details": "Dettagli",
+      "records": "Record",
+      "back": "Indietro",
+      "back_to_scenarios": "Torna agli Scenari",
+      "running": "In esecuzione...",
+      "employee": "Dipendente",
+      "search": "Cerca",
+      "export": "Export",
+      "help": "Aiuto"
+    },
+    "plan_status": {
+      "draft": "Bozza",
+      "submitted": "Inviato",
+      "in_review": "In revisione",
+      "approved": "Approvato",
+      "rejected": "Respinto",
+      "locked": "Bloccato",
+      "is_locked": "Blocco sicuro"
+    },
+    "errors": {
+      "gating_failed": {
+        "title": "Controllo politica di gating fallito",
+        "message": "Il ciclo di merito non può essere pubblicato perché le condizioni normative non sono soddisfatte.",
+        "remediation": "Controlla se il ciclo è chiuso, tutti i piani sono approvati e il validatore non segnala errori."
+      },
+      "dead_run_data": {
+        "title": "Fallimento integrità dati (DEAD_RUN)",
+        "message": "L'esecuzione dello scenario selezionato contiene dati finanziari non validi o vuoti.",
+        "remediation": "Riesegui il motore dello scenario con un nuovo snapshot. Assicurati che gli stipendi e gli aumenti raccomandati siano popolati correttamente."
+      }
+    },
+    "merit_admin": {
+      "create_cycle": {
+        "title": "Nuovo Ciclo",
+        "subtitle": "Configura un nuovo periodo di revisione.",
+        "name_label": "Nome del Ciclo",
+        "name_placeholder": "es. Revisione Salariale Q1 2026",
+        "start_date": "Data di Inizio",
+        "end_date": "Data di Fine",
+        "budget": "Budget",
+        "currency": "Valuta",
+        "cancel": "Annulla",
+        "submit": "Crea Ciclo"
+      },
+      "sidebar_label": "Amministrazione cicli meritocratici",
+      "page_title": "Controllo Ciclo Meritocratico",
+      "page_subtitle": "Convalida la prontezza del libro paga, blocca i piani dei manager e chiudi/riapri i cicli con tracce di audit.",
+      "refresh_audit": "Aggiorna audit",
+      "reload": "Ricarica",
+      "cycle_label": "Ciclo",
+      "loading_cycles": "Caricamento cicli...",
+      "validate_readiness": "Convalida prontezza",
+      "validating": "Convalida in corso...",
+      "report_title": "Rapporto Prontezza Libro Paga",
+      "status_ok": "OK",
+      "status_not_ready": "NON PRONTO",
+      "report_idle": "Esegui la convalida per vedere i problemi di prontezza e i segnali di budget.",
+      "summary_manager_plans": "Piani manager",
+      "summary_locked": "Bloccati",
+      "summary_effective_recs": "Recs. effettive",
+      "summary_issues": "Problemi",
+      "issues_label": "Problemi",
+      "actions_title": "Azioni Amministrative",
+      "bulk_lock_title": "Blocco di massa",
+      "bulk_lock_desc": "Blocca tutti i piani dei manager nel ciclo selezionato (audit registrato).",
+      "note_label": "Nota (richiesta)",
+      "note_placeholder": "es: Revisione finale completata",
+      "btn_lock_all": "Blocca tutti i piani",
+      "cycle_control_title": "Chiusura/Riapertura ciclo",
+      "cycle_control_desc": "La chiusura è consentita solo quando il rapporto del validatore è OK.",
+      "reason_label": "Motivo (richiesto)",
+      "reason_placeholder": "es: Approvato da TR + Finanza",
+      "btn_close_cycle": "Chiudi ciclo",
+      "btn_reopen": "Riapri",
+      "audit_cycle_title": "Audit di ciclo (chiusura/riapertura)",
+      "audit_no_events": "Nessun evento di chiusura ancora.",
+      "audit_plans_summary_title": "Riepilogo piani manager",
+      "audit_plans_total": "Totale",
+      "audit_plans_locked": "Bloccati",
+      "audit_plans_reopened": "Riaperti",
+      "audit_plans_other": "Altri",
+      "audit_plan_history_title": "Cronologia blocco piani (ultimi)",
+      "audit_plan_no_events": "Nessun evento di piano ancora.",
+      "notes_title": "Note",
+      "note_1": "La chiusura del ciclo è disabilitata a meno che il rapporto del validatore non sia OK.",
+      "note_2": "Le azioni scrivono nelle tabelle di audit e aggiornano i dati automaticamente.",
+      "note_3": "Se il percorso di importazione del tuo client Supabase differisce, aggiorna src/services/meritAdminApi.ts.",
+      "modal_confirm_title": "Conferma Azione",
+      "modal_confirm_btn": "Conferma",
+      "modal_cancel_btn": "Annulla",
+      "success_bulk_lock": "Blocco di massa eseguito ({{count}} piani).",
+      "success_action": "{{action}} eseguito.",
+      "publish_export_title": "Pubblica ed Esporta",
+      "publish_export_desc": "Finalizza i risultati del ciclo pubblicando lo scenario migliore e generando il CSV per le buste paga.",
+      "status_published": "PUBBLICATO",
+      "published_on": "Pubblicato il {{date}}",
+      "scenario_select_label": "Seleziona scenario da pubblicare",
+      "publish_recommended": "Consigliato",
+      "publish_reason_required": "Motivo della selezione manuale (obbligatorio)",
+      "publish_reason_placeholder": "Specifica perché è stato scelto questo scenario...",
+      "btn_publish": "Pubblica Risultati",
+      "btn_export": "Esporta CSV Buste Paga",
+      "published_by": "Da {{name}}",
+      "confirm_publish_title": "Conferma Pubblicazione",
+      "confirm_publish_desc": "Questo segnerà le raccomandazioni come effettive e bloccherà l'esportazione. Continuare?",
+      "success_published": "Pubblicato con successo ({{count}} record).",
+      "gating_title": "Politica di Gating",
+      "gate_closed": "Ciclo Chiuso",
+      "gate_locked": "Tutti i Piani Bloccati",
+      "gate_validator": "Validatore Pronto",
+      "error_gating_failed": "Condizioni di gating non soddisfatte per la pubblicazione.",
+      "guide": {
+        "title": "Guida Operativa Paghe",
+        "step1_title": "Passo 1: Validazione Dati",
+        "step1_desc": "Assicurati che tutti i manager abbiano terminato e che non ci siano errori di budget.",
+        "step2_title": "Passo 2: Chiusura Ufficiale",
+        "step2_desc": "Blocca il ciclo per impedire modifiche. È l'ultimo punto di controllo prima del pagamento.",
+        "step3_title": "Passo 3: Pubblicazione e Paghe",
+        "step3_desc": "Scegli lo scenario vincente e genera il file CSV per il tuo sistema paghe.",
+        "step_progress": "Passo {{current}} di {{total}}",
+        "action_required": "Azione Richiesta"
+      },
+      "tooltips": {
+        "gating": "Regole automatiche che prevengono errori prima del pagamento.",
+        "validator": "Scansiona migliaia di righe alla ricerca di incongruenze matematiche."
+      },
+      "onboarding": {
+        "title": "Benvenuto in EvoComp Intelligence",
+        "subtitle": "Guida rapida per i processi di compensazione",
+        "next": "Avanti",
+        "back": "Indietro",
+        "finish": "Fine",
+        "skip": "Salta Tour",
+        "step1_title": "1. Importazione Dati",
+        "step1_content": "Carica i dati dei dipendenti in 'Importazioni' usando il nostro modello CSV. Riceverai una conferma istantanea.",
+        "step2_title": "2. Selezione e Origine",
+        "step2_content": "In 'Importazioni', usa la freccia in 'Operations' per inviare i tuoi dati alla sezione Scenari.",
+        "step3_title": "3. Gestione Scenari",
+        "step3_content": "Vai su 'Scenari' per trovare le tue importazioni pronte per la valutazione dei compensi.",
+        "step4_title": "4. Parametrizzazione",
+        "step4_content": "Usa 'Nuovo Scenario' per definire budget, valute e regole di calcolo prima della modellazione.",
+        "step5_title": "5. Esecuzione e Modellazione",
+        "step5_content": "Apri il tuo scenario ed esegui il motore per modellare gli aumenti per ogni dipendente in modo accurato."
+      },
+      "cycles": {
+        "title": "Cicli di Compensazione",
+        "subtitle": "Gestisci i periodi di revisione salariale, i bonus e gli adeguamenti di equità.",
+        "new": "Nuovo Ciclo",
+        "active_count": "Cicli Attivi",
+        "planned_count": "In Pianificazione",
+        "completed_count": "Completati",
+        "history": "Cronologia Cicli",
+        "no_cycles": "Nessun ciclo configurato",
+        "learn_more": "Scopri di più sui cicli",
+        "loading": "Caricamento cicli...",
+        "no_active_cycle": "Nessun ciclo attivo"
+      },
+      "snapshots": {
+        "title": "Snapshot dei Dati",
+        "subtitle": "Repository sicuro dei censimenti dei talenti e della compensazione.",
+        "upload": "Carica Dati",
+        "fetching": "Recupero archivi dati sicuri...",
+        "empty_title": "Nessun snapshot trovato",
+        "empty_message": "Non sono stati ancora pubblicati snapshot. Importa il tuo primo set di dati per iniziare.",
+        "go_to_imports": "Vai a Importazioni",
+        "col_id_date": "ID Snapshot e Data",
+        "col_source": "Sorgente",
+        "col_headcount": "Organico",
+        "col_salary": "Salario Totale (Base)",
+        "col_currencies": "Valute",
+        "col_actions": "Azioni",
+        "view_details": "Visualizza Dettagli",
+        "run_scenario": "Esegui Scenario"
+      }
+    },
+    "landing": {
+      "nav": {
+        "services": "Services",
+        "advantage": "The EvoComp Advantage",
+        "security": "Enterprise Security",
+        "about": "About Us",
+        "client_workspace": "Client Workspace"
+      },
+      "hero": {
+        "title_1": "Expert Compensation",
+        "title_2": "Consulting — Powered by",
+        "title_3": "Next-Gen Technology",
+        "subtitle": "Built for Total Rewards teams across the Americas. We deliver bank-grade, data-driven compensation decisions faster—using EvoComp's interactive scenario engine, not static spreadsheets.",
+        "cta_workspace": "Client Workspace",
+        "cta_consultation": "Book a Consultation",
+        "mono_text": "Not a PDF shop. Not an Excel factory. A secure decision system."
+      },
+      "features": {
+        "card1_label": "Scenario Execution",
+        "card1_t1": "What-if pools, matrices, caps, and constraints—deterministic results.",
+        "card1_t2": "From modeling to execution: budget control, approvals, and governance.",
+        "card1_t3": "Traceability by design: decisions you can explain in audits.",
+        "card2_label": "Live System Status",
+        "card2_m1": "Loading secure tenant workspace…",
+        "card2_m2": "Validating JWT session token…",
+        "card2_m3": "Applying Row Level Security policies…",
+        "card2_m4": "Simulating merit cycle scenarios…",
+        "card2_m5": "Generating audit trail & evidence pack…",
+        "card3_label": "Approval Protocol",
+        "card3_lock": "Lock Scenario",
+        "card3_status": "Scenario locked • Version stamped"
+      },
+      "manifesto": {
+        "t1": "The usual question is: What went wrong?",
+        "t2_1": "We ask: What can be optimized—",
+        "t2_2": "securely, measurably, fast?",
+        "t3": ">_ From spreadsheets to a secure decision operating system."
+      },
+      "archive": {
+        "label": "Archive File 0{{num}}",
+        "card1_title": "Salary Scenario Modeling & Execution",
+        "card1_b1": "What-if scenarios across teams, countries, and pay bases.",
+        "card1_b2": "Pools, matrices, caps, eligibility rules—deterministic outcomes.",
+        "card1_b3": "Ready for approvals and controlled rollout.",
+        "card2_title": "Salary & Compensation Structures + Job Architecture",
+        "card2_b1": "Market-aligned pay bands and job leveling.",
+        "card2_b2": "Analytical job evaluation and architecture design.",
+        "card2_b3": "Consistency across geographies in the Americas.",
+        "card3_title": "Variable Pay Design + Bonus Calculations",
+        "card3_b1": "Incentive plan design with measurable levers.",
+        "card3_b2": "Bonus modeling and forecasting tied to performance.",
+        "card3_b3": "Transparent outputs for Finance and leadership."
+      },
+      "security": {
+        "title": "Enterprise-Grade Security",
+        "c1_title": "Bank-Grade Data Protection",
+        "c1_desc": "Encrypted at rest and in transit. Designed to satisfy the most stringent compliance audits requested by IT and InfoSec stakeholders in large enterprises.",
+        "c2_title": "Backend & Authentication",
+        "c2_desc": "Stateless authentication validation via rigorously verified JWT tokens. Every API call requires fresh credential resolution ensuring session integrity.",
+        "c3_title": "Tenant Isolation (RLS)",
+        "c3_desc": "Strict Row Level Security implemented directly on the PostgreSQL (Supabase) engine. Cross-tenant data bleeds are mathematically impossible by design."
+      },
+      "pricing": {
+        "title": "Engagement Models",
+        "c1_title": "Advisory Essentials",
+        "c1_b1": "Comp consulting engagements + secure deliverables",
+        "c1_b2": "Band / job architecture support",
+        "c1_b3": "Limited workspace access",
+        "c1_btn": "Request Scope",
+        "c2_badge": "Recommended",
+        "c2_title": "EvoComp Workspace",
+        "c2_b1": "Full scenario engine access + guided consulting",
+        "c2_b2": "Merit cycle execution workflows",
+        "c2_b3": "Audit-ready traceability and governance",
+        "c2_btn": "Book a Consultation",
+        "c3_title": "Enterprise",
+        "c3_b1": "Custom security posture alignment",
+        "c3_b2": "IT review support + controls documentation",
+        "c3_b3": "Multi-region operating model",
+        "c3_btn": "Talk to Security"
+      },
+      "footer": {
+        "badge": "Operating System / Active",
+        "desc": "Built for auditability, tenant isolation, and bank-grade data protection.",
+        "sitemap": "Sitemap",
+        "home": "Home",
+        "services": "Services",
+        "advantage": "Advantage",
+        "security": "Security",
+        "about": "About Us",
+        "legal": "Legal & Locale",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "contact": "Contact",
+        "rights": "© {{year}} EvoComp. All rights reserved."
+      }
+    },
+    "workbench": {
+      "title": "Workbench di Esecuzione",
+      "budget_summary": "Riepilogo Budget",
+      "budget_pool": "Poche di Budget",
+      "budget_spent": "Speso",
+      "budget_remaining": "Rimanente",
+      "search_placeholder": "Cerca dipendenti...",
+      "run_execution": "Esegui",
+      "saving": "Salvataggio...",
+      "status_draft": "BOZZA",
+      "status_runnable": "PRONTO",
+      "status_executed": "ESEGUITO",
+      "validation_error_over_guideline": "Supera direttiva",
+      "validation_error_required": "Richiesto",
+      "col_name": "Nome"
+    },
+    "paybands": {
+      "dashboard": {
+        "title": "Dashboard Fasce",
+        "subtitle": "Strutture Retributive Attive",
+        "active_structures": "Strutture Attive",
+        "recent_activity": "Attività Recente",
+        "no_structures": "Nessuna struttura pubblicata.",
+        "start_modeling": "Crea Scenario",
+        "manage_imports": "Gestisci Dati",
+        "market_coverage": "Copertura di Mercato",
+        "active_resolution": "Risoluzione attiva",
+        "resolution_desc": "Verifica quale struttura pubblicata si applica per paese, tipo base e data.",
+        "target_country": "Paese target",
+        "as_of_date": "Data di riferimento",
+        "btn_resolve": "Verifica risoluzione",
+        "resolving": "Risoluzione in corso...",
+        "match_found": "Corrispondenza trovata",
+        "version": "Versione",
+        "bands_loaded": "Bande caricate",
+        "back_dashboard": "Torna alla Dashboard"
+      },
+      "labels": {
+        "grades": "livelli",
+        "deployed": "Rilasciato",
+        "source_scenario": "Scenario di origine",
+        "hash": "Hash",
+        "run_hash": "Hash di Esecuzione",
+        "internal_grade": "Livello Interno",
+        "market_mid_aged": "Media di Mercato",
+        "proposed_min": "Min Proposto",
+        "proposed_mid": "Medio Proposto",
+        "proposed_max": "Max Proposto",
+        "spread": "Apertura",
+        "explainability": "Spiegabilità",
+        "id": "ID",
+        "bands": "Fasce",
+        "vendor_level_code": "Codice Livello Fornitore",
+        "actions": "Azioni"
+      },
+      "imports": {
+        "title": "Importazione Dati",
+        "subtitle": "Importa benchmark globali.",
+        "dragDropHint": "Trascina qui il tuo CSV.",
+        "uploading": "Elaborazione in corso...",
+        "success": "Dati importati con successo.",
+        "error": "Errore nel formato CSV.",
+        "history": "Cronologia",
+        "empty": "Nessun dato importato.",
+        "btn_upload": "Carica File",
+        "scope_placeholder": "Es: Benchmarking Regionale 2024",
+        "empty_error": "Il file CSV è vuoto o mancano dati.",
+        "required_columns_hint": "Sono supportati solo i file .csv. Assicurarsi che siano incluse le colonne richieste.",
+        "change_file": "Cambia File",
+        "upload_another": "Carica un altro"
+      },
+      "mappings": {
+        "title": "Configurazioni di Mappatura",
+        "subtitle": "Definire regole di interconnessione tra livelli tecnici di fornitori esterni e gradi aziendali interni.",
+        "empty_msg": "Non ci sono ancora regole di mappatura. Aggiungine una per iniziare.",
+        "columns": {
+          "provider": "Fornitore",
+          "country_code": "Paese (ISO)",
+          "vendor_level_code": "Codice Livello Fornitore",
+          "internal_grade": "Grado Interno",
+          "actions": "Azioni"
+        },
+        "buttons": {
+          "add_rule": "Aggiungi Regola",
+          "save_mappings": "Salva Mappature"
+        },
+        "placeholders": {
+          "country_code": "es: ITA, USA, MEX",
+          "vendor_level_code": "es: P3, 50, M2",
+          "internal_grade": "es: 14, 15, 16"
+        }
+      },
+      "wizard": {
+        "step1": {
+          "title": "Parametri Globali",
+          "desc": "Definisci ambito e valuta.",
+          "scenario_name": "Nome",
+          "country": "Paese",
+          "basis_type": "Tipo di Base",
+          "pricing_date": "Data di Valutazione",
+          "effective_dates": "Date Effettive"
+        },
+        "step2": {
+          "title": "Pesi e Proiezioni",
+          "desc": "Assegna pesi.",
+          "weights": "Pesi (%)",
+          "aging_policy": "Politica di Aging",
+          "quality_policy": "Qualità",
+          "range_policy": "Politica di Fascia",
+          "mode_global": "Modo Globale",
+          "mode_grade": "Per Livello",
+          "weight_label": "Peso",
+          "total_sum": "Somma Totale",
+          "must_equal_1": "(deve essere 1.00)",
+          "sum": "Somma"
+        },
+        "step3": {
+          "title": "Simulazione",
+          "desc": "Rivedi prima di eseguire.",
+          "run": "Esegui Motore"
+        },
+        "common": {
+          "next": "Continua",
+          "back": "Indietro",
+          "save": "Salva Bozza",
+          "to": "a"
+        }
+      },
+      "workbench": {
+        "title": "Esecuzione",
+        "run_failed": "Simulazione fallita.",
+        "run_success": "Simulazione completata.",
+        "btn_publish": "Pubblica Finale",
+        "btn_rerun": "Esegui di nuovo",
+        "min": "Min",
+        "mid": "Medio",
+        "max": "Max"
+      },
+      "validation": {
+        "weightsMustSumOne": "I pesi devono sommare 100%.",
+        "requiredField": "Campo obbligatorio.",
+        "invalidDate": "Data di fine non valida."
+      },
+      "errors": {
+        "unauthorized": "Errore di Sicurezza: Token mancante o non valido. L'accesso non verificato al motore è severamente proibito.",
+        "save_failed": "Impossibile salvare lo scenario. Controllare i dati e riprovare."
+      },
+      "actions": {
+        "publish": "Pubblica",
+        "run": "Esegui",
+        "delete": "Elimina",
+        "import": "Importa"
+      },
+      "status": {
+        "draft": "Bozza",
+        "runnable": "Pronto",
+        "published": "Pubblicato",
+        "archived": "Archiviato",
+        "completed": "Completato"
+      },
+      "basisType": {
+        "baseSalary": "Salario Base",
+        "annualTargetCash": "Cash Target Annuale",
+        "totalGuaranteed": "Totale Garantito"
+      },
+      "providers": {
+        "MERCER": "MERCER",
+        "WTW": "WTW",
+        "THIRD": "TERZE PARTI"
+      }
+    },
     "job_description": {
+      "viewer": {
+        "not_found": "Profile not found",
+        "version": "Version",
+        "edit": "Edit",
+        "sections": {
+          "key_details": "Dettagli Chiave",
+          "purpose": "Job Purpose",
+          "typical_titles": "Typical Titles",
+          "responsibilities": "Responsabilità",
+          "requirements": "Requisiti",
+          "stakeholders": "Stakeholders & Aliases",
+          "hr_restricted": "Restricted (HR/Comp)",
+          "governance": "Governance",
+          "details": "Dettagli Chiave"
+        },
+        "created": "Created",
+        "status": "Status"
+      },
       "landing": {
+        "hero": {
+          "badge": "Intelligenza Aziendale Sicura",
+          "title": "Motore di Descrizioni di Ruolo",
+          "subtitle": "Architettura Basata su IA",
+          "strategy_text": "Centralizza e standardizza le descrizioni di ruolo della tua organizzazione."
+        },
         "actions": {
           "back_to_workspace": "Torna al Workspace",
-          "coming_soon": "Prossimamente"
+          "cta_repository": "Apri Repository",
+          "cta_create": "Crea Profilo"
         },
-        "hero": {
-          "badge": "Concetto Attivo",
-          "title": "ST. Intelligenza delle Descrizioni di Ruolo",
-          "subtitle": "Centralizza e standardizza i mansionari della tua organizzazione. Usa l'IA per redigere, valutare e mappare le competenze ai ruoli in un ambiente sicuro e unificato.",
-          "strategy_text": "Architettura Strategica e Valutazione"
-        },
+        "capabilities_title": "Funzionalità del Modulo",
         "capabilities": {
-          "title": "Funzioni del Modulo",
-          "ai_drafting": {
-            "title": "Redazione con IA",
-            "desc": "Genera mansionari strutturati da zero o da modelli."
+          "ai_builder": {
+            "title": "Redazione Assistita dall’IA",
+            "desc": "Genera descrizioni strutturadas da zero o a partire da modelli."
           },
-          "competency_mapping": {
-            "title": "Mappatura Competenze",
-            "desc": "Mappa abilità e requisiti direttamente ai profili di ruolo."
+          "compliance": {
+            "title": "Conformità e Qualità",
+            "desc": "Controlli integrati per un’architettura dei ruoli coerente e affidabile."
           },
-          "version_control": {
-            "title": "Governance Biblioteca",
-            "desc": "Un unico sistema di registrazione per tutti i ruoli e versioni."
+          "versioning": {
+            "title": "Controllo Versioni",
+            "desc": "Mantieni lo storico di tutte le versioni dei profili."
           },
-          "org_chart_alignment": {
-            "title": "Allineamento Org",
-            "desc": "Assicura che i ruoli siano correttamente posizionati nella gerarchia."
+          "org_chart": {
+            "title": "Integrazione con Organigrammi",
+            "desc": "Visualizza linee di riporto e relazioni strutturali."
           },
-          "multilingual_support": {
-            "title": "Pronto per il Mondo",
-            "desc": "Supporto completo per framework e lingue internazionali."
+          "multilingual": {
+            "title": "Supporto Multilingue",
+            "desc": "Traduci e opera automaticamente oltre i confini globali."
           },
-          "professional_export": {
-            "title": "Esportazione Diretta",
-            "desc": "Genera PDF o documenti professionali all'istante."
+          "export": {
+            "title": "Esportazione Universale",
+            "desc": "Esporta in modo sicuro in PDF e nei formati ATS standard."
           }
+        },
+        "footer": {
+          "auth": "Autenticazione: Protetta da RLS",
+          "drafting": "Redazione: Ottimizzata con IA",
+          "status": "Stato: Sistema Pronto"
         }
       },
       "repository": {
-        "title": "Repository delle Descrizioni di Ruolo",
-        "subtitle": "Biblioteca istituzionale per ruoli e profili.",
-        "repository": {
-          "title": "Repository Privato",
-          "create_new": "Crea Nuovo Profilo",
-          "search_placeholder": "Cerca per titolo, codice o famiglia...",
-          "empty_state": "Nessun profilo di mansione trovato nel repository della tua organizzazione.",
-          "col_profile": "Profilo di Ruolo",
-          "col_family": "Famiglia e Livello",
-          "col_status": "Stato",
-          "status_draft": "Bozza",
-          "status_active": "Attivo",
-          "status_archived": "Archiviato"
-        }
+        "title": "Archivio Descrizioni Mansioni",
+        "columns": {
+          "title": "Titolo della Mansione",
+          "status": "Stato",
+          "updated": "Aggiornato",
+          "reference": "Codice Riferimento",
+          "career_function": "Funzione",
+          "job_level": "Job Level",
+          "actions": "Actions",
+          "function": "Funzione",
+          "level": "Livello",
+          "career_level": "Livello di Carriera"
+        },
+        "new_profile": "Crea Nuovo Profilo",
+        "search_placeholder": "Cerca profili...",
+        "filter_function": "Tutte le Funzioni",
+        "filter_level": "Tutti i Livelli",
+        "filter_status": "Tutti gli Stati",
+        "empty_title": "No Profiles Found",
+        "empty_desc": "Inizia creando il tuo primo profilo di descrizione mansione.",
+        "stats_total": "Total Profiles",
+        "stats_published": "Published",
+        "stats_drafts": "Drafts",
+        "subtitle": "Gestisci e versiona i profili di ruolo e le definizioni strutturali della tua organizzazione.",
+        "total_count": "{{count}} profili trovati",
+        "no_profiles": "Nessun profilo trovato",
+        "no_profiles_desc": "Inizia creando il tuo primo profilo di descrizione mansione."
       },
       "builder": {
-        "title": "Editor dei Profili di Ruolo",
-        "save_draft": "Salva Bozza",
-        "publish": "Pubblica Profilo",
-        "sections": {
-          "identity": "Identità e Informazioni Chiave",
-          "scope": "Scopo e Impatto",
+        "title_new": "Create Profile",
+        "title_edit": "Edit Profile",
+        "steps": {
+          "key_details": "Dettagli Chiave",
+          "scope_purpose": "Ambito e Scopo",
           "responsibilities": "Responsabilità",
-          "requirements": "Requisiti",
-          "stakeholders": "Stakeholder e Interlocutori",
-          "restricted": "Riservato (HR/Comp)"
+          "qualifications": "Qualifications",
+          "review": "Revisione e Pubblicazione",
+          "details": "Dettagli Chiave",
+          "context": "Contesto della Posizione",
+          "requirements": "Requisiti"
+        },
+        "sections": {
+          "position_context": "Contesto della Posizione",
+          "core_info": "Core Information",
+          "reporting_structure": "Reporting Structure",
+          "position_context_hint": "Definisci come questo ruolo interagisce con la gerarchia e l'ambito geografico della tua organizzazione.",
+          "key_details": "Identità Primaria",
+          "purpose": "Missione e Scopo",
+          "purpose_hint": "Descrivi il motivo fondamentale per cui esiste questa posizione in una o due frasi chiare.",
+          "responsibilities": "Responsabilità Principali",
+          "qualifications": "Qualifiche e Competenze",
+          "hr_restricted": "Controlli HR e Governance"
         },
         "fields": {
-          "job_title": "Titolo del Ruolo",
-          "reference_code": "Codice di Riferimento",
+          "associate_position": "Posizione Associata",
+          "job_title": "Titolo della Mansione",
+          "business_type": "Tipo di Business",
+          "core_jobs": "Core Jobs",
+          "select": "Select...",
+          "typical_titles": "Titoli Tipici (Alias)",
+          "geographies": "Geographies",
+          "managerial_scope": "Ambito Manageriale",
+          "budget_responsibility": "Responsabilità di Budget",
+          "supervised_levels": "Livelli Supervisionati",
+          "stakeholders": "Stakeholder Chiave",
+          "experience_min": "Esperienza (Anni)",
+          "education_min": "Minimum Education Equivalent",
+          "certifications": "Required Certifications",
+          "competencies": "Core Competencies",
+          "language_reqs": "Language Requirements",
+          "purpose": "Role Purpose",
+          "financial_impact": "Financial Impact",
+          "decision_authority": "Decision Authority",
+          "job_title_placeholder": "ad es., Senior Systems Architect",
+          "job_function": "Funzione Aziendale",
+          "career_level": "Livello di Carriera",
+          "select_placeholder": "Seleziona...",
+          "team_size": "Responsabilità per Dimensione del Team",
+          "purpose_label": "Scopo della Posizione",
+          "purpose_placeholder": "Questo ruolo è responsabile di...",
+          "reference_code": "Codice Riferimento",
           "career_function": "Funzione di Carriera",
           "job_family": "Famiglia Professionale",
-          "career_level": "Livello di Carriera",
-          "job_purpose": "Scopo della Posizione",
-          "team_size": "Dimensione del Team",
+          "position_context_hint": "Definisci come questo ruolo interagisce con la gerarchia e l'ambito geografico della tua organizzazione.",
+          "additional_info": "Informazioni Aggiuntive",
           "education": "Istruzione",
-          "experience": "Esperienza Rilevante",
-          "essential": "Essenziale",
-          "time_percent": "% di Tempo"
+          "business_support": "Supporto al Business",
+          "geographical_responsibility": "Ambito Geografico",
+          "new_position_title": "Nuovo Titolo della Posizione",
+          "placeholder_title": "ad es. Senior Talent Partner",
+          "provider_1": "Codice Fornitore 1",
+          "provider_2": "Codice Fornitore 2",
+          "provider_3": "Codice Fornitore 3",
+          "job_purpose": "Missione e Scopo"
         },
-        "validations": {
-          "total_time_error": "La somma delle percentuali di tempo deve essere esattamente 100%. Attuale: {{total}}%",
-          "required_fields": "Si prega di compilare tutti i campi di identità obbligatori."
+        "actions": {
+          "next": "Passaggio Successivo",
+          "back": "Back",
+          "save_draft": "Salva Bozza",
+          "publish": "Publish Profile",
+          "previous": "Passaggio Precedente",
+          "create_placeholder": "Crea Posizione Organizzativa"
+        },
+        "responsibilities": {
+          "title": "Responsabilità Principali",
+          "add": "Aggiungi Responsabilità",
+          "col_title": "Titolo della Responsabilità",
+          "col_description": "Description",
+          "col_weight": "Weight %",
+          "col_essential": "Essenziale",
+          "col_criticality": "Criticità",
+          "expertise_levels": {
+            "ENTRY": "Iniziale",
+            "JUNIOR": "Junior",
+            "SENIOR": "Senior",
+            "SPECIALIST": "Specialista",
+            "EXPERT": "Esperto"
+          },
+          "criticality_levels": {
+            "LOW": "Bassa",
+            "MEDIUM": "Media",
+            "HIGH": "Alta",
+            "CRITICAL": "Critica"
+          },
+          "col_category": "Categoria",
+          "total_label": "Peso Totale",
+          "must_equal_100": "Deve essere pari al 100%",
+          "col_skills": "Competenze Chiave",
+          "col_expertise": "Livello di Expertise",
+          "col_time": "% di Tempo"
+        },
+        "scope": {
+          "title": "Role Scope"
+        },
+        "qualifications": {
+          "title": "Qualifications"
+        },
+        "validation": {
+          "title_required": "Il titolo della mansione è obbligatorio",
+          "function_required": "La funzione di carriera è obbligatoria",
+          "level_required": "Il livello di carriera è obbligatorio",
+          "responsibilities_100": "Il peso totale delle responsabilità deve essere pari al 100%"
+        },
+        "error": {
+          "generic": "Si è verificato un errore. Riprova."
         }
+      },
+      "advisor": {
+        "title": "Consulente Strategico AI",
+        "description": "Analisi intelligente della descrizione della mansione rispetto ai benchmark di mercato e alle strutture interne.",
+        "trigger": "Esegui Analisi",
+        "running": "Analyzing...",
+        "blocked_warning": "Inserisci il livello di carriera per abilitare la mappatura AI.",
+        "stale_warning": "La bozza è cambiata. Esegui nuovamente l'analisi per una precisione aggiornata.",
+        "level": "Livello Mappato",
+        "band": "Ref. Band",
+        "score": "Punteggio Complessità",
+        "confidence": "Fiducia",
+        "high_confidence": "Alta",
+        "medium_confidence": "Media",
+        "low_confidence": "Bassa",
+        "show_trace": "Mostra Traccia Logica",
+        "trace": {
+          "signals_title": "Segnali di Analisi",
+          "breakdown_title": "Dettaglio Punteggio",
+          "mapping_title": "Mappatura Gerarchica",
+          "base_score": "Peso Base",
+          "normalization": "Normalizzazione",
+          "adjustments": "Rettifiche",
+          "final_score": "Punteggio Finale",
+          "mapped_level": "Livello Interno",
+          "mapped_band": "Fascia di Mercato"
+        },
+        "guidance": {
+          "geo_inferred": "Geografia inferita dai predefiniti organizzativi.",
+          "problem_solving_defaulted": "Complessità impostata sul valore base standard del livello.",
+          "experience_inferred": "Requisiti di esperienza stimati tramite analisi del titolo."
+        },
+        "mapping": {
+          "not_available": "N/D"
+        }
+      },
+      "statuses": {
+        "active": "Attivo",
+        "published": "Pubblicato",
+        "draft": "Bozza",
+        "archived": "Archiviato"
+      },
+      "geo_options": {
+        "local": "Locale",
+        "regional": "Regionale",
+        "global": "Globale",
+        "multi-country": "Multi-paese",
+        "LOCAL": "Locale",
+        "COUNTRY": "Nazionale",
+        "REGIONAL": "Regionale",
+        "GLOBAL": "Globale"
+      },
+      "team_options": {
+        "0": "Nessuna responsabilità di team",
+        "none": "Nessuno",
+        "1-5": "1-5 dipendenti",
+        "6-20": "6-20 dipendenti",
+        "21-50": "21-50 dipendenti",
+        "51+": "oltre 51 dipendenti",
+        "1_5": "Da 1 a 5 collaboratori",
+        "6_15": "Da 6 a 15 collaboratori",
+        "16_50": "Da 16 a 50 collaboratori",
+        "50_PLUS": "Più di 50 collaboratori"
+      },
+      "managerial_options": {
+        "none": "Nessuna",
+        "direct": "Solo Report Diretti",
+        "indirect": "Diretti e Indiretti",
+        "executive": "Executive / Aziendale",
+        "NO_DIRECT": "Senza gestione diretta di persone",
+        "MANAGES_IC": "Gestisce collaboratori individuali",
+        "MANAGES_MANAGERS": "Gestisce manager",
+        "EXECUTIVE": "Leadership esecutiva"
+      },
+      "budget_options": {
+        "none": "Nessuna",
+        "departmental": "Dipartimentale",
+        "divisional": "Divisionale",
+        "corporate": "Corporate / Gruppo",
+        "NONE": "Nessuna responsabilità di budget",
+        "DEPT": "Budget dipartimentale",
+        "BU": "Budget della business unit",
+        "ENTERPRISE": "Budget aziendale"
       }
     }
-  },
-  "merit": {
-    "type_merit_review": "Revisione Meriti",
-    "type_general": "Generale",
-    "back": "Indietro",
-    "next": "Avanti",
-    "cancel": "Annulla",
-    "creating": "Creazione...",
-    "create_scenario": "Crea Scenario",
-    "builder_title": "Crea Scenario Revisione Meriti",
-    "builder_subtitle": "Configura base di compensi e budget.",
-    "step1_label": "Identità",
-    "step2_label": "Parametri",
-    "step3_label": "Anteprima",
-    "scenario_name": "Nome Scenario",
-    "scenario_name_placeholder": "Es: Revisione Q1 2026",
-    "select_snapshot": "Seleziona Snapshot",
-    "snapshot_placeholder": "— Seleziona —",
-    "base_currency": "Valuta di Base",
-    "comp_basis": "Base di Compensi",
-    "basis_base_salary": "Salario Base",
-    "basis_annual_target_cash": "Target Cash Annuale",
-    "basis_total_guaranteed": "Totale Garantito",
-    "basis_best_match": "Flessibile (Migliore Corrispondenza)",
-    "approved_budget_pct": "Budget Approvato (%)",
-    "budget_pct_hint": "Es: 20%",
-    "step_factor": "Fattore Step",
-    "thresholds": "Soglie",
-    "threshold_t1": "T1",
-    "threshold_t2": "T2",
-    "threshold_t3": "T3",
-    "fte_hours": "Ore FTE",
-    "matrix_preview_desc": "Anteprima linee guida.",
-    "matrix_note": "Budget {{budget}}, fattore {{step}}.",
-    "rating": "Valutazione",
-    "zone_below_min": "< Min",
-    "zone_below_mid": "Min–Mid",
-    "zone_above_mid": "Mid–Max",
-    "zone_above_max": "> Max",
-    "back_to_scenarios": "Torna agli Scenari",
-    "snapshot": "Snapshot",
-    "budget_pct_label": "Budget",
-    "run_number": "Esecuzione",
-    "run_scenario": "Esegui",
-    "generate_guidelines": "Genera Linee Guida",
-    "open_workbench": "Apri Workbench",
-    "mode_execution": "Esecuzione",
-    "mode_guidelines": "Linee Guida",
-    "running": "In corso...",
-    "no_runs_title": "Nessuna esecuzione",
-    "no_runs_subtitle": "Clicca su Esegui.",
-    "results_by_employee": "Risultati per Dipendente",
-    "employees": "dipendenti",
-    "no_results_in_run": "Nessun risultato.",
-    "baseline_total": "Riferimento",
-    "approved_budget": "Budget Approvato",
-    "applied_total": "Totale Applicato",
-    "remaining_budget": "Budget Rimanente",
-    "budget_status": "Stato Budget",
-    "budget_status_within": "Nel Budget",
-    "budget_status_over": "Fuori Budget",
-    "quality_report": "Rapporto Qualità Dati",
-    "qr_total": "Totale",
-    "qr_missing_band": "Senza Fascia",
-    "qr_invalid_rating": "Valutazione Invalida",
-    "qr_invalid_hours": "Ore Invalide",
-    "qr_missing_basis": "Base Mancante",
-    "qr_missing_variable": "Variabile Mancante",
-    "qr_missing_fx": "FX Mancante",
-    "qr_below_min": "Sotto il Minimo",
-    "qr_above_max": "Sopra Max",
-    "col_employee_id": "ID",
-    "col_rating": "Valut.",
-    "col_grade": "Grado",
-    "col_basis_amount": "Importo",
-    "col_band_mid": "Medio",
-    "col_compa_ratio": "Compa",
-    "col_zone": "Zona",
-    "col_guideline_pct": "% Linea Guida",
-    "col_applied_pct": "% Applicato",
-    "col_increase": "Aumento",
-    "col_new_amount": "Nuovo Importo",
-    "col_requested_pct": "% Richiesto",
-    "col_gross_increase": "Lordo",
-    "col_consolidated": "Consolidato",
-    "col_lump_sum": "Una Tantum",
-    "col_budget_spend": "Spesa Budg.",
-    "col_compa_after": "Compa Dopo",
-    "col_flags": "Indicatori",
-    "band_min": "Min",
-    "band_mid": "Mid",
-    "band_max": "Max",
-    "error_name_required": "Nome richiesto.",
-    "error_snapshot_required": "Seleziona snapshot.",
-    "error_grade_required": "Grado richiesto.",
-    "error_band_amounts_required": "Min/Mid/Max richiesti.",
-    "page_showing": "Mostrando",
-    "page_of": "di",
-    "page_prev": "Precedente",
-    "page_next": "Successivo",
-    "page_rows_per_page": "Righe per pagina"
   },
   "common": {
     "optional": "opzionale",
@@ -436,16 +1086,19 @@
     "employee": "Dipendente",
     "search": "Cerca",
     "export": "Export",
-    "help": "Aiuto"
-  },
-  "plan_status": {
-    "draft": "Bozza",
-    "submitted": "Inviato",
-    "in_review": "In revisione",
-    "approved": "Approvato",
-    "rejected": "Respinto",
-    "locked": "Bloccato",
-    "is_locked": "Blocco sicuro"
+    "help": "Aiuto",
+    "loading": "Caricamento...",
+    "unassigned": "Non assegnato / Ruolo indipendente",
+    "existing_positions": "Posizioni esistenti",
+    "risk_levels": {
+      "low": "Basso",
+      "medium": "Medio",
+      "high": "Alto",
+      "critical": "Critico"
+    },
+    "time": {
+      "hours_ago": "{{count}}h fa"
+    }
   },
   "approvals": {
     "manager_workspace": "Area manager",
@@ -471,16 +1124,183 @@
     "by": "Da",
     "on": "il"
   },
-  "errors": {
-    "gating_failed": {
-      "title": "Controllo politica di gating fallito",
-      "message": "Il ciclo di merito non può essere pubblicato perché le condizioni normative non sono soddisfatte.",
-      "remediation": "Controlla se il ciclo è chiuso, tutti i piani sono approvati e il validatore non segnala errori."
+  "scenarios": {
+    "title": "Scenari di Compensi",
+    "subtitle": "Modella la distribuzione dei meriti e l'impatto sul budget.",
+    "new": "Nuovo Scenario",
+    "empty_title": "Nessun scenario trovato",
+    "empty_subtitle": "Crea il tuo primo scenario per iniziare a modellare gli aumenti salariali.",
+    "learn_more": "Scopri di più sulla modellazione",
+    "budget": "Budget",
+    "no_limit": "Senza limiti",
+    "delete_confirm_title": "Sei sicuro di voler eliminare questo scenario?",
+    "delete_confirm_subtitle": "Questa azione non può essere annullata e tutti i dati modellati andranno persi.",
+    "ready_to_run": "Pronto per l'esecuzione",
+    "empty_run_desc": "Questo scenario non ha ancora esecuzioni. Clicca qui sotto per generare la prima e iniziare l'analisi.",
+    "run_scenario": "Run Scenario",
+    "run_failed": "The run failed on the server. Please check logs.",
+    "run_timeout": "Wait time exceeded (60s). Please reload or try again.",
+    "results_for_run": "Results for run:",
+    "total_increase": "Total Increase",
+    "headcount": "Headcount",
+    "avg_increase": "Avg Increase",
+    "employee_details": "Employee Details",
+    "rating": "Rating",
+    "flags": "Flags"
+  },
+  "paybands": {
+    "dashboard": {
+      "title": "Dashboard Fasce",
+      "subtitle": "Strutture Retributive Attive",
+      "active_structures": "Strutture Attive",
+      "recent_activity": "Attività Recente",
+      "no_structures": "Nessuna struttura pubblicata.",
+      "start_modeling": "Crea Scenario",
+      "manage_imports": "Gestisci Dati",
+      "market_coverage": "Copertura di Mercato",
+      "active_resolution": "Risoluzione attiva",
+      "resolution_desc": "Verifica quale struttura pubblicata si applica per paese, tipo base e data.",
+      "target_country": "Paese target",
+      "as_of_date": "Data di riferimento",
+      "btn_resolve": "Verifica risoluzione",
+      "resolving": "Risoluzione in corso...",
+      "match_found": "Corrispondenza trovata",
+      "version": "Versione",
+      "bands_loaded": "Bande caricate",
+      "back_dashboard": "Torna alla Dashboard"
     },
-    "dead_run_data": {
-      "title": "Fallimento integrità dati (DEAD_RUN)",
-      "message": "L'esecuzione dello scenario selezionato contiene dati finanziari non validi o vuoti.",
-      "remediation": "Riesegui il motore dello scenario con un nuovo snapshot. Assicurati che gli stipendi e gli aumenti raccomandati siano popolati correttamente."
+    "labels": {
+      "grades": "livelli",
+      "deployed": "Rilasciato",
+      "source_scenario": "Scenario di origine",
+      "hash": "Hash",
+      "run_hash": "Hash di Esecuzione",
+      "internal_grade": "Livello Interno",
+      "market_mid_aged": "Media di Mercato",
+      "proposed_min": "Min Proposto",
+      "proposed_mid": "Medio Proposto",
+      "proposed_max": "Max Proposto",
+      "spread": "Apertura",
+      "explainability": "Spiegabilità",
+      "id": "ID",
+      "bands": "Fasce",
+      "vendor_level_code": "Codice Livello Fornitore",
+      "actions": "Azioni"
+    },
+    "imports": {
+      "title": "Importazione Dati",
+      "subtitle": "Importa benchmark globali.",
+      "dragDropHint": "Trascina qui il tuo CSV.",
+      "uploading": "Elaborazione in corso...",
+      "success": "Dati importati con successo.",
+      "error": "Errore nel formato CSV.",
+      "history": "Cronologia",
+      "empty": "Nessun dato importato.",
+      "btn_upload": "Carica File",
+      "scope_placeholder": "Es: Benchmarking Regionale 2024",
+      "empty_error": "Il file CSV è vuoto o mancano dati.",
+      "required_columns_hint": "Sono supportati solo i file .csv. Assicurarsi che siano incluse le colonne richieste.",
+      "change_file": "Cambia File",
+      "upload_another": "Carica un altro"
+    },
+    "mappings": {
+      "title": "Configurazioni di Mappatura",
+      "subtitle": "Definire regole di interconnessione tra livelli tecnici di fornitori esterni e gradi aziendali interni.",
+      "empty_msg": "Non ci sono ancora regole di mappatura. Aggiungine una per iniziare.",
+      "columns": {
+        "provider": "Fornitore",
+        "country_code": "Paese (ISO)",
+        "vendor_level_code": "Codice Livello Fornitore",
+        "internal_grade": "Grado Interno",
+        "actions": "Azioni"
+      },
+      "buttons": {
+        "add_rule": "Aggiungi Regola",
+        "save_mappings": "Salva Mappature"
+      },
+      "placeholders": {
+        "country_code": "es: ITA, USA, MEX",
+        "vendor_level_code": "es: P3, 50, M2",
+        "internal_grade": "es: 14, 15, 16"
+      }
+    },
+    "wizard": {
+      "step1": {
+        "title": "Parametri Globali",
+        "desc": "Definisci ambito e valuta.",
+        "scenario_name": "Nome",
+        "country": "Paese",
+        "basis_type": "Tipo di Base",
+        "pricing_date": "Data di Valutazione",
+        "effective_dates": "Date Effettive"
+      },
+      "step2": {
+        "title": "Pesi e Proiezioni",
+        "desc": "Assegna pesi.",
+        "weights": "Pesi (%)",
+        "aging_policy": "Politica di Aging",
+        "quality_policy": "Qualità",
+        "range_policy": "Politica di Fascia",
+        "mode_global": "Modo Globale",
+        "mode_grade": "Per Livello",
+        "weight_label": "Peso",
+        "total_sum": "Somma Totale",
+        "must_equal_1": "(deve essere 1.00)",
+        "sum": "Somma"
+      },
+      "step3": {
+        "title": "Simulazione",
+        "desc": "Rivedi prima di eseguire.",
+        "run": "Esegui Motore"
+      },
+      "common": {
+        "next": "Continua",
+        "back": "Indietro",
+        "save": "Salva Bozza",
+        "to": "a"
+      }
+    },
+    "workbench": {
+      "title": "Esecuzione",
+      "run_failed": "Simulazione fallita.",
+      "run_success": "Simulazione completata.",
+      "btn_publish": "Pubblica Finale",
+      "btn_rerun": "Esegui di nuovo",
+      "min": "Min",
+      "mid": "Medio",
+      "max": "Max"
+    },
+    "validation": {
+      "weightsMustSumOne": "I pesi devono sommare 100%.",
+      "requiredField": "Campo obbligatorio.",
+      "invalidDate": "Data di fine non valida."
+    },
+    "errors": {
+      "unauthorized": "Errore di Sicurezza: Token mancante o non valido. L'accesso non verificato al motore è severamente proibito.",
+      "save_failed": "Impossibile salvare lo scenario. Controllare i dati e riprovare."
+    },
+    "actions": {
+      "publish": "Pubblica",
+      "run": "Esegui",
+      "delete": "Elimina",
+      "import": "Importa"
+    },
+    "status": {
+      "draft": "Bozza",
+      "runnable": "Pronto",
+      "published": "Pubblicato",
+      "archived": "Archiviato",
+      "completed": "Completato"
+    },
+    "basisType": {
+      "baseSalary": "Salario Base",
+      "annualTargetCash": "Cash Target Annuale",
+      "totalGuaranteed": "Totale Garantito"
+    },
+    "providers": {
+      "MERCER": "MERCER",
+      "WTW": "WTW",
+      "THIRD": "TERZE PARTI"
     }
   },
   "pay_bands": {
@@ -645,147 +1465,270 @@
       "run_scenario": "Esegui Scenario"
     }
   },
+  "reports": {
+    "title": "Intelligence & Insights",
+    "subtitle": "Genera rapporti per dirigenti e pacchetti di audit.",
+    "generate": "Genera Nuovo Rapporto",
+    "exec_summary": "Sintesi Esecutiva",
+    "exec_summary_desc": "Distribuzione del budget e media dei meriti.",
+    "audit_pack": "Pacchetto Audit Completo",
+    "audit_pack_desc": "Approfondimento sulla cronologia delle decisioni.",
+    "custom_template": "Modello Personalizzato",
+    "custom_template_desc": "Crea il tuo layout di reportistica.",
+    "coming_soon": "In arrivo nella Fase 2",
+    "history": "Cronologia Generazione Recente"
+  },
+  "snapshots": {
+    "fetching": "Recupero archivi dati sicuri...",
+    "empty_message": "Nessuno snapshot pubblicato finora. Importa il tuo primo set di dati sui talenti per iniziare a modellare.",
+    "go_to_imports": "Vai a Importazioni",
+    "col_id_date": "ID Snapshot e Data",
+    "col_source": "Importazione Origine",
+    "col_headcount": "Organico",
+    "col_salary": "Salario Totale (Base)",
+    "col_currencies": "Valute",
+    "col_actions": "Azioni",
+    "view_details": "Visualizza Dettagli",
+    "run_scenario": "Esegui Scenario"
+  },
+  "audit": {
+    "system_of_record": "Sistema di Registrazione Immutabile",
+    "subtitle": "Tracciabilità forense profonda di tutte le operazioni della piattaforma e delle decisioni di retribuzione critiche.",
+    "refresh": "Aggiorna Registro",
+    "search_placeholder": "Cerca per evento, attore o ID entità...",
+    "last": "Ultimi",
+    "events": "Eventi",
+    "col_timestamp": "Timestamp / Evento",
+    "col_actor": "Attore",
+    "col_context": "Contesto",
+    "col_ip": "IP Origine",
+    "col_trace": "Traccia",
+    "scanning": "Scansione del registro forense..."
+  },
   "landing": {
     "nav": {
-      "services": "Services",
-      "advantage": "The EvoComp Advantage",
-      "security": "Enterprise Security",
-      "about": "About Us",
-      "client_workspace": "Client Workspace"
+      "services": "Servizi",
+      "advantage": "Vantaggio",
+      "security": "Sicurezza",
+      "about": "Chi Siamo",
+      "client_workspace": "Workspace"
     },
     "hero": {
-      "title_1": "Expert Compensation",
-      "title_2": "Consulting — Powered by",
-      "title_3": "Next-Gen Technology",
-      "subtitle": "Built for Total Rewards teams across the Americas. We deliver bank-grade, data-driven compensation decisions faster—using EvoComp's interactive scenario engine, not static spreadsheets.",
-      "cta_workspace": "Client Workspace",
-      "cta_consultation": "Book a Consultation",
-      "mono_text": "Not a PDF shop. Not an Excel factory. A secure decision system."
+      "title_1": "Consulenza",
+      "title_2": "in Compensazione —",
+      "title_3": "Tecnologia",
+      "subtitle": "Decisioni basate sui dati e a prova di audit.",
+      "cta_workspace": "Workspace",
+      "cta_consultation": "Prenota",
+      "mono_text": "Un sistema di decisione."
     },
     "features": {
-      "card1_label": "Scenario Execution",
-      "card1_t1": "What-if pools, matrices, caps, and constraints—deterministic results.",
-      "card1_t2": "From modeling to execution: budget control, approvals, and governance.",
-      "card1_t3": "Traceability by design: decisions you can explain in audits.",
-      "card2_label": "Live System Status",
-      "card2_m1": "Loading secure tenant workspace…",
-      "card2_m2": "Validating JWT session token…",
-      "card2_m3": "Applying Row Level Security policies…",
-      "card2_m4": "Simulating merit cycle scenarios…",
-      "card2_m5": "Generating audit trail & evidence pack…",
-      "card3_label": "Approval Protocol",
-      "card3_lock": "Lock Scenario",
-      "card3_status": "Scenario locked • Version stamped"
+      "card1_label": "Esecuzione",
+      "card1_t1": "Scenari deterministici.",
+      "card1_t2": "Budget e governance.",
+      "card1_t3": "Tracciabilità.",
+      "card2_label": "Stato",
+      "card2_m1": "Caricamento...",
+      "card2_m2": "Validazione JWT...",
+      "card2_m3": "RLS policy...",
+      "card2_m4": "Simulazione...",
+      "card2_m5": "Audit trail...",
+      "card3_label": "Approvazione",
+      "card3_lock": "Blocca",
+      "card3_status": "Bloccato"
     },
     "manifesto": {
-      "t1": "The usual question is: What went wrong?",
-      "t2_1": "We ask: What can be optimized—",
-      "t2_2": "securely, measurably, fast?",
-      "t3": ">_ From spreadsheets to a secure decision operating system."
+      "t1": "Cosa è andato storto?",
+      "t2_1": "Noi chiediamo: Cosa ottimizzare",
+      "t2_2": "in modo sicuro e rapido?",
+      "t3": ">_ Un sistema operativo d'avanguardia."
     },
     "archive": {
-      "label": "Archive File 0{{num}}",
-      "card1_title": "Salary Scenario Modeling & Execution",
-      "card1_b1": "What-if scenarios across teams, countries, and pay bases.",
-      "card1_b2": "Pools, matrices, caps, eligibility rules—deterministic outcomes.",
-      "card1_b3": "Ready for approvals and controlled rollout.",
-      "card2_title": "Salary & Compensation Structures + Job Architecture",
-      "card2_b1": "Market-aligned pay bands and job leveling.",
-      "card2_b2": "Analytical job evaluation and architecture design.",
-      "card2_b3": "Consistency across geographies in the Americas.",
-      "card3_title": "Variable Pay Design + Bonus Calculations",
-      "card3_b1": "Incentive plan design with measurable levers.",
-      "card3_b2": "Bonus modeling and forecasting tied to performance.",
-      "card3_b3": "Transparent outputs for Finance and leadership."
+      "label": "Archivio {{num}}",
+      "card1_title": "Modellazione Scenari",
+      "card1_b1": "Scenari What-if.",
+      "card1_b2": "Budget o matrici.",
+      "card1_b3": "Flussi approvazione.",
+      "card2_title": "Job Architecture",
+      "card2_b1": "Posizionamento.",
+      "card2_b2": "Valutazione analitica.",
+      "card2_b3": "Coerenza globale.",
+      "card3_title": "Retribuzione Variabile",
+      "card3_b1": "Piani Bonus.",
+      "card3_b2": "Bonus flessibili.",
+      "card3_b3": "Trasparenza Output."
     },
     "security": {
-      "title": "Enterprise-Grade Security",
-      "c1_title": "Bank-Grade Data Protection",
-      "c1_desc": "Encrypted at rest and in transit. Designed to satisfy the most stringent compliance audits requested by IT and InfoSec stakeholders in large enterprises.",
-      "c2_title": "Backend & Authentication",
-      "c2_desc": "Stateless authentication validation via rigorously verified JWT tokens. Every API call requires fresh credential resolution ensuring session integrity.",
-      "c3_title": "Tenant Isolation (RLS)",
-      "c3_desc": "Strict Row Level Security implemented directly on the PostgreSQL (Supabase) engine. Cross-tenant data bleeds are mathematically impossible by design."
+      "title": "Sicurezza Enterprise",
+      "c1_title": "Protezione Dati",
+      "c1_desc": "Crittografia in transito.",
+      "c2_title": "Autenticazione",
+      "c2_desc": "Validazione JWT.",
+      "c3_title": "Isolamento (RLS)",
+      "c3_desc": "DB Multi-tenant isolato."
     },
     "pricing": {
-      "title": "Engagement Models",
-      "c1_title": "Advisory Essentials",
-      "c1_b1": "Comp consulting engagements + secure deliverables",
-      "c1_b2": "Band / job architecture support",
-      "c1_b3": "Limited workspace access",
-      "c1_btn": "Request Scope",
-      "c2_badge": "Recommended",
-      "c2_title": "EvoComp Workspace",
-      "c2_b1": "Full scenario engine access + guided consulting",
-      "c2_b2": "Merit cycle execution workflows",
-      "c2_b3": "Audit-ready traceability and governance",
-      "c2_btn": "Book a Consultation",
-      "c3_title": "Enterprise",
-      "c3_b1": "Custom security posture alignment",
-      "c3_b2": "IT review support + controls documentation",
-      "c3_b3": "Multi-region operating model",
-      "c3_btn": "Talk to Security"
+      "title": "Modelli",
+      "c1_title": "Sviluppo Base",
+      "c1_b1": "Reportistica Dati",
+      "c1_b2": "Analisi Total Reward",
+      "c1_b3": "Solo-Lettura Software",
+      "c1_btn": "Strategia",
+      "c2_badge": "Raccomandato",
+      "c2_title": "Accesso Full",
+      "c2_b1": "Saas Completo",
+      "c2_b2": "Cicli del Merito",
+      "c2_b3": "Data Security RLS",
+      "c2_btn": "Schedula Demo",
+      "c3_title": "Governo Enterprise",
+      "c3_b1": "Customizzazione IP",
+      "c3_b2": "Validazione IT",
+      "c3_b3": "Conformità Legale",
+      "c3_btn": "Contatta Sicurezza"
     },
     "footer": {
-      "badge": "Operating System / Active",
-      "desc": "Built for auditability, tenant isolation, and bank-grade data protection.",
+      "badge": "Attiva",
+      "desc": "Modellatore Finanziario di ultima generazione.",
       "sitemap": "Sitemap",
       "home": "Home",
-      "services": "Services",
-      "advantage": "Advantage",
-      "security": "Security",
-      "about": "About Us",
-      "legal": "Legal & Locale",
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "contact": "Contact",
-      "rights": "© {{year}} EvoComp. All rights reserved."
+      "services": "Servizi",
+      "advantage": "Vantaggio",
+      "security": "Sicurezza",
+      "about": "Informazioni",
+      "legal": "Legale",
+      "privacy": "Privacy",
+      "terms": "Termini",
+      "contact": "Contatto",
+      "rights": "© {{year}} EvoComp."
+    }
+  },
+  "errors": {
+    "gating_failed": {
+      "title": "Controllo politica di gating fallito",
+      "message": "Il ciclo di merito non può essere pubblicato perché le condizioni normative non sono soddisfatte.",
+      "remediation": "Controlla se il ciclo è chiuso, tutti i piani sono approvati e il validatore non segnala errori."
+    },
+    "dead_run_data": {
+      "title": "Fallimento integrità dati (DEAD_RUN)",
+      "message": "L'esecuzione dello scenario selezionato contiene dati finanziari non validi o vuoti.",
+      "remediation": "Riesegui il motore dello scenario con un nuovo snapshot. Assicurati che gli stipendi e gli aumenti raccomandati siano popolati correttamente."
+    }
+  },
+  "scenarios_guide:scenarios": {
+    "guide": {
+      "micro_help": {
+        "execution": "Execution",
+        "results": "Results",
+        "scenarios": "Scenarios"
+      }
+    }
+  },
+  "compensation": {
+    "dashboard": {
+      "title": "Intelligenza di Compensazione",
+      "subtitle": "Analisi di Allineamento di Mercato",
+      "as_of": "Data as of",
+      "search": "Cerca per titolo o famiglia..."
     }
   },
   "workspace_hub": {
     "header": {
       "title": "EvoComp Workspace",
-      "subtitle": "Secure Tenant Environment",
-      "badge": "WORKSPACE ACTIVE",
-      "logout": "Secure Sign Out"
+      "subtitle": "Ambiente Sicuro del Cliente",
+      "badge": "WORKSPACE ATTIVO",
+      "logout": "Uscita Protetta"
     },
     "hero": {
-      "welcome": "Welcome to your ",
-      "highlight": "Strategic Hub",
-      "desc": "Select a module to enter the secure environment. Your current session isolates all operations strictly to your tenant data architecture."
+      "welcome": "Benvenuto nel tuo ",
+      "highlight": "Hub Strategico",
+      "desc": "Seleziona un modulo per lavorare nell'ambiente sicuro. La tua sessione isola tutte le operazioni strettamente all'architettura dei dati del tuo tenant."
+    },
+    "executive_summary": {
+      "title": "Riepilogo Esecutivo",
+      "payroll": "Libro Paga",
+      "market_alignment": "Allineamento al Mercato",
+      "equity_risk": "Rischio di Equità",
+      "active_scenarios": "Scenari Attivi"
+    },
+    "pillars": {
+      "design": {
+        "title": "Design",
+        "desc": "Modella l'architettura dei ruoli e le strutture retributive."
+      },
+      "diagnose": {
+        "title": "Diagnosi",
+        "desc": "Rileva i rischi e monitora l'allineamento al mercato."
+      },
+      "simulate": {
+        "title": "Simulazione",
+        "desc": "Modella scenari 'what-if' in una sandbox sicura."
+      },
+      "consult": {
+        "title": "Consulenza",
+        "desc": "Consulente Strategico di IA Basato sull'Evidenza."
+      }
+    },
+    "insights": {
+      "title": "Approfondimenti Critici",
+      "empty": "Nessun rischio critico rilevato.",
+      "compression": "Rischio di compressione rilevato nella gerarchia {{hierarchy}}",
+      "below_midpoint": "{{count}} posizioni al di sotto del punto medio della fascia",
+      "market_gap": "Gap di mercato >{{pct}}% per {{function}}",
+      "priority_high": "PRIORITÀ ALTA",
+      "internal_audit": "AUDIT INTERNO"
+    },
+    "scenarios": {
+      "title": "Scenari Attivi",
+      "empty": "Nessun scenario attivo."
     },
     "modules": {
       "m1": {
-        "title": "Compensation Scenarios",
-        "desc": "Model, simulate, and execute merit cycles across teams and geographies with audit-ready deterministic outputs."
+        "title": "Laboratorio di Scenari",
+        "desc": "Modella, simula ed esegui cicli di merito con risultati deterministici."
       },
       "m2": {
-        "title": "Pay Bands & Structures",
-        "desc": "Establish market-aligned pay bands, analytical job leveling, and structured compensation consistency."
+        "title": "Fasce e Strutture",
+        "desc": "Stabilisci fasce retributive e livellamento analitico dei ruoli."
       },
       "m3": {
-        "title": "Job Architecture & Evaluation",
-        "desc": "Design analytical job structures, levels, and mappings to ensure internal equity and market alignment."
+        "title": "Architettura e Valutazione",
+        "desc": "Progetta strutture di ruoli per garantire l'equità interna."
       },
-      "m4": {
-        "title": "Variable Pay",
-        "desc": "Design incentive plans with measurable levers, matrix thresholds, and performance-based outcomes."
+      "job_profiles": {
+        "title": "Profili di Ruolo",
+        "desc": "Standardizza i mansionari con il supporto dell'IA."
       },
-      "m5": {
-        "title": "Bonus Calculations",
-        "desc": "Forecast, model, and distribute variable compensation based on complex performance metrics."
+      "risk_radar": {
+        "title": "Radar dei Rischi",
+        "desc": "Rilevamento in tempo real di inversioni e compressioni salariali."
       },
-      "job_description": {
-        "title": "Gestione delle Descrizioni di Ruolo",
-        "desc": "Crea, standardizza e governa i mansionari con drafting assistito da IA e allineamento delle competenze.",
-        "status": "CONCEPT"
+      "market_alignment": {
+        "title": "Allineamento al Mercato",
+        "desc": "Benchmarking deterministico vs. percentili di mercato."
+      },
+      "simulation_workbench": {
+        "title": "Workbench di Simulazione",
+        "desc": "Sandbox per decisioni retributive ad alto impatto."
+      },
+      "scenario_comparison": {
+        "title": "Confronto Scenari",
+        "desc": "Analisi comparativa dei risultati del modello."
+      },
+      "ai_consultant": {
+        "title": "Consulente IA",
+        "desc": "Guida strategica e spiegabilità basata sull'evidenza."
+      },
+      "ai_reasoning": {
+        "ask_mode": "Modalità Domanda",
+        "explain_mode": "Modalità Spiegazione",
+        "recommend_mode": "Modalità Raccomandazione"
       },
       "badges": {
         "active": "Attivo",
         "concept": "Concetto"
       },
       "actions": {
-        "launch": "Lancia Modulo",
+        "launch": "Avvia Modulo",
         "preview": "Anteprima Roadmap"
       }
     }
@@ -806,159 +1749,187 @@
     "validation_error_required": "Richiesto",
     "col_name": "Nome"
   },
-  "paybands": {
-    "dashboard": {
-      "title": "Dashboard Fasce",
-      "subtitle": "Strutture Retributive Attive",
-      "active_structures": "Strutture Attive",
-      "recent_activity": "Attività Recente",
-      "no_structures": "Nessuna struttura pubblicata.",
-      "start_modeling": "Crea Scenario",
-      "manage_imports": "Gestisci Dati",
-      "market_coverage": "Copertura di Mercato",
-      "active_resolution": "Risoluzione attiva",
-      "resolution_desc": "Verifica quale struttura pubblicata si applica per paese, tipo base e data.",
-      "target_country": "Paese target",
-      "as_of_date": "Data di riferimento",
-      "btn_resolve": "Verifica risoluzione",
-      "resolving": "Risoluzione in corso...",
-      "match_found": "Corrispondenza trovata",
-      "version": "Versione",
-      "bands_loaded": "Bande caricate",
-      "back_dashboard": "Torna alla Dashboard"
+  "modules": {
+    "compensation": {
+      "diagnostics": {
+        "title": "Compensi Intelligence",
+        "subtitle": "Analisi del motore IA deterministico basata su benchmark di mercato strutturati ed equità interna.",
+        "running": "Analisi in Corso...",
+        "internal_equity": "Equità Interna",
+        "vs_peers": "vs Colleghi",
+        "peers": "Colleghi",
+        "band_fit": "Allineamento Fascia",
+        "market_gap": "Gap di Mercato",
+        "gap_vs_mid": "Gap vs Media",
+        "matched_p50": "P50 Abbinato",
+        "compression_risk": "Rischio Compressione",
+        "manager_gap": "Gap Manager",
+        "vs_reports_zero": "Nessun riporto diretto",
+        "vs_reports_one": "vs 1 riporto diretto",
+        "vs_reports_other": "vs {{count}} riporti diretti",
+        "no_data": "Nessun dato diagnostico disponibile per questa posizione.",
+        "run_engine": "Esegui Motore Compensi",
+        "primary_recommendation": "Raccomandazione Primaria",
+        "view_full_report": "Visualizza Report Completo",
+        "statuses": {
+          "HEALTHY": "SALUTARE",
+          "COMPETITIVE": "COMPETITIVO",
+          "IN_RANGE_MID": "IN FASCIA (MEDIO)",
+          "IN_RANGE_LOW": "IN FASCIA (BASSO)",
+          "IN_RANGE_HIGH": "IN FASCIA (ALTO)",
+          "OUTLIER": "ANOMALO",
+          "LAGGING": "SOTTO MERCATO",
+          "LEADING": "SOPRA MERCATO",
+          "SEVERE_COMPRESSION": "COMPRESSIONE SEVERA",
+          "MODERATE_COMPRESSION": "COMPRESSIONE MODERATA",
+          "WATCH": "MONITORARE",
+          "PAY_INVERSION": "INVERSIONE SALARIALE",
+          "BELOW_BAND": "SOTTO FASCIA",
+          "ABOVE_BAND": "SOPRA FASCIA",
+          "INSUFFICIENT_DATA": "DATI INSUFICIENTI"
+        },
+        "modal": {
+          "title": "Rapporto Diagnostico Compensi",
+          "scope": "Ambito Diagnostico",
+          "run_at": "Analisi Eseguita",
+          "matching_source": "Fonte Abbinamento",
+          "median_peer": "Collega Mediano",
+          "compa_ratio": "Compa-Ratio",
+          "range_penetration": "Penetrazione Fascia",
+          "market_benchmark": "Benchmark P50 di Mercato",
+          "priority_level": "Livello di priorità deterministico",
+          "raw_data": "Output Diagnostico Grezzo (Tecnico)",
+          "close": "Chiudi Rapporto"
+        },
+        "recommendations": {
+          "FIX_INVERSION": "CORREGGI INVERSIONE",
+          "ADJUST_TO_MINIMUM": "REGOLA AL MINIMO",
+          "REDUCE_COMPRESSION": "RIDUCI COMPRESSIONE",
+          "MARKET_ALIGNMENT_ADJUST": "REGOLA ALLINEAMENTO MERCATO",
+          "INTERNAL_EQUITY_ADJUST": "REGOLA EQUITÀ INTERNA",
+          "MAINTAIN": "MANTIENI"
+        }
+      }
+    }
+  },
+  "plan_status": {
+    "approved": "Approvato",
+    "draft": "Bozza",
+    "in_review": "In Revisione",
+    "is_locked": "È Bloccato",
+    "locked": "Bloccato",
+    "rejected": "Rifiutato",
+    "submitted": "Inviato"
+  },
+  "consult": {
+    "stage": {
+      "greeting": "Come posso assistere la tua strategia oggi?",
+      "subtitle": "Chiedi informazioni sulla compressione salariale, sui divari di allineamento al mercato o sui rischi di equità nella tua organizzazione.",
+      "suggested_prompts": {
+        "compression": "Qual è il nostro maggiore rischio di compressione?",
+        "alignment": "Analizza l'allineamento al mercato per le vendite negli Stati Uniti",
+        "simulations": "Spiega gli ultimi risultati della simulazione",
+        "actions": "Raccomanda un'azione correttiva del budget"
+      }
     },
-    "labels": {
-      "grades": "livelli",
-      "deployed": "Rilasciato",
-      "source_scenario": "Scenario di origine",
-      "hash": "Hash",
-      "run_hash": "Hash di Esecuzione",
-      "internal_grade": "Livello Interno",
-      "market_mid_aged": "Media di Mercato",
-      "proposed_min": "Min Proposto",
-      "proposed_mid": "Medio Proposto",
-      "proposed_max": "Max Proposto",
-      "spread": "Apertura",
-      "explainability": "Spiegabilità",
-      "id": "ID",
-      "bands": "Fasce",
-      "vendor_level_code": "Codice Livello Fornitore",
-      "actions": "Azioni"
+    "composer": {
+      "placeholder_ask": "Chiedi informazioni sui rischi di compensazione, sui divari di mercato o sui problemi strutturali...",
+      "placeholder_explain": "Seleziona un risultato o chiedi perché è stata presa una decisione...",
+      "placeholder_recommend": "Descrivi il risultato che vuoi ottenere (ad es., \"Riduci il ritardo del mercato\")...",
+      "placeholder_default": "Chiedi a EvoComp...",
+      "clear": "Cancella",
+      "attach_context": "Allega contesto",
+      "mode": "Modalità"
     },
-    "imports": {
-      "title": "Importazione Dati",
-      "subtitle": "Importa benchmark globali.",
-      "dragDropHint": "Trascina qui il tuo CSV.",
-      "uploading": "Elaborazione in corso...",
-      "success": "Dati importati con successo.",
-      "error": "Errore nel formato CSV.",
+    "response": {
+      "default_error": "Si è verificato un errore imprevisto durante il ragionamento.",
+      "failure_title": "Fallimento della consultazione",
+      "budget_exceeded_title": "Limite di budget superato",
+      "timeout_title": "Timeout esecuzione",
+      "overload_title": "Provider sovraccarico",
+      "auth_error_title": "Errore di autenticazione",
+      "diagnostic_id": "ID diagnostico",
+      "engine_insight": "Intuizione del motore",
+      "insight_general": "Questo errore è stato generato al confine del trasporto o del provider.",
+      "insight_timeout": "La profondità di ragionamento richiesta ha superato l'attuale limite di latenza (45s).",
+      "insight_overload": "Il provider AI sta attualmente riscontrando una domanda elevata.",
+      "insight_retry": "Rivedi la tua connettività o le impostazioni del tenant e riprova.",
+      "provider": "Provider",
+      "latency": "Latenza",
+      "real_ai_analysis": "Analisi AI reale",
+      "mock_simulation": "Simulazione di sistema (Mock)",
+      "automatic_fallback": "Fallback automatico",
+      "mock_note": "Nota: questa risposta è generata utilizzando modelli deterministici per la convalida UX e non riflette l'analisi AI in tempo reale.",
+      "key_findings": "Risultati strategici chiave",
+      "risk_assessment": "Valutazione del rischio",
+      "recommended_actions": "Azioni raccomandate",
+      "test_scenarios": "Scenari di mitigazione di prova",
+      "production_grade": "Grado di produzione",
+      "validation_only": "Solo convalida",
+      "confidence": "Fiducia",
+      "confidence_levels": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Bassa"
+      },
+      "bundle": "Pacchetto",
+      "ref": "Rif",
+      "evidence_via": "Evidenza tramite"
+    },
+    "stream": {
+      "title": "Flusso di ragionamento",
+      "connectivity_limited": "Connettività limitata: i progressi verranno aggiornati al termine",
+      "realtime_enabled": "Tempo reale abilitato",
+      "initializing": "Inizializzazione del ciclo di ragionamento...",
+      "moving_to_next": "Passaggio alla fase successiva...",
+      "steps": {
+        "planner": "Pianificazione del percorso di ragionamento...",
+        "tool_request": "Richiesta {{tool}}...",
+        "tool_request_default": "strumento di analisi",
+        "tool_result": "Elaborato {{tool}}.",
+        "tool_result_default": "punto dati",
+        "bundle_build": "Assemblaggio del pacchetto di evidenze...",
+        "llm_request": "Sintetizzando la consulenza finale...",
+        "llm_response": "Generazione della risposta esecutiva...",
+        "response_validation": "Verifica del contratto e della sicurezza...",
+        "finalize": "Finalizzazione della consultazione...",
+        "error": "Guasto al motore di ragionamento.",
+        "default": "Elaborazione passaggio..."
+      }
+    },
+    "control_rail": {
+      "interaction_mode": "Modalità di interazione",
+      "modes": {
+        "ask": "Chiedi",
+        "explain": "Spiega",
+        "recommend": "Raccomanda"
+      },
+      "evidence_scope": "Ambito della prova",
+      "scopes": {
+        "structure": "Struttura",
+        "diagnostics": "Diagnostica",
+        "simulation": "Simulazione",
+        "market": "Mercato"
+      },
       "history": "Cronologia",
-      "empty": "Nessun dato importato.",
-      "btn_upload": "Carica File",
-      "scope_placeholder": "Es: Benchmarking Regionale 2024",
-      "empty_error": "Il file CSV è vuoto o mancano dati.",
-      "required_columns_hint": "Sono supportati solo i file .csv. Assicurarsi che siano incluse le colonne richieste.",
-      "change_file": "Cambia File",
-      "upload_another": "Carica un altro"
-    },
-    "mappings": {
-      "title": "Configurazioni di Mappatura",
-      "subtitle": "Definire regole di interconnessione tra livelli tecnici di fornitori esterni e gradi aziendali interni.",
-      "empty_msg": "Non ci sono ancora regole di mappatura. Aggiungine una per iniziare.",
-      "columns": {
-        "provider": "Fornitore",
-        "country_code": "Paese (ISO)",
-        "vendor_level_code": "Codice Livello Fornitore",
-        "internal_grade": "Grado Interno",
-        "actions": "Azioni"
-      },
-      "buttons": {
-        "add_rule": "Aggiungi Regola",
-        "save_mappings": "Salva Mappature"
-      },
-      "placeholders": {
-        "country_code": "es: ITA, USA, MEX",
-        "vendor_level_code": "es: P3, 50, M2",
-        "internal_grade": "es: 14, 15, 16"
+      "no_history": "Nessuna consultazione recente trovata.",
+      "suggested": "Suggerito",
+      "suggested_prompts": {
+        "compression": "Rischio di compressione salariale?",
+        "market_lag": "Mercato in ritardo su Eng?"
       }
     },
-    "wizard": {
-      "step1": {
-        "title": "Parametri Globali",
-        "desc": "Definisci ambito e valuta.",
-        "scenario_name": "Nome",
-        "country": "Paese",
-        "basis_type": "Tipo di Base",
-        "pricing_date": "Data di Valutazione",
-        "effective_dates": "Date Effettive"
-      },
-      "step2": {
-        "title": "Pesi e Proiezioni",
-        "desc": "Assegna pesi.",
-        "weights": "Pesi (%)",
-        "aging_policy": "Politica di Aging",
-        "quality_policy": "Qualità",
-        "range_policy": "Politica di Fascia",
-        "mode_global": "Modo Globale",
-        "mode_grade": "Per Livello",
-        "weight_label": "Peso",
-        "total_sum": "Somma Totale",
-        "must_equal_1": "(deve essere 1.00)",
-        "sum": "Somma"
-      },
-      "step3": {
-        "title": "Simulazione",
-        "desc": "Rivedi prima di eseguire.",
-      "run": "Esegui Motore"
-      },
-      "common": {
-        "next": "Continua",
-        "back": "Indietro",
-        "save": "Salva Bozza",
-        "to": "a"
-      }
-    },
-    "workbench": {
-      "title": "Esecuzione",
-      "run_failed": "Simulazione fallita.",
-      "run_success": "Simulazione completata.",
-      "btn_publish": "Pubblica Finale",
-      "btn_rerun": "Esegui di nuovo",
-      "min": "Min",
-      "mid": "Medio",
-      "max": "Max"
-    },
-    "validation": {
-      "weightsMustSumOne": "I pesi devono sommare 100%.",
-      "requiredField": "Campo obbligatorio.",
-      "invalidDate": "Data di fine non valida."
-    },
-    "errors": {
-      "unauthorized": "Errore di Sicurezza: Token mancante o non valido. L'accesso non verificato al motore è severamente proibito.",
-      "save_failed": "Impossibile salvare lo scenario. Controllare i dati e riprovare."
-    },
-    "actions": {
-      "publish": "Pubblica",
-      "run": "Esegui",
-      "delete": "Elimina",
-      "import": "Importa"
-    },
-    "status": {
-      "draft": "Bozza",
-      "runnable": "Pronto",
-      "published": "Pubblicato",
-      "archived": "Archiviato",
-      "completed": "Completato"
-    },
-    "basisType": {
-      "baseSalary": "Salario Base",
-      "annualTargetCash": "Cash Target Annuale",
-      "totalGuaranteed": "Totale Garantito"
-    },
-    "providers": {
-      "MERCER": "MERCER",
-      "WTW": "WTW",
-      "THIRD": "TERZE PARTI"
+    "evidence_drawer": {
+      "title": "Livello di audit delle prove",
+      "tools": "Strumenti",
+      "bundle": "Pacchetto",
+      "expand": "Espandi traccia",
+      "collapse": "Comprimi traccia",
+      "tool_trace": "Traccia strumenti",
+      "engine_sources": "Fonti del motore",
+      "reasoning_chain": "Catena di ragionamento",
+      "visual_pending": "Visualizzazione dell'albero logico in sospeso",
+      "structured_payload": "Payload strutturato"
     }
   }
 }

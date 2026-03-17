@@ -1,4 +1,4 @@
-import ExcelJS from 'npm:exceljs@4.4.0';
+import ExcelJS from 'https://esm.sh/exceljs@4.4.0';
 
 export interface XlsxColumn {
   key: string;
@@ -10,9 +10,9 @@ export interface XlsxColumn {
 export interface BuildXlsxParams {
   sheetName: string;
   columns: XlsxColumn[];
-  rows: Record<string, any>[];
-  notes?: { sheetName: string; rows: any[][] };
-  topHeaderRows?: any[][]; // For metadata like Generated At
+  rows: Record<string, unknown>[];
+  notes?: { sheetName: string; rows: unknown[][] };
+  topHeaderRows?: unknown[][]; // For metadata like Generated At
 }
 
 const DEFAULT_WIDTHS = {
@@ -80,7 +80,7 @@ export async function buildXlsx({ sheetName, columns, rows, notes, topHeaderRows
 
   // Add Data Rows
   rows.forEach(rData => {
-    const rowObj: Record<string, any> = {};
+    const rowObj: Record<string, unknown> = {};
     columns.forEach(col => {
       let val = rData[col.key];
       // Sanitize text fields

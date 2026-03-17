@@ -229,7 +229,7 @@ serve(async (req: Request) => {
     const safeTs = ts.replace(/[:.]/g, '-').slice(0, 15);
     const filename = `evocomp_scenario_${scenario_run_id.slice(0,8)}_${mode}_${safeTs}.xlsx`;
 
-    return new Response(xlsxBytes, {
+    return new Response(xlsxBytes as any, {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

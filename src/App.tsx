@@ -40,6 +40,12 @@ const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'))
 const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'))
 const JobDescriptionPage = React.lazy(() => import('./pages/JobDescriptionPage'))
 
+const JDRepositoryPage = React.lazy(() => import('./modules/job-description/pages/JDRepositoryPage'))
+const JDBuilderPage = React.lazy(() => import('./modules/job-description/pages/JDBuilderPage'))
+const JDViewerPage = React.lazy(() => import('./modules/job-description/pages/JDViewerPage'))
+const SimulationWorkbenchPage = React.lazy(() => import('./modules/job-description/pages/SimulationWorkbenchPage'))
+const AIConsultantPage = React.lazy(() => import('./modules/consult/pages/AIConsultantPage'))
+
 // --- Pay Bands Builder Phase 3 ---
 const ActiveStructuresView = React.lazy(() => import('./pages/workspace/paybands/ActiveStructuresView'))
 const MarketDataUploader = React.lazy(() => import('./pages/workspace/paybands/MarketDataUploader'))
@@ -116,6 +122,13 @@ function App() {
         }
       }
       setProfile(data)
+
+      // Sync tenant_id to auth metadata for Edge Function context
+      const { data: { session } } = await supabase.auth.getSession();
+      if (data?.tenant_id && session?.user?.user_metadata?.tenant_id !== data.tenant_id) {
+        console.log('[AuthSync] Syncing tenant_id to auth metadata...');
+        await supabase.auth.updateUser({ data: { tenant_id: data.tenant_id } });
+      }
     } catch (err) {
       console.error('Error fetching profile:', err)
     } finally {
@@ -164,10 +177,16 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/workspace/job-description" element={
+          <Route path="/workspace/job-description/*" element={
             <ProtectedRoute session={session} profile={profile}>
               <WorkspaceToolLayout profile={profile}>
-                <JobDescriptionPage />
+                <Routes>
+                  <Route index element={<JobDescriptionPage />} />
+                  <Route path="profiles" element={<JDRepositoryPage />} />
+                  <Route path="profiles/new" element={<JDBuilderPage />} />
+                  <Route path="profiles/:id" element={<JDViewerPage />} />
+                  <Route path="profiles/:id/edit" element={<JDBuilderPage />} />
+                </Routes>
               </WorkspaceToolLayout>
             </ProtectedRoute>
           } />
@@ -181,8 +200,17 @@ function App() {
                   <Route path="mappings" element={<MappingsUI />} />
                   <Route path="builder/new" element={<ScenarioOptionsWizard />} />
                   <Route path="builder/:id" element={<ScenarioWorkbench />} />
+                  <Route path="simulation/:id" element={<SimulationWorkbenchPage />} />
                   <Route path="guide" element={<PayBandsGuidePage />} />
                 </Routes>
+              </WorkspaceToolLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/workspace/consult" element={
+            <ProtectedRoute session={session} profile={profile}>
+              <WorkspaceToolLayout profile={profile}>
+                <AIConsultantPage profile={profile} />
               </WorkspaceToolLayout>
             </ProtectedRoute>
           } />

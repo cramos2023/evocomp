@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { parse } from "npm:mathjs@12.4.1";
-import { Decimal } from "npm:decimal.js@10.4.3";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { parse } from "https://esm.sh/mathjs@12.4.1";
+import { Decimal } from "https://esm.sh/decimal.js@10.4.3";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,9 +10,24 @@ const corsHeaders = {
 
 const MAX_ATTEMPTS = 3;
 
+interface MathNode {
+  isSymbolNode?: boolean;
+  name: string;
+  isConstantNode?: boolean;
+  value: unknown;
+  isParenthesisNode?: boolean;
+  content: MathNode;
+  isOperatorNode?: boolean;
+  op: string;
+  args: MathNode[];
+  isFunctionNode?: boolean;
+  fn: { name: string };
+  type: string;
+}
+
 // --- SAFE AST EVALUATOR USING DECIMAL.JS ---
 // Strict tree walker. NEVER uses eval() or math.evaluate(string).
-function evaluateAST(node: any, scope: Record<string, Decimal | null>, colConfig?: any): Decimal | null {
+function evaluateAST(node: MathNode, scope: Record<string, Decimal | null>, colConfig?: Record<string, unknown>): Decimal | null {
   if (node.isSymbolNode) {
     const val = scope[node.name];
     if (val === undefined || val === null) {
@@ -23,7 +38,7 @@ function evaluateAST(node: any, scope: Record<string, Decimal | null>, colConfig
     }
     return val;
   }
-  if (node.isConstantNode) return new Decimal(node.value);
+  if (node.isConstantNode) return new Decimal(node.value as any);
   if (node.isParenthesisNode) return evaluateAST(node.content, scope, colConfig);
   if (node.isOperatorNode) {
     const a = evaluateAST(node.args[0], scope, colConfig);
@@ -48,8 +63,8 @@ function evaluateAST(node: any, scope: Record<string, Decimal | null>, colConfig
     }
   }
   if (node.isFunctionNode) {
-    const args = node.args.map((arg: any) => evaluateAST(arg, scope, colConfig));
-    if (args.some((arg: any) => arg === null)) return null;
+    const args = node.args.map((arg: MathNode) => evaluateAST(arg, scope, colConfig));
+    if (args.some((arg: Decimal | null) => arg === null)) return null;
     const fnName = node.fn.name.toLowerCase();
     switch (fnName) {
       case 'round': {
@@ -144,9 +159,9 @@ serve(async (req) => {
 
     if (colsErr) throw colsErr;
 
-    const columnsWithAST = (cols || []).filter(c => c.formula_dsl).map(c => ({
-      col_key: c.column_key,
-      ast: parse(c.formula_dsl.replace(/\[([a-zA-Z0-9_]+)\]/g, '$1')),
+    const columnsWithAST = (cols || []).filter((c: Record<string, unknown>) => c.formula_dsl).map((c: Record<string, unknown>) => ({
+      col_key: c.column_key as string,
+      ast: parse(String(c.formula_dsl).replace(/\[([a-zA-Z0-9_]+)\]/g, '$1')) as unknown as MathNode,
       config: c
     }));
 
@@ -188,8 +203,9 @@ serve(async (req) => {
           const val = evaluateAST(col.ast, scope, col.config);
           scope[col.col_key] = val;
           afterJson[col.col_key] = val === null ? null : val.toNumber();
-        } catch (e: any) {
-          const msg = e.message;
+        } catch (err: unknown) {
+          const error = err as Error;
+          const msg = error.message;
           console.warn(`Row ${row.id} col ${col.col_key}: ${msg}`);
           afterJson[col.col_key] = null;
           scope[col.col_key] = null;
@@ -239,19 +255,20 @@ serve(async (req) => {
       status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     // Best-effort job failure marking
     if (jobId) {
       try {
         const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!);
         await sb.from('formula_jobs').update({
           status: 'failed',
-          error_message: err.message,
+          error_message: error.message,
           finished_at: new Date().toISOString()
         }).eq('id', jobId);
       } catch (_) { /* ignore */ }
     }
-    return new Response(JSON.stringify({ status: 'error', message: err.message }), {
+    return new Response(JSON.stringify({ status: 'error', message: error.message }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
